@@ -47,6 +47,9 @@ def normalize_entry(entry, date):
     duration_str = entry.get("duration") or ""
     ac_type = entry.get("type") or ""
     status = entry.get("status")
+    raw_condition = _null_empty(_null_dash(entry.get("condition") or ""))
+    is_standby = isinstance(raw_condition, str) and "(Standby)" in raw_condition
+    condition = raw_condition.replace(" (Standby)", "").strip() if is_standby else raw_condition
 
     return {
         "id": str(raw_row_idx),
@@ -55,6 +58,7 @@ def normalize_entry(entry, date):
         "status": status if status in VALID_STATUSES else "Pending",
         "isActual": bool(entry.get("isActual", False)),
         "isSimulator": "(SIM)" in ac_type,
+        "isStandby": is_standby,
         # scheduling
         "start": entry.get("start"),
         "end": entry.get("end"),
@@ -65,7 +69,7 @@ def normalize_entry(entry, date):
         "instructor": _null_dash(entry.get("instructor")),
         "batch": entry.get("batch"),
         "lesson": entry.get("lesson"),
-        "condition": _null_empty(_null_dash(entry.get("condition"))),
+        "condition": condition,
         # aircraft
         "type": _null_empty(_null_dash(ac_type)),
         "tail": _null_dash(entry.get("tail")),
