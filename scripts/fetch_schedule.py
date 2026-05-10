@@ -15,6 +15,70 @@ LOAD_TIMEOUT_MS = 60_000   # 60 s total page load budget
 POLL_INTERVAL_MS = 500     # check every 0.5 s
 MAX_POLL_TRIES = 60        # 30 s of polling after page load
 
+TIMEZONE = "Asia/Bangkok"
+VALID_STATUSES = {"Pending", "Completed", "Canceled"}
+
+
+def _null_dash(value):
+    return None if value == "-" else value
+
+
+def _null_empty(value):
+    return None if value == "" else value
+
+
+def _parse_duration_min(duration_str):
+    """Convert 'HH:MM' to total minutes as int, or None if unparseable."""
+    try:
+        h, m = duration_str.split(":")
+        return int(h) * 60 + int(m)
+    except Exception:
+        return None
+
+
+def normalize_entry(entry, date):
+    """Return a normalized schedule entry ready for dashboard consumption."""
+    raw_row_idx = entry.get("rowIdx")
+    try:
+        row_idx = int(raw_row_idx)
+    except (TypeError, ValueError):
+        row_idx = raw_row_idx
+
+    duration_str = entry.get("duration") or ""
+    ac_type = entry.get("type") or ""
+    status = entry.get("status")
+
+    return {
+        "id": str(raw_row_idx),
+        "date": date,
+        "rowIdx": row_idx,
+        "status": status if status in VALID_STATUSES else "Pending",
+        "isActual": bool(entry.get("isActual", False)),
+        "isSimulator": "(SIM)" in ac_type,
+        # scheduling
+        "start": entry.get("start"),
+        "end": entry.get("end"),
+        "duration": duration_str or None,
+        "durationMin": _parse_duration_min(duration_str),
+        # people
+        "student": _null_dash(entry.get("student")),
+        "instructor": _null_dash(entry.get("instructor")),
+        "batch": entry.get("batch"),
+        "lesson": entry.get("lesson"),
+        "condition": _null_empty(_null_dash(entry.get("condition"))),
+        # aircraft
+        "type": _null_empty(_null_dash(ac_type)),
+        "tail": _null_dash(entry.get("tail")),
+        # actuals (populated after flight)
+        "actualType": _null_empty(entry.get("actualType")),
+        "tkoff": _null_dash(entry.get("tkoff")),
+        "ldgTime": _null_dash(entry.get("ldgTime")),
+        "airborne": _null_dash(entry.get("airborne")),
+        "ldg": entry.get("ldg"),
+        "to": entry.get("to"),
+        "inst": entry.get("inst"),
+    }
+
 
 async def get_iframe_flight_cache(page):
     """Return the flightCache object from inside the sandbox iframe."""
@@ -87,9 +151,16 @@ async def main():
         print("ERROR: Could not retrieve flightCache from the page.", file=sys.stderr)
         sys.exit(1)
 
+    raw_schedules = cache.get("schedules", {})
+    normalized_schedules = {
+        date: [normalize_entry(entry, date) for entry in entries]
+        for date, entries in raw_schedules.items()
+    }
+
     output = {
         "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "schedules": cache.get("schedules", {}),
+        "timezone": TIMEZONE,
+        "schedules": normalized_schedules,
         "leaves": cache.get("leaves", []),
         "instructors": cache.get("instructors", []),
         "resources": cache.get("resources", []),
