@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +18,121 @@ MAX_POLL_TRIES = 60        # 30 s of polling after page load
 
 TIMEZONE = "Asia/Bangkok"
 VALID_STATUSES = {"Pending", "Completed", "Canceled"}
+
+# Fields every schedule entry must carry. A missing field is a hard error.
+REQUIRED_ENTRY_FIELDS = {
+    "rowIdx", "status", "isActual",
+    "student", "instructor", "batch", "lesson",
+    "start", "end", "duration", "condition",
+    "type", "tail", "actualType",
+    "tkoff", "ldgTime", "airborne",
+    "ldg", "to", "inst",
+}
+
+# Fields seen in the source as of the last schema review.
+# Extra fields beyond this set trigger a warning so new upstream data is noticed.
+KNOWN_ENTRY_FIELDS = REQUIRED_ENTRY_FIELDS
+
+_DURATION_RE = re.compile(r"^\d+:\d{2}$")
+_TIME_RE = re.compile(r"^\d{2}:\d{2}$")
+# rowIdx is either a plain integer string or the "ACTUAL_ONLY_<n>" pattern
+# used by the source system for unplanned flights with no scheduled slot.
+_ROW_IDX_RE = re.compile(r"^\d+$|^ACTUAL_ONLY_\d*$")
+
+
+def validate_raw_cache(cache):
+    """
+    Check raw cache structure before normalization.
+
+    Returns (warnings, errors). Errors mean our normalization logic will
+    break or produce wrong output; warnings mean upstream drift worth
+    investigating but not immediately fatal.
+    """
+    warnings = []
+    errors = []
+
+    # ── Top-level keys ────────────────────────────────────────────────────────
+    required_top = {"schedules", "leaves", "instructors", "resources"}
+    missing_top = required_top - set(cache)
+    extra_top = set(cache) - required_top
+    if missing_top:
+        errors.append(f"Missing top-level keys: {sorted(missing_top)}")
+    if extra_top:
+        warnings.append(f"New top-level keys (upstream addition): {sorted(extra_top)}")
+
+    schedules = cache.get("schedules", {})
+    if not isinstance(schedules, dict):
+        errors.append(f"'schedules' is not a dict (got {type(schedules).__name__})")
+        return warnings, errors  # can't validate entries without it
+
+    # ── Per-entry checks ──────────────────────────────────────────────────────
+    new_statuses: set = set()
+    new_fields: set = set()
+
+    for date, entries in schedules.items():
+        if not isinstance(entries, list):
+            errors.append(f"schedules[{date!r}] is not a list")
+            continue
+
+        for entry in entries:
+            ref = f"date={date} rowIdx={entry.get('rowIdx', '?')!r}"
+
+            # Missing required fields
+            missing = REQUIRED_ENTRY_FIELDS - set(entry)
+            if missing:
+                errors.append(f"{ref}: missing fields {sorted(missing)}")
+
+            # Unknown new fields
+            extra = set(entry) - KNOWN_ENTRY_FIELDS
+            if extra:
+                new_fields.update(extra)
+
+            # rowIdx must be a plain integer or the "ACTUAL_ONLY_<n>" pattern
+            # (used by the source for unplanned flights with no scheduled slot).
+            raw_idx = str(entry.get("rowIdx", ""))
+            if not _ROW_IDX_RE.match(raw_idx):
+                warnings.append(f"{ref}: unexpected rowIdx format: {raw_idx!r}")
+
+            # isActual must be bool
+            if not isinstance(entry.get("isActual"), bool):
+                errors.append(
+                    f"{ref}: isActual expected bool, "
+                    f"got {type(entry.get('isActual')).__name__}: {entry.get('isActual')!r}"
+                )
+
+            # ldg / to / inst must be int
+            for field in ("ldg", "to", "inst"):
+                val = entry.get(field)
+                if not isinstance(val, int):
+                    errors.append(
+                        f"{ref}: {field} expected int, "
+                        f"got {type(val).__name__}: {val!r}"
+                    )
+
+            # duration must be "H…:MM" or "-" (missing)
+            duration = entry.get("duration", "")
+            if duration and duration != "-" and not _DURATION_RE.match(duration):
+                errors.append(f"{ref}: duration has unexpected format: {duration!r}")
+
+            # start / end must be "HH:MM"
+            for field in ("start", "end"):
+                val = entry.get(field, "")
+                if val and not _TIME_RE.match(val):
+                    errors.append(f"{ref}: {field} has unexpected format: {val!r}")
+
+            # status drift (non-fatal — we default unknowns to "Pending")
+            status = entry.get("status")
+            if status not in VALID_STATUSES:
+                new_statuses.add(status)
+
+    if new_fields:
+        warnings.append(f"New entry fields from upstream (review for usefulness): {sorted(new_fields)}")
+    if new_statuses:
+        warnings.append(
+            f"Unknown status values (defaulted to 'Pending'): {sorted(str(s) for s in new_statuses)}"
+        )
+
+    return warnings, errors
 
 
 def _null_dash(value):
@@ -39,8 +155,9 @@ def _parse_duration_min(duration_str):
 def normalize_entry(entry, date):
     """Return a normalized schedule entry ready for dashboard consumption."""
     raw_row_idx = entry.get("rowIdx")
+    # Keep ACTUAL_ONLY_* as string; convert plain numeric strings to int.
     try:
-        row_idx = int(raw_row_idx)
+        row_idx = int(raw_row_idx) if str(raw_row_idx or "").isdigit() else raw_row_idx
     except (TypeError, ValueError):
         row_idx = raw_row_idx
 
@@ -154,6 +271,21 @@ async def main():
     if cache is None:
         print("ERROR: Could not retrieve flightCache from the page.", file=sys.stderr)
         sys.exit(1)
+
+    warnings, errors = validate_raw_cache(cache)
+    for msg in warnings:
+        print(f"WARNING: {msg}", file=sys.stderr)
+    for msg in errors:
+        print(f"ERROR: {msg}", file=sys.stderr)
+    if errors:
+        print(
+            f"Schema validation failed ({len(errors)} error(s)). "
+            "Data not saved — fix normalization before retrying.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if warnings:
+        print(f"Schema validation passed with {len(warnings)} warning(s). Review stderr.", file=sys.stderr)
 
     raw_schedules = cache.get("schedules", {})
     normalized_schedules = {
