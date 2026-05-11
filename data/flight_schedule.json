@@ -1,12 +1,12 @@
 {
-  "fetched_at": "2026-05-11T07:55:16Z",
+  "fetched_at": "2026-05-11T10:54:02Z",
   "timezone": "Asia/Bangkok",
   "schedules": {
     "2026-05-12": [
       {
-        "id": "3105",
+        "id": "12",
         "date": "2026-05-12",
-        "rowIdx": 3105,
+        "rowIdx": 12,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -31,9 +31,9 @@
         "inst": 0
       },
       {
-        "id": "3106",
+        "id": "13",
         "date": "2026-05-12",
-        "rowIdx": 3106,
+        "rowIdx": 13,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -58,9 +58,9 @@
         "inst": 0
       },
       {
-        "id": "3107",
+        "id": "14",
         "date": "2026-05-12",
-        "rowIdx": 3107,
+        "rowIdx": 14,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -85,9 +85,9 @@
         "inst": 0
       },
       {
-        "id": "3108",
+        "id": "15",
         "date": "2026-05-12",
-        "rowIdx": 3108,
+        "rowIdx": 15,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -112,19 +112,19 @@
         "inst": 0
       },
       {
-        "id": "3109",
+        "id": "16",
         "date": "2026-05-12",
-        "rowIdx": 3109,
+        "rowIdx": 16,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
         "isStandby": false,
-        "start": "06:30",
-        "end": "09:30",
+        "start": "10:30",
+        "end": "13:30",
         "duration": "03:00",
         "durationMin": 180,
         "student": "MARUAY B.",
-        "instructor": "CHAROENCHAI U.",
+        "instructor": "SANTI PO.",
         "batch": "AP-126",
         "lesson": "CSPXV 41",
         "condition": "Nav",
@@ -139,9 +139,9 @@
         "inst": 0
       },
       {
-        "id": "3110",
+        "id": "17",
         "date": "2026-05-12",
-        "rowIdx": 3110,
+        "rowIdx": 17,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -166,9 +166,9 @@
         "inst": 0
       },
       {
-        "id": "3111",
+        "id": "18",
         "date": "2026-05-12",
-        "rowIdx": 3111,
+        "rowIdx": 18,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -193,69 +193,15 @@
         "inst": 0
       },
       {
-        "id": "3112",
+        "id": "19",
         "date": "2026-05-12",
-        "rowIdx": 3112,
+        "rowIdx": 19,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:30",
-        "end": "13:30",
-        "duration": "03:00",
-        "durationMin": 180,
-        "student": "PATCHARANAN D.",
-        "instructor": "SANTI PO.",
-        "batch": "AP-126",
-        "lesson": "CSPXV 42",
-        "condition": "Nav",
-        "type": "DA40TDI",
-        "tail": "HS-TPO",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
-      },
-      {
-        "id": "3113",
-        "date": "2026-05-12",
-        "rowIdx": 3113,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": true,
-        "start": "11:00",
-        "end": "12:00",
-        "duration": "01:00",
-        "durationMin": 60,
-        "student": "WATCHARAPOL A.",
-        "instructor": "WUTTHICHAI L.",
-        "batch": "AP-127",
-        "lesson": "CDGL 04",
-        "condition": "-",
-        "type": "DA40TDI",
-        "tail": null,
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
-      },
-      {
-        "id": "3114",
-        "date": "2026-05-12",
-        "rowIdx": 3114,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": false,
-        "start": "06:40",
-        "end": "09:40",
+        "start": "10:15",
+        "end": "13:15",
         "duration": "03:00",
         "durationMin": 180,
         "student": "CHANOL T.",
@@ -274,9 +220,9 @@
         "inst": 0
       },
       {
-        "id": "3115",
+        "id": "20",
         "date": "2026-05-12",
-        "rowIdx": 3115,
+        "rowIdx": 20,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -301,9 +247,9 @@
         "inst": 0
       },
       {
-        "id": "3116",
+        "id": "21",
         "date": "2026-05-12",
-        "rowIdx": 3116,
+        "rowIdx": 21,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -328,42 +274,15 @@
         "inst": 0
       },
       {
-        "id": "3117",
+        "id": "22",
         "date": "2026-05-12",
-        "rowIdx": 3117,
+        "rowIdx": 22,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:00",
-        "end": "13:00",
-        "duration": "03:00",
-        "durationMin": 180,
-        "student": "PHUMNAPAT P.",
-        "instructor": "PARINYA B.",
-        "batch": "AP-124",
-        "lesson": "CSPXI 90",
-        "condition": "IR",
-        "type": "DA40CS",
-        "tail": null,
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
-      },
-      {
-        "id": "3118",
-        "date": "2026-05-12",
-        "rowIdx": 3118,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": false,
-        "start": "10:00",
-        "end": "13:00",
+        "start": "10:30",
+        "end": "13:30",
         "duration": "03:00",
         "durationMin": 180,
         "student": "PHUMNAPAT P.",
@@ -382,9 +301,9 @@
         "inst": 0
       },
       {
-        "id": "3120",
+        "id": "23",
         "date": "2026-05-12",
-        "rowIdx": 3120,
+        "rowIdx": 23,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -409,19 +328,19 @@
         "inst": 0
       },
       {
-        "id": "3122",
+        "id": "24",
         "date": "2026-05-12",
-        "rowIdx": 3122,
+        "rowIdx": 24,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:30",
-        "end": "13:30",
+        "start": "06:30",
+        "end": "09:30",
         "duration": "03:00",
         "durationMin": 180,
         "student": "KANTAPONG A.",
-        "instructor": "CHAROENCHAI U.",
+        "instructor": "SANTI PO.",
         "batch": "AP-126",
         "lesson": "CSPXV 40",
         "condition": "Nav",
@@ -436,9 +355,9 @@
         "inst": 0
       },
       {
-        "id": "3125",
+        "id": "25",
         "date": "2026-05-12",
-        "rowIdx": 3125,
+        "rowIdx": 25,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -463,9 +382,9 @@
         "inst": 0
       },
       {
-        "id": "3126",
+        "id": "26",
         "date": "2026-05-12",
-        "rowIdx": 3126,
+        "rowIdx": 26,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -490,9 +409,9 @@
         "inst": 0
       },
       {
-        "id": "3127",
+        "id": "27",
         "date": "2026-05-12",
-        "rowIdx": 3127,
+        "rowIdx": 27,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -517,9 +436,9 @@
         "inst": 0
       },
       {
-        "id": "3133",
+        "id": "28",
         "date": "2026-05-12",
-        "rowIdx": 3133,
+        "rowIdx": 28,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -544,9 +463,9 @@
         "inst": 0
       },
       {
-        "id": "3134",
+        "id": "29",
         "date": "2026-05-12",
-        "rowIdx": 3134,
+        "rowIdx": 29,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -571,9 +490,9 @@
         "inst": 0
       },
       {
-        "id": "3135",
+        "id": "30",
         "date": "2026-05-12",
-        "rowIdx": 3135,
+        "rowIdx": 30,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -582,13 +501,13 @@
         "end": "09:30",
         "duration": "03:00",
         "durationMin": 180,
-        "student": "PORNTREETRA R.",
-        "instructor": "SANTI PO.",
-        "batch": "AP-126",
+        "student": "CHANISA S.",
+        "instructor": "CHAROENCHAI U.",
+        "batch": "AP-124",
         "lesson": "CSPXV 43",
         "condition": "Nav",
-        "type": "DA40TDI",
-        "tail": "HS-TPO",
+        "type": "DA40CS",
+        "tail": "HS-TVG",
         "actualType": null,
         "tkoff": null,
         "ldgTime": null,
@@ -598,23 +517,50 @@
         "inst": 0
       },
       {
-        "id": "3136",
+        "id": "31",
         "date": "2026-05-12",
-        "rowIdx": 3136,
+        "rowIdx": 31,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
-        "isStandby": true,
-        "start": "06:30",
-        "end": "07:45",
+        "isStandby": false,
+        "start": "12:30",
+        "end": "13:45",
         "duration": "01:15",
         "durationMin": 75,
         "student": "AKARAVIT K.",
         "instructor": "WUTTHICHAI L.",
         "batch": "AP-127",
         "lesson": "CDGL 06",
-        "condition": "-",
+        "condition": null,
         "type": "DA40TDI",
+        "tail": "HS-TPW",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "32",
+        "date": "2026-05-12",
+        "rowIdx": 32,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": true,
+        "start": "08:15",
+        "end": "09:15",
+        "duration": "01:00",
+        "durationMin": 60,
+        "student": "PICHAKORN J.",
+        "instructor": "KOONPHOL U.",
+        "batch": "AP-127",
+        "lesson": "CDGL 03",
+        "condition": "-",
+        "type": "DA40CS",
         "tail": null,
         "actualType": null,
         "tkoff": null,
@@ -625,24 +571,213 @@
         "inst": 0
       },
       {
-        "id": "3141",
+        "id": "33",
         "date": "2026-05-12",
-        "rowIdx": 3141,
+        "rowIdx": 33,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:30",
-        "end": "11:30",
+        "start": "11:00",
+        "end": "12:30",
+        "duration": "01:30",
+        "durationMin": 90,
+        "student": "IAN B.",
+        "instructor": "PORNSAK P.",
+        "batch": "PPL-H 05",
+        "lesson": "PPL-H LS 43",
+        "condition": null,
+        "type": "R44",
+        "tail": "HS-TZR",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "34",
+        "date": "2026-05-12",
+        "rowIdx": 34,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "13:00",
+        "end": "14:00",
         "duration": "01:00",
         "durationMin": 60,
-        "student": "PICHAKORN J.",
+        "student": "CHISANUPONG N.",
+        "instructor": "PORNSAK P.",
+        "batch": "HP-57",
+        "lesson": "LS 52",
+        "condition": null,
+        "type": "R44",
+        "tail": "HS-TZR",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "35",
+        "date": "2026-05-12",
+        "rowIdx": 35,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": true,
+        "start": "10:00",
+        "end": "13:00",
+        "duration": "03:00",
+        "durationMin": 180,
+        "student": "PATTHARADEJ S.",
+        "instructor": "THAWATANAN P.",
+        "batch": "AP-126",
+        "lesson": "CSPXV 41",
+        "condition": "Nav",
+        "type": "DA40CS",
+        "tail": null,
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "36",
+        "date": "2026-05-12",
+        "rowIdx": 36,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "11:00",
+        "end": "12:00",
+        "duration": "01:00",
+        "durationMin": 60,
+        "student": "WATCHARAPOL A.",
+        "instructor": "WUTTHICHAI L.",
+        "batch": "AP-127",
+        "lesson": "CDGL 04",
+        "condition": null,
+        "type": "DA40TDI",
+        "tail": "HS-TPW",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "37",
+        "date": "2026-05-12",
+        "rowIdx": 37,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "10:15",
+        "end": "13:15",
+        "duration": "03:00",
+        "durationMin": 180,
+        "student": "PATCHARANAN D.",
+        "instructor": "CHAROENCHAI U.",
+        "batch": "AP-126",
+        "lesson": "CSPXV 42",
+        "condition": "Nav",
+        "type": "DA40TDI",
+        "tail": "HS-TPX",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "38",
+        "date": "2026-05-12",
+        "rowIdx": 38,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "08:30",
+        "end": "09:30",
+        "duration": "01:00",
+        "durationMin": 60,
+        "student": "PRECHAWUT N.",
+        "instructor": "PORNSAK P.",
+        "batch": "HP-57",
+        "lesson": "LS 52",
+        "condition": null,
+        "type": "R44",
+        "tail": "HS-TZR",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "3145",
+        "date": "2026-05-12",
+        "rowIdx": 3145,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "09:40",
+        "end": "10:40",
+        "duration": "01:00",
+        "durationMin": 60,
+        "student": "SIRAWIT K.",
+        "instructor": "PORNSAK P.",
+        "batch": "HP-57",
+        "lesson": "LS 52",
+        "condition": null,
+        "type": "R44",
+        "tail": "HS-TZR",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "3146",
+        "date": "2026-05-12",
+        "rowIdx": 3146,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": true,
+        "start": "06:30",
+        "end": "07:45",
+        "duration": "01:15",
+        "durationMin": 75,
+        "student": "MAETHAPHAN R.",
         "instructor": "KOONPHOL U.",
         "batch": "AP-127",
-        "lesson": "CDGL 03",
-        "condition": null,
+        "lesson": "CDGL 05",
+        "condition": "-",
         "type": "DA40CS",
-        "tail": "HS-TVG",
+        "tail": null,
         "actualType": null,
         "tkoff": null,
         "ldgTime": null,
@@ -654,9 +789,9 @@
     ],
     "2026-05-11": [
       {
-        "id": "3066",
+        "id": "39",
         "date": "2026-05-11",
-        "rowIdx": 3066,
+        "rowIdx": 39,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -681,9 +816,9 @@
         "inst": 0
       },
       {
-        "id": "3067",
+        "id": "40",
         "date": "2026-05-11",
-        "rowIdx": 3067,
+        "rowIdx": 40,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -708,11 +843,11 @@
         "inst": 0
       },
       {
-        "id": "3068",
+        "id": "41",
         "date": "2026-05-11",
-        "rowIdx": 3068,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 41,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
         "start": "11:00",
@@ -726,20 +861,20 @@
         "condition": null,
         "type": "R44",
         "tail": "HS-TZU",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "Dual",
+        "tkoff": "11:10",
+        "ldgTime": "12:00",
+        "airborne": "00:50",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
-        "id": "3069",
+        "id": "42",
         "date": "2026-05-11",
-        "rowIdx": 3069,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 42,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
         "start": "12:10",
@@ -753,18 +888,18 @@
         "condition": null,
         "type": "R44",
         "tail": "HS-TZU",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "Dual",
+        "tkoff": "12:20",
+        "ldgTime": "13:40",
+        "airborne": "01:20",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
-        "id": "3070",
+        "id": "43",
         "date": "2026-05-11",
-        "rowIdx": 3070,
+        "rowIdx": 43,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -789,9 +924,9 @@
         "inst": 0
       },
       {
-        "id": "3071",
+        "id": "44",
         "date": "2026-05-11",
-        "rowIdx": 3071,
+        "rowIdx": 44,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -816,9 +951,9 @@
         "inst": 0
       },
       {
-        "id": "3072",
+        "id": "45",
         "date": "2026-05-11",
-        "rowIdx": 3072,
+        "rowIdx": 45,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -843,17 +978,17 @@
         "inst": 0
       },
       {
-        "id": "3073",
+        "id": "46",
         "date": "2026-05-11",
-        "rowIdx": 3073,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 46,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:00",
-        "end": "13:00",
-        "duration": "03:00",
-        "durationMin": 180,
+        "start": "09:58",
+        "end": "12:38",
+        "duration": "02:40",
+        "durationMin": 160,
         "student": "POONYAPAT W.",
         "instructor": "ITTIPOL P.",
         "batch": "AP-124",
@@ -861,18 +996,18 @@
         "condition": "IR",
         "type": "DA40TDI",
         "tail": "HS-TPU",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
+        "actualType": "SPIC",
+        "tkoff": "10:16",
+        "ldgTime": "12:31",
+        "airborne": "02:15",
+        "ldg": 3,
+        "to": 3,
+        "inst": 3
       },
       {
-        "id": "3074",
+        "id": "47",
         "date": "2026-05-11",
-        "rowIdx": 3074,
+        "rowIdx": 47,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -897,9 +1032,9 @@
         "inst": 1
       },
       {
-        "id": "3075",
+        "id": "48",
         "date": "2026-05-11",
-        "rowIdx": 3075,
+        "rowIdx": 48,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -924,9 +1059,9 @@
         "inst": 1
       },
       {
-        "id": "3076",
+        "id": "49",
         "date": "2026-05-11",
-        "rowIdx": 3076,
+        "rowIdx": 49,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -951,9 +1086,9 @@
         "inst": 0
       },
       {
-        "id": "3077",
+        "id": "50",
         "date": "2026-05-11",
-        "rowIdx": 3077,
+        "rowIdx": 50,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -978,15 +1113,15 @@
         "inst": 2
       },
       {
-        "id": "3078",
+        "id": "51",
         "date": "2026-05-11",
-        "rowIdx": 3078,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 51,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:00",
-        "end": "13:00",
+        "start": "09:45",
+        "end": "12:45",
         "duration": "03:00",
         "durationMin": 180,
         "student": "GARUNPHON T.",
@@ -996,18 +1131,18 @@
         "condition": "IR",
         "type": "DA40TDI",
         "tail": "HS-TPX",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
+        "actualType": "SPIC",
+        "tkoff": "09:55",
+        "ldgTime": "12:40",
+        "airborne": "02:45",
+        "ldg": 2,
+        "to": 2,
+        "inst": 2
       },
       {
-        "id": "3079",
+        "id": "52",
         "date": "2026-05-11",
-        "rowIdx": 3079,
+        "rowIdx": 52,
         "status": "Pending",
         "isActual": false,
         "isSimulator": true,
@@ -1032,9 +1167,9 @@
         "inst": 0
       },
       {
-        "id": "3080",
+        "id": "53",
         "date": "2026-05-11",
-        "rowIdx": 3080,
+        "rowIdx": 53,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -1059,9 +1194,9 @@
         "inst": 0
       },
       {
-        "id": "3081",
+        "id": "54",
         "date": "2026-05-11",
-        "rowIdx": 3081,
+        "rowIdx": 54,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1086,9 +1221,9 @@
         "inst": 0
       },
       {
-        "id": "3082",
+        "id": "55",
         "date": "2026-05-11",
-        "rowIdx": 3082,
+        "rowIdx": 55,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1113,15 +1248,15 @@
         "inst": 0
       },
       {
-        "id": "3083",
+        "id": "56",
         "date": "2026-05-11",
-        "rowIdx": 3083,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 56,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "08:30",
-        "end": "10:30",
+        "start": "08:20",
+        "end": "10:20",
         "duration": "02:00",
         "durationMin": 120,
         "student": "NAFEEN M.",
@@ -1131,18 +1266,18 @@
         "condition": "IR",
         "type": "DA40CS",
         "tail": "HS-TVD",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
+        "actualType": "SPIC",
+        "tkoff": "08:34",
+        "ldgTime": "10:14",
+        "airborne": "01:40",
+        "ldg": 2,
+        "to": 2,
+        "inst": 2
       },
       {
-        "id": "3084",
+        "id": "57",
         "date": "2026-05-11",
-        "rowIdx": 3084,
+        "rowIdx": 57,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -1167,9 +1302,9 @@
         "inst": 0
       },
       {
-        "id": "3085",
+        "id": "58",
         "date": "2026-05-11",
-        "rowIdx": 3085,
+        "rowIdx": 58,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1194,9 +1329,9 @@
         "inst": 0
       },
       {
-        "id": "3086",
+        "id": "59",
         "date": "2026-05-11",
-        "rowIdx": 3086,
+        "rowIdx": 59,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1221,9 +1356,9 @@
         "inst": 0
       },
       {
-        "id": "3087",
+        "id": "60",
         "date": "2026-05-11",
-        "rowIdx": 3087,
+        "rowIdx": 60,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1248,11 +1383,11 @@
         "inst": 0
       },
       {
-        "id": "3088",
+        "id": "61",
         "date": "2026-05-11",
-        "rowIdx": 3088,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 61,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
         "start": "10:00",
@@ -1266,18 +1401,18 @@
         "condition": "Nav",
         "type": "DA40TDI",
         "tail": "HS-TPT",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "SPIC",
+        "tkoff": "10:10",
+        "ldgTime": "12:55",
+        "airborne": "02:45",
+        "ldg": 3,
+        "to": 3,
         "inst": 0
       },
       {
-        "id": "3089",
+        "id": "62",
         "date": "2026-05-11",
-        "rowIdx": 3089,
+        "rowIdx": 62,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -1302,9 +1437,9 @@
         "inst": 0
       },
       {
-        "id": "3090",
+        "id": "63",
         "date": "2026-05-11",
-        "rowIdx": 3090,
+        "rowIdx": 63,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1329,9 +1464,9 @@
         "inst": 0
       },
       {
-        "id": "3091",
+        "id": "64",
         "date": "2026-05-11",
-        "rowIdx": 3091,
+        "rowIdx": 64,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -1356,9 +1491,9 @@
         "inst": 0
       },
       {
-        "id": "3092",
+        "id": "65",
         "date": "2026-05-11",
-        "rowIdx": 3092,
+        "rowIdx": 65,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1383,9 +1518,9 @@
         "inst": 0
       },
       {
-        "id": "3093",
+        "id": "66",
         "date": "2026-05-11",
-        "rowIdx": 3093,
+        "rowIdx": 66,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1410,9 +1545,9 @@
         "inst": 0
       },
       {
-        "id": "3094",
+        "id": "67",
         "date": "2026-05-11",
-        "rowIdx": 3094,
+        "rowIdx": 67,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1437,9 +1572,9 @@
         "inst": 0
       },
       {
-        "id": "3095",
+        "id": "68",
         "date": "2026-05-11",
-        "rowIdx": 3095,
+        "rowIdx": 68,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1464,9 +1599,9 @@
         "inst": 0
       },
       {
-        "id": "3096",
+        "id": "69",
         "date": "2026-05-11",
-        "rowIdx": 3096,
+        "rowIdx": 69,
         "status": "Pending",
         "isActual": false,
         "isSimulator": true,
@@ -1491,15 +1626,15 @@
         "inst": 0
       },
       {
-        "id": "3097",
+        "id": "70",
         "date": "2026-05-11",
-        "rowIdx": 3097,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 70,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "13:00",
-        "end": "16:00",
+        "start": "13:15",
+        "end": "16:15",
         "duration": "03:00",
         "durationMin": 180,
         "student": "WATTIKORN K.",
@@ -1509,18 +1644,18 @@
         "condition": "Nav",
         "type": "DA40TDI",
         "tail": "HS-TPW",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "SPIC",
+        "tkoff": "13:25",
+        "ldgTime": "16:10",
+        "airborne": "02:45",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
-        "id": "3098",
+        "id": "71",
         "date": "2026-05-11",
-        "rowIdx": 3098,
+        "rowIdx": 71,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1545,9 +1680,9 @@
         "inst": 0
       },
       {
-        "id": "3099",
+        "id": "72",
         "date": "2026-05-11",
-        "rowIdx": 3099,
+        "rowIdx": 72,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1572,9 +1707,9 @@
         "inst": 0
       },
       {
-        "id": "3100",
+        "id": "73",
         "date": "2026-05-11",
-        "rowIdx": 3100,
+        "rowIdx": 73,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -1599,17 +1734,17 @@
         "inst": 0
       },
       {
-        "id": "3101",
+        "id": "74",
         "date": "2026-05-11",
-        "rowIdx": 3101,
-        "status": "Pending",
-        "isActual": false,
+        "rowIdx": 74,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "11:30",
-        "end": "12:30",
-        "duration": "01:00",
-        "durationMin": 60,
+        "start": "12:24",
+        "end": "13:30",
+        "duration": "01:06",
+        "durationMin": 66,
         "student": "PURIN K.",
         "instructor": "CHAROENCHAI U.",
         "batch": "MEP-35",
@@ -1617,18 +1752,18 @@
         "condition": null,
         "type": "DA42TDI",
         "tail": "HS-TPQ",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "Dual",
+        "tkoff": "12:35",
+        "ldgTime": "13:27",
+        "airborne": "00:52",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
-        "id": "3102",
+        "id": "75",
         "date": "2026-05-11",
-        "rowIdx": 3102,
+        "rowIdx": 75,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1653,9 +1788,9 @@
         "inst": 0
       },
       {
-        "id": "3103",
+        "id": "76",
         "date": "2026-05-11",
-        "rowIdx": 3103,
+        "rowIdx": 76,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1680,9 +1815,9 @@
         "inst": 0
       },
       {
-        "id": "3104",
+        "id": "77",
         "date": "2026-05-11",
-        "rowIdx": 3104,
+        "rowIdx": 77,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1707,9 +1842,9 @@
         "inst": 0
       },
       {
-        "id": "3121",
+        "id": "78",
         "date": "2026-05-11",
-        "rowIdx": 3121,
+        "rowIdx": 78,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1734,9 +1869,9 @@
         "inst": 0
       },
       {
-        "id": "3123",
+        "id": "79",
         "date": "2026-05-11",
-        "rowIdx": 3123,
+        "rowIdx": 79,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1761,9 +1896,9 @@
         "inst": 0
       },
       {
-        "id": "3137",
+        "id": "80",
         "date": "2026-05-11",
-        "rowIdx": 3137,
+        "rowIdx": 80,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1921,13 +2056,40 @@
         "ldg": 2,
         "to": 2,
         "inst": 0
+      },
+      {
+        "id": "ACTUAL_ONLY_3101",
+        "date": "2026-05-11",
+        "rowIdx": "ACTUAL_ONLY_3101",
+        "status": "Completed",
+        "isActual": true,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "12:24",
+        "end": "13:30",
+        "duration": "01:06",
+        "durationMin": 66,
+        "student": "PURIN K. (Unplanned)",
+        "instructor": "CHAROENCHAI U.",
+        "batch": "MEP-35",
+        "lesson": "FAM",
+        "condition": "Actual",
+        "type": "DA42TDI",
+        "tail": "HS-TPQ",
+        "actualType": "Dual",
+        "tkoff": "12:35",
+        "ldgTime": "13:27",
+        "airborne": "00:52",
+        "ldg": 1,
+        "to": 1,
+        "inst": 0
       }
     ],
     "2026-05-08": [
       {
-        "id": "3035",
+        "id": "81",
         "date": "2026-05-08",
-        "rowIdx": 3035,
+        "rowIdx": 81,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1952,9 +2114,9 @@
         "inst": 0
       },
       {
-        "id": "3036",
+        "id": "82",
         "date": "2026-05-08",
-        "rowIdx": 3036,
+        "rowIdx": 82,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -1979,9 +2141,9 @@
         "inst": 2
       },
       {
-        "id": "3038",
+        "id": "83",
         "date": "2026-05-08",
-        "rowIdx": 3038,
+        "rowIdx": 83,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2006,9 +2168,9 @@
         "inst": 1
       },
       {
-        "id": "3039",
+        "id": "84",
         "date": "2026-05-08",
-        "rowIdx": 3039,
+        "rowIdx": 84,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2033,9 +2195,9 @@
         "inst": 1
       },
       {
-        "id": "3040",
+        "id": "85",
         "date": "2026-05-08",
-        "rowIdx": 3040,
+        "rowIdx": 85,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2060,9 +2222,9 @@
         "inst": 0
       },
       {
-        "id": "3041",
+        "id": "86",
         "date": "2026-05-08",
-        "rowIdx": 3041,
+        "rowIdx": 86,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2087,9 +2249,9 @@
         "inst": 0
       },
       {
-        "id": "3042",
+        "id": "87",
         "date": "2026-05-08",
-        "rowIdx": 3042,
+        "rowIdx": 87,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2114,9 +2276,9 @@
         "inst": 0
       },
       {
-        "id": "3043",
+        "id": "88",
         "date": "2026-05-08",
-        "rowIdx": 3043,
+        "rowIdx": 88,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2141,9 +2303,9 @@
         "inst": 1
       },
       {
-        "id": "3044",
+        "id": "89",
         "date": "2026-05-08",
-        "rowIdx": 3044,
+        "rowIdx": 89,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2168,9 +2330,9 @@
         "inst": 0
       },
       {
-        "id": "3045",
+        "id": "90",
         "date": "2026-05-08",
-        "rowIdx": 3045,
+        "rowIdx": 90,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2195,9 +2357,9 @@
         "inst": 0
       },
       {
-        "id": "3046",
+        "id": "91",
         "date": "2026-05-08",
-        "rowIdx": 3046,
+        "rowIdx": 91,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2222,9 +2384,9 @@
         "inst": 0
       },
       {
-        "id": "3047",
+        "id": "92",
         "date": "2026-05-08",
-        "rowIdx": 3047,
+        "rowIdx": 92,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2249,9 +2411,9 @@
         "inst": 0
       },
       {
-        "id": "3048",
+        "id": "93",
         "date": "2026-05-08",
-        "rowIdx": 3048,
+        "rowIdx": 93,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2276,9 +2438,9 @@
         "inst": 0
       },
       {
-        "id": "3049",
+        "id": "94",
         "date": "2026-05-08",
-        "rowIdx": 3049,
+        "rowIdx": 94,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2303,9 +2465,9 @@
         "inst": 0
       },
       {
-        "id": "3050",
+        "id": "95",
         "date": "2026-05-08",
-        "rowIdx": 3050,
+        "rowIdx": 95,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2330,9 +2492,9 @@
         "inst": 0
       },
       {
-        "id": "3051",
+        "id": "96",
         "date": "2026-05-08",
-        "rowIdx": 3051,
+        "rowIdx": 96,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2357,9 +2519,9 @@
         "inst": 1
       },
       {
-        "id": "3052",
+        "id": "97",
         "date": "2026-05-08",
-        "rowIdx": 3052,
+        "rowIdx": 97,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -2384,9 +2546,9 @@
         "inst": 0
       },
       {
-        "id": "3053",
+        "id": "98",
         "date": "2026-05-08",
-        "rowIdx": 3053,
+        "rowIdx": 98,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2411,9 +2573,9 @@
         "inst": 0
       },
       {
-        "id": "3054",
+        "id": "99",
         "date": "2026-05-08",
-        "rowIdx": 3054,
+        "rowIdx": 99,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -2438,9 +2600,9 @@
         "inst": 0
       },
       {
-        "id": "3055",
+        "id": "100",
         "date": "2026-05-08",
-        "rowIdx": 3055,
+        "rowIdx": 100,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2465,9 +2627,9 @@
         "inst": 0
       },
       {
-        "id": "3056",
+        "id": "101",
         "date": "2026-05-08",
-        "rowIdx": 3056,
+        "rowIdx": 101,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2492,9 +2654,9 @@
         "inst": 0
       },
       {
-        "id": "3057",
+        "id": "102",
         "date": "2026-05-08",
-        "rowIdx": 3057,
+        "rowIdx": 102,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2519,9 +2681,9 @@
         "inst": 0
       },
       {
-        "id": "3058",
+        "id": "103",
         "date": "2026-05-08",
-        "rowIdx": 3058,
+        "rowIdx": 103,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2546,9 +2708,9 @@
         "inst": 0
       },
       {
-        "id": "3059",
+        "id": "104",
         "date": "2026-05-08",
-        "rowIdx": 3059,
+        "rowIdx": 104,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2573,9 +2735,9 @@
         "inst": 0
       },
       {
-        "id": "3060",
+        "id": "105",
         "date": "2026-05-08",
-        "rowIdx": 3060,
+        "rowIdx": 105,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2600,9 +2762,9 @@
         "inst": 0
       },
       {
-        "id": "3061",
+        "id": "106",
         "date": "2026-05-08",
-        "rowIdx": 3061,
+        "rowIdx": 106,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2627,9 +2789,9 @@
         "inst": 0
       },
       {
-        "id": "3062",
+        "id": "107",
         "date": "2026-05-08",
-        "rowIdx": 3062,
+        "rowIdx": 107,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2654,9 +2816,9 @@
         "inst": 0
       },
       {
-        "id": "3063",
+        "id": "108",
         "date": "2026-05-08",
-        "rowIdx": 3063,
+        "rowIdx": 108,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2681,9 +2843,9 @@
         "inst": 0
       },
       {
-        "id": "3064",
+        "id": "109",
         "date": "2026-05-08",
-        "rowIdx": 3064,
+        "rowIdx": 109,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2708,9 +2870,9 @@
         "inst": 0
       },
       {
-        "id": "3065",
+        "id": "110",
         "date": "2026-05-08",
-        "rowIdx": 3065,
+        "rowIdx": 110,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2764,9 +2926,9 @@
     ],
     "2026-05-07": [
       {
-        "id": "30",
+        "id": "111",
         "date": "2026-05-07",
-        "rowIdx": 30,
+        "rowIdx": 111,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2791,9 +2953,9 @@
         "inst": 0
       },
       {
-        "id": "3011",
+        "id": "112",
         "date": "2026-05-07",
-        "rowIdx": 3011,
+        "rowIdx": 112,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2818,9 +2980,9 @@
         "inst": 0
       },
       {
-        "id": "3012",
+        "id": "113",
         "date": "2026-05-07",
-        "rowIdx": 3012,
+        "rowIdx": 113,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2845,9 +3007,9 @@
         "inst": 0
       },
       {
-        "id": "3013",
+        "id": "114",
         "date": "2026-05-07",
-        "rowIdx": 3013,
+        "rowIdx": 114,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2872,9 +3034,9 @@
         "inst": 0
       },
       {
-        "id": "3014",
+        "id": "115",
         "date": "2026-05-07",
-        "rowIdx": 3014,
+        "rowIdx": 115,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2899,9 +3061,9 @@
         "inst": 0
       },
       {
-        "id": "3015",
+        "id": "116",
         "date": "2026-05-07",
-        "rowIdx": 3015,
+        "rowIdx": 116,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2926,9 +3088,9 @@
         "inst": 0
       },
       {
-        "id": "3016",
+        "id": "117",
         "date": "2026-05-07",
-        "rowIdx": 3016,
+        "rowIdx": 117,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2953,9 +3115,9 @@
         "inst": 0
       },
       {
-        "id": "3021",
+        "id": "118",
         "date": "2026-05-07",
-        "rowIdx": 3021,
+        "rowIdx": 118,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -2980,9 +3142,9 @@
         "inst": 1
       },
       {
-        "id": "3022",
+        "id": "119",
         "date": "2026-05-07",
-        "rowIdx": 3022,
+        "rowIdx": 119,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -3007,9 +3169,9 @@
         "inst": 0
       },
       {
-        "id": "3023",
+        "id": "120",
         "date": "2026-05-07",
-        "rowIdx": 3023,
+        "rowIdx": 120,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3034,9 +3196,9 @@
         "inst": 0
       },
       {
-        "id": "3024",
+        "id": "121",
         "date": "2026-05-07",
-        "rowIdx": 3024,
+        "rowIdx": 121,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3061,9 +3223,9 @@
         "inst": 0
       },
       {
-        "id": "3025",
+        "id": "122",
         "date": "2026-05-07",
-        "rowIdx": 3025,
+        "rowIdx": 122,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3088,9 +3250,9 @@
         "inst": 0
       },
       {
-        "id": "3026",
+        "id": "123",
         "date": "2026-05-07",
-        "rowIdx": 3026,
+        "rowIdx": 123,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3115,9 +3277,9 @@
         "inst": 0
       },
       {
-        "id": "3027",
+        "id": "124",
         "date": "2026-05-07",
-        "rowIdx": 3027,
+        "rowIdx": 124,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3142,9 +3304,9 @@
         "inst": 1
       },
       {
-        "id": "3028",
+        "id": "125",
         "date": "2026-05-07",
-        "rowIdx": 3028,
+        "rowIdx": 125,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3169,9 +3331,9 @@
         "inst": 0
       },
       {
-        "id": "3029",
+        "id": "126",
         "date": "2026-05-07",
-        "rowIdx": 3029,
+        "rowIdx": 126,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3196,9 +3358,9 @@
         "inst": 0
       },
       {
-        "id": "3030",
+        "id": "127",
         "date": "2026-05-07",
-        "rowIdx": 3030,
+        "rowIdx": 127,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3223,9 +3385,9 @@
         "inst": 0
       },
       {
-        "id": "3031",
+        "id": "128",
         "date": "2026-05-07",
-        "rowIdx": 3031,
+        "rowIdx": 128,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3250,9 +3412,9 @@
         "inst": 0
       },
       {
-        "id": "3032",
+        "id": "129",
         "date": "2026-05-07",
-        "rowIdx": 3032,
+        "rowIdx": 129,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3277,9 +3439,9 @@
         "inst": 0
       },
       {
-        "id": "3033",
+        "id": "130",
         "date": "2026-05-07",
-        "rowIdx": 3033,
+        "rowIdx": 130,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3304,9 +3466,9 @@
         "inst": 0
       },
       {
-        "id": "3034",
+        "id": "131",
         "date": "2026-05-07",
-        "rowIdx": 3034,
+        "rowIdx": 131,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3331,9 +3493,9 @@
         "inst": 0
       },
       {
-        "id": "3037",
+        "id": "132",
         "date": "2026-05-07",
-        "rowIdx": 3037,
+        "rowIdx": 132,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3441,9 +3603,9 @@
     ],
     "2026-05-06": [
       {
-        "id": "3",
+        "id": "133",
         "date": "2026-05-06",
-        "rowIdx": 3,
+        "rowIdx": 133,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3468,9 +3630,9 @@
         "inst": 0
       },
       {
-        "id": "4",
+        "id": "134",
         "date": "2026-05-06",
-        "rowIdx": 4,
+        "rowIdx": 134,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -3495,9 +3657,9 @@
         "inst": 0
       },
       {
-        "id": "5",
+        "id": "135",
         "date": "2026-05-06",
-        "rowIdx": 5,
+        "rowIdx": 135,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3522,9 +3684,9 @@
         "inst": 0
       },
       {
-        "id": "6",
+        "id": "136",
         "date": "2026-05-06",
-        "rowIdx": 6,
+        "rowIdx": 136,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3549,9 +3711,9 @@
         "inst": 0
       },
       {
-        "id": "7",
+        "id": "137",
         "date": "2026-05-06",
-        "rowIdx": 7,
+        "rowIdx": 137,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3576,9 +3738,9 @@
         "inst": 0
       },
       {
-        "id": "8",
+        "id": "138",
         "date": "2026-05-06",
-        "rowIdx": 8,
+        "rowIdx": 138,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -3603,9 +3765,9 @@
         "inst": 0
       },
       {
-        "id": "9",
+        "id": "139",
         "date": "2026-05-06",
-        "rowIdx": 9,
+        "rowIdx": 139,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -3630,9 +3792,9 @@
         "inst": 0
       },
       {
-        "id": "10",
+        "id": "140",
         "date": "2026-05-06",
-        "rowIdx": 10,
+        "rowIdx": 140,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3657,9 +3819,9 @@
         "inst": 0
       },
       {
-        "id": "11",
+        "id": "141",
         "date": "2026-05-06",
-        "rowIdx": 11,
+        "rowIdx": 141,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3684,9 +3846,9 @@
         "inst": 3
       },
       {
-        "id": "12",
+        "id": "142",
         "date": "2026-05-06",
-        "rowIdx": 12,
+        "rowIdx": 142,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3711,9 +3873,9 @@
         "inst": 2
       },
       {
-        "id": "13",
+        "id": "143",
         "date": "2026-05-06",
-        "rowIdx": 13,
+        "rowIdx": 143,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3738,9 +3900,9 @@
         "inst": 2
       },
       {
-        "id": "14",
+        "id": "144",
         "date": "2026-05-06",
-        "rowIdx": 14,
+        "rowIdx": 144,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3765,9 +3927,9 @@
         "inst": 2
       },
       {
-        "id": "33",
+        "id": "145",
         "date": "2026-05-06",
-        "rowIdx": 33,
+        "rowIdx": 145,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3792,9 +3954,9 @@
         "inst": 2
       },
       {
-        "id": "3008",
+        "id": "146",
         "date": "2026-05-06",
-        "rowIdx": 3008,
+        "rowIdx": 146,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3819,9 +3981,9 @@
         "inst": 0
       },
       {
-        "id": "3009",
+        "id": "147",
         "date": "2026-05-06",
-        "rowIdx": 3009,
+        "rowIdx": 147,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3846,9 +4008,9 @@
         "inst": 0
       },
       {
-        "id": "3010",
+        "id": "148",
         "date": "2026-05-06",
-        "rowIdx": 3010,
+        "rowIdx": 148,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3873,9 +4035,9 @@
         "inst": 2
       },
       {
-        "id": "3017",
+        "id": "149",
         "date": "2026-05-06",
-        "rowIdx": 3017,
+        "rowIdx": 149,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3900,9 +4062,9 @@
         "inst": 0
       },
       {
-        "id": "3018",
+        "id": "150",
         "date": "2026-05-06",
-        "rowIdx": 3018,
+        "rowIdx": 150,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3927,9 +4089,9 @@
         "inst": 0
       },
       {
-        "id": "3019",
+        "id": "151",
         "date": "2026-05-06",
-        "rowIdx": 3019,
+        "rowIdx": 151,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -3954,9 +4116,9 @@
         "inst": 0
       },
       {
-        "id": "3020",
+        "id": "152",
         "date": "2026-05-06",
-        "rowIdx": 3020,
+        "rowIdx": 152,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4091,9 +4253,9 @@
     ],
     "2026-05-05": [
       {
-        "id": "15",
+        "id": "153",
         "date": "2026-05-05",
-        "rowIdx": 15,
+        "rowIdx": 153,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -4118,9 +4280,9 @@
         "inst": 0
       },
       {
-        "id": "16",
+        "id": "154",
         "date": "2026-05-05",
-        "rowIdx": 16,
+        "rowIdx": 154,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4145,9 +4307,9 @@
         "inst": 0
       },
       {
-        "id": "17",
+        "id": "155",
         "date": "2026-05-05",
-        "rowIdx": 17,
+        "rowIdx": 155,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4172,9 +4334,9 @@
         "inst": 0
       },
       {
-        "id": "18",
+        "id": "156",
         "date": "2026-05-05",
-        "rowIdx": 18,
+        "rowIdx": 156,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4199,9 +4361,9 @@
         "inst": 0
       },
       {
-        "id": "19",
+        "id": "157",
         "date": "2026-05-05",
-        "rowIdx": 19,
+        "rowIdx": 157,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4226,9 +4388,9 @@
         "inst": 0
       },
       {
-        "id": "20",
+        "id": "158",
         "date": "2026-05-05",
-        "rowIdx": 20,
+        "rowIdx": 158,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4253,9 +4415,9 @@
         "inst": 0
       },
       {
-        "id": "21",
+        "id": "159",
         "date": "2026-05-05",
-        "rowIdx": 21,
+        "rowIdx": 159,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4280,9 +4442,9 @@
         "inst": 0
       },
       {
-        "id": "22",
+        "id": "160",
         "date": "2026-05-05",
-        "rowIdx": 22,
+        "rowIdx": 160,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -4307,9 +4469,9 @@
         "inst": 0
       },
       {
-        "id": "23",
+        "id": "161",
         "date": "2026-05-05",
-        "rowIdx": 23,
+        "rowIdx": 161,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -4334,9 +4496,9 @@
         "inst": 0
       },
       {
-        "id": "24",
+        "id": "162",
         "date": "2026-05-05",
-        "rowIdx": 24,
+        "rowIdx": 162,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4361,9 +4523,9 @@
         "inst": 0
       },
       {
-        "id": "25",
+        "id": "163",
         "date": "2026-05-05",
-        "rowIdx": 25,
+        "rowIdx": 163,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4388,9 +4550,9 @@
         "inst": 0
       },
       {
-        "id": "26",
+        "id": "164",
         "date": "2026-05-05",
-        "rowIdx": 26,
+        "rowIdx": 164,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4415,9 +4577,9 @@
         "inst": 0
       },
       {
-        "id": "27",
+        "id": "165",
         "date": "2026-05-05",
-        "rowIdx": 27,
+        "rowIdx": 165,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4442,9 +4604,9 @@
         "inst": 0
       },
       {
-        "id": "28",
+        "id": "166",
         "date": "2026-05-05",
-        "rowIdx": 28,
+        "rowIdx": 166,
         "status": "Pending",
         "isActual": false,
         "isSimulator": true,
@@ -4469,9 +4631,9 @@
         "inst": 0
       },
       {
-        "id": "29",
+        "id": "167",
         "date": "2026-05-05",
-        "rowIdx": 29,
+        "rowIdx": 167,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4496,9 +4658,9 @@
         "inst": 1
       },
       {
-        "id": "31",
+        "id": "168",
         "date": "2026-05-05",
-        "rowIdx": 31,
+        "rowIdx": 168,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4523,9 +4685,9 @@
         "inst": 0
       },
       {
-        "id": "32",
+        "id": "169",
         "date": "2026-05-05",
-        "rowIdx": 32,
+        "rowIdx": 169,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4550,9 +4712,9 @@
         "inst": 0
       },
       {
-        "id": "34",
+        "id": "170",
         "date": "2026-05-05",
-        "rowIdx": 34,
+        "rowIdx": 170,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4577,9 +4739,9 @@
         "inst": 0
       },
       {
-        "id": "35",
+        "id": "171",
         "date": "2026-05-05",
-        "rowIdx": 35,
+        "rowIdx": 171,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4604,9 +4766,9 @@
         "inst": 0
       },
       {
-        "id": "36",
+        "id": "172",
         "date": "2026-05-05",
-        "rowIdx": 36,
+        "rowIdx": 172,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4631,9 +4793,9 @@
         "inst": 0
       },
       {
-        "id": "37",
+        "id": "173",
         "date": "2026-05-05",
-        "rowIdx": 37,
+        "rowIdx": 173,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -4658,9 +4820,9 @@
         "inst": 0
       },
       {
-        "id": "38",
+        "id": "174",
         "date": "2026-05-05",
-        "rowIdx": 38,
+        "rowIdx": 174,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4685,9 +4847,9 @@
         "inst": 2
       },
       {
-        "id": "39",
+        "id": "175",
         "date": "2026-05-05",
-        "rowIdx": 39,
+        "rowIdx": 175,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4712,9 +4874,9 @@
         "inst": 3
       },
       {
-        "id": "40",
+        "id": "176",
         "date": "2026-05-05",
-        "rowIdx": 40,
+        "rowIdx": 176,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4739,9 +4901,9 @@
         "inst": 0
       },
       {
-        "id": "41",
+        "id": "177",
         "date": "2026-05-05",
-        "rowIdx": 41,
+        "rowIdx": 177,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4766,9 +4928,9 @@
         "inst": 0
       },
       {
-        "id": "42",
+        "id": "178",
         "date": "2026-05-05",
-        "rowIdx": 42,
+        "rowIdx": 178,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4793,9 +4955,9 @@
         "inst": 0
       },
       {
-        "id": "43",
+        "id": "179",
         "date": "2026-05-05",
-        "rowIdx": 43,
+        "rowIdx": 179,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4820,9 +4982,9 @@
         "inst": 0
       },
       {
-        "id": "44",
+        "id": "180",
         "date": "2026-05-05",
-        "rowIdx": 44,
+        "rowIdx": 180,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4847,9 +5009,9 @@
         "inst": 0
       },
       {
-        "id": "45",
+        "id": "181",
         "date": "2026-05-05",
-        "rowIdx": 45,
+        "rowIdx": 181,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4874,9 +5036,9 @@
         "inst": 0
       },
       {
-        "id": "46",
+        "id": "182",
         "date": "2026-05-05",
-        "rowIdx": 46,
+        "rowIdx": 182,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -4901,9 +5063,9 @@
         "inst": 0
       },
       {
-        "id": "47",
+        "id": "183",
         "date": "2026-05-05",
-        "rowIdx": 47,
+        "rowIdx": 183,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -4928,9 +5090,9 @@
         "inst": 0
       },
       {
-        "id": "63",
+        "id": "184",
         "date": "2026-05-05",
-        "rowIdx": 63,
+        "rowIdx": 184,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5038,36 +5200,9 @@
     ],
     "2026-05-15": [
       {
-        "id": "3119",
+        "id": "2",
         "date": "2026-05-15",
-        "rowIdx": 3119,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": false,
-        "start": "06:30",
-        "end": "11:30",
-        "duration": "05:00",
-        "durationMin": 300,
-        "student": "NANJITRA D.",
-        "instructor": "EKKAPHOP R.",
-        "batch": "AP-126",
-        "lesson": "CSXV 45",
-        "condition": "Solo/Nav",
-        "type": "DA40TDI",
-        "tail": null,
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
-      },
-      {
-        "id": "3129",
-        "date": "2026-05-15",
-        "rowIdx": 3129,
+        "rowIdx": 2,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5092,9 +5227,9 @@
         "inst": 0
       },
       {
-        "id": "3130",
+        "id": "3",
         "date": "2026-05-15",
-        "rowIdx": 3130,
+        "rowIdx": 3,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5119,9 +5254,9 @@
         "inst": 0
       },
       {
-        "id": "3131",
+        "id": "4",
         "date": "2026-05-15",
-        "rowIdx": 3131,
+        "rowIdx": 4,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5144,40 +5279,13 @@
         "ldg": 0,
         "to": 0,
         "inst": 0
-      },
-      {
-        "id": "3132",
-        "date": "2026-05-15",
-        "rowIdx": 3132,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": false,
-        "start": "08:30",
-        "end": "16:00",
-        "duration": "07:30",
-        "durationMin": 450,
-        "student": null,
-        "instructor": "THAWATANAN P.",
-        "batch": "Meeting",
-        "lesson": "MEETING",
-        "condition": "Meeting",
-        "type": null,
-        "tail": null,
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
       }
     ],
     "2026-05-14": [
       {
-        "id": "3124",
+        "id": "5",
         "date": "2026-05-14",
-        "rowIdx": 3124,
+        "rowIdx": 5,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5202,9 +5310,36 @@
         "inst": 0
       },
       {
-        "id": "3128",
+        "id": "6",
         "date": "2026-05-14",
-        "rowIdx": 3128,
+        "rowIdx": 6,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "06:30",
+        "end": "11:30",
+        "duration": "05:00",
+        "durationMin": 300,
+        "student": "NABHADR P.",
+        "instructor": "SANTI SUK.",
+        "batch": "AP-126",
+        "lesson": "CSXV 45",
+        "condition": "Solo/Nav",
+        "type": "DA40TDI",
+        "tail": "HS-TPT",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "7",
+        "date": "2026-05-14",
+        "rowIdx": 7,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5219,7 +5354,7 @@
         "lesson": "CSPXV 44",
         "condition": "Nav",
         "type": "DA40TDI",
-        "tail": null,
+        "tail": "HS-TPR",
         "actualType": null,
         "tkoff": null,
         "ldgTime": null,
@@ -5229,9 +5364,9 @@
         "inst": 0
       },
       {
-        "id": "3138",
+        "id": "8",
         "date": "2026-05-14",
-        "rowIdx": 3138,
+        "rowIdx": 8,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5246,7 +5381,7 @@
         "lesson": "CSPXV 44",
         "condition": "Nav",
         "type": "DA40TDI",
-        "tail": null,
+        "tail": "HS-TPU",
         "actualType": null,
         "tkoff": null,
         "ldgTime": null,
@@ -5256,9 +5391,9 @@
         "inst": 0
       },
       {
-        "id": "3139",
+        "id": "9",
         "date": "2026-05-14",
-        "rowIdx": 3139,
+        "rowIdx": 9,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5273,7 +5408,7 @@
         "lesson": "CSPXI 90",
         "condition": "IR",
         "type": "DA40TDI",
-        "tail": null,
+        "tail": "HS-TPX",
         "actualType": null,
         "tkoff": null,
         "ldgTime": null,
@@ -5283,9 +5418,9 @@
         "inst": 0
       },
       {
-        "id": "3140",
+        "id": "10",
         "date": "2026-05-14",
-        "rowIdx": 3140,
+        "rowIdx": 10,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5300,6 +5435,33 @@
         "lesson": "RCA A",
         "condition": null,
         "type": "DA40TDI",
+        "tail": "HS-TPX",
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "11",
+        "date": "2026-05-14",
+        "rowIdx": 11,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "06:30",
+        "end": "09:30",
+        "duration": "03:00",
+        "durationMin": 180,
+        "student": "SIWAT C.",
+        "instructor": "KOONPHOL U.",
+        "batch": "AP-126",
+        "lesson": "CSPXV 42",
+        "condition": "Nav",
+        "type": "DA40CS",
         "tail": null,
         "actualType": null,
         "tkoff": null,
@@ -5314,8 +5476,8 @@
   "leaves": [
     {
       "duration": "Full Day",
-      "name": "KANTAPONG A.",
       "start": "2026-05-11",
+      "name": "KANTAPONG A.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -5328,15 +5490,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-07-31",
       "name": "WATTIKORN K.",
+      "start": "2026-07-31",
       "reason": "Personal Leave",
       "end": "2026-07-31"
     },
     {
       "duration": "Full Day",
-      "start": "2026-06-02",
       "name": "WATTIKORN K.",
+      "start": "2026-06-02",
       "reason": "Personal Leave",
       "end": "2026-06-02"
     },
@@ -5384,22 +5546,22 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "PICHAKORN J.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-05"
     },
     {
       "duration": "Full Day",
+      "start": "2026-05-05",
       "name": "PREM P.",
-      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-05"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "PORNTREETRA R.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-05"
     },
@@ -5412,8 +5574,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-06-02",
       "name": "WATTIKORN K.",
+      "start": "2026-06-02",
       "reason": "Other",
       "end": "2026-06-02"
     },
@@ -5433,15 +5595,15 @@
     },
     {
       "duration": "Full Day",
-      "name": "PORNTREETRA R.",
       "start": "2026-05-18",
+      "name": "PORNTREETRA R.",
       "reason": "Other",
       "end": "2026-05-18"
     },
     {
       "duration": "Full Day",
-      "name": "PARAMUTT C.",
       "start": "2026-05-18",
+      "name": "PARAMUTT C.",
       "reason": "Other",
       "end": "2026-05-18"
     },
@@ -5461,8 +5623,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "JIRAYU A.",
       "start": "2026-05-14",
+      "name": "JIRAYU A.",
       "reason": "Other",
       "end": "2026-05-14"
     },
@@ -5475,22 +5637,22 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-08",
       "name": "NATPAKALP K.",
+      "start": "2026-05-08",
       "reason": "Other",
       "end": "2026-05-17"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "NATPAKALP K.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-06"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "ANUSORN T.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-06"
     },
@@ -5503,8 +5665,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-04-27",
       "name": "SANTI SUK.",
+      "start": "2026-04-27",
       "reason": "Sick",
       "end": "2026-04-27"
     },
@@ -5517,15 +5679,15 @@
     },
     {
       "duration": "Full Day",
-      "name": "AWIRUT S.",
       "start": "2026-05-25",
+      "name": "AWIRUT S.",
       "reason": "CAAT Exam",
       "end": "2026-05-25"
     },
     {
       "duration": "Full Day",
-      "start": "2026-04-24",
       "name": "SARACH C.",
+      "start": "2026-04-24",
       "reason": "Personal Leave",
       "end": "2026-04-28"
     },
@@ -5538,29 +5700,29 @@
     },
     {
       "duration": "Full Day",
-      "name": "SARACH C.",
       "start": "2026-05-18",
+      "name": "SARACH C.",
       "reason": "CAAT Exam",
       "end": "2026-05-19"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "PAKORN W.",
+      "start": "2026-05-11",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
     {
       "duration": "Full Day",
-      "name": "CHANOL T.",
       "start": "2026-05-27",
+      "name": "CHANOL T.",
       "reason": "CAAT Exam",
       "end": "2026-05-29"
     },
     {
       "duration": "Full Day",
-      "name": "RAKCHON K.",
       "start": "2026-05-07",
+      "name": "RAKCHON K.",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
@@ -5587,8 +5749,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-08",
       "name": "ANUSORN T.",
+      "start": "2026-05-08",
       "reason": "Other",
       "end": "2026-05-15"
     },
@@ -5615,8 +5777,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "EKKASIT B.",
       "start": "2026-05-11",
+      "name": "EKKASIT B.",
       "reason": "Official Duty",
       "end": "2026-05-24"
     },
@@ -5650,8 +5812,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "NATTARAT G.",
       "start": "2026-05-11",
+      "name": "NATTARAT G.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -5664,8 +5826,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-14",
       "name": "JIRAYU A.",
+      "start": "2026-05-14",
       "reason": "Personal Leave",
       "end": "2026-05-14"
     },
@@ -5678,8 +5840,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "PRITASNA M.",
       "start": "2026-05-15",
+      "name": "PRITASNA M.",
       "reason": "Personal Leave",
       "end": "2026-05-15"
     },
@@ -5692,8 +5854,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "PREM P.",
       "start": "2026-05-11",
+      "name": "PREM P.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -5706,8 +5868,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-14",
       "name": "RAKCHON K.",
+      "start": "2026-05-14",
       "reason": "CAAT Exam",
       "end": "2026-05-15"
     },
@@ -5720,15 +5882,15 @@
     },
     {
       "duration": "Full Day",
-      "name": "SOWAN C.",
       "start": "2026-05-22",
+      "name": "SOWAN C.",
       "reason": "Personal Leave",
       "end": "2026-05-22"
     },
     {
       "duration": "Full Day",
-      "name": "SOWAN C.",
       "start": "2026-06-02",
+      "name": "SOWAN C.",
       "reason": "Personal Leave",
       "end": "2026-06-02"
     },
@@ -5741,8 +5903,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "EKKASIT B.",
       "start": "2026-05-11",
+      "name": "EKKASIT B.",
       "reason": "Official Duty",
       "end": "2026-05-25"
     },
@@ -5755,22 +5917,22 @@
     },
     {
       "duration": "Full Day",
-      "name": "KRIDSADA K.",
       "start": "2026-05-11",
+      "name": "KRIDSADA K.",
       "reason": "Official Duty",
       "end": "2026-05-25"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "SIWAKORN P.",
+      "start": "2026-05-11",
       "reason": "Other",
       "end": "2026-05-12"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-25",
       "name": "TAKORN C.",
+      "start": "2026-05-25",
       "reason": "CAAT Exam",
       "end": "2026-05-25"
     },
@@ -5783,8 +5945,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "VASAPHON S.",
+      "start": "2026-05-11",
       "reason": "Personal Leave",
       "end": "2026-05-11"
     },
@@ -5794,6 +5956,27 @@
       "start": "2026-05-15",
       "reason": "Personal Leave",
       "end": "2026-05-15"
+    },
+    {
+      "duration": "Full Day",
+      "name": "PORNTREETRA R.",
+      "start": "2026-05-12",
+      "reason": "Sick Leave",
+      "end": "2026-05-12"
+    },
+    {
+      "duration": "Full Day",
+      "name": "PORNTREETRA R.",
+      "start": "2026-05-16",
+      "reason": "CAAT Exam",
+      "end": "2026-05-18"
+    },
+    {
+      "duration": "Full Day",
+      "start": "2026-05-16",
+      "name": "PARAMUTT C.",
+      "reason": "CAAT Exam",
+      "end": "2026-05-18"
     }
   ],
   "instructors": [
@@ -5886,7 +6069,7 @@
     {
       "acType": "DA40TDI",
       "tail": "HS-TPO",
-      "isMaint": false
+      "isMaint": true
     },
     {
       "acType": "DA40TDI",
@@ -5906,7 +6089,7 @@
     {
       "acType": "DA40TDI",
       "tail": "HS-TPV",
-      "isMaint": false
+      "isMaint": true
     },
     {
       "acType": "DA40TDI",
@@ -5921,7 +6104,7 @@
     {
       "acType": "DA40CS",
       "tail": "HS-TVA",
-      "isMaint": false
+      "isMaint": true
     },
     {
       "acType": "DA40CS",
