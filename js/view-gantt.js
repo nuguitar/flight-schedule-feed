@@ -2,7 +2,7 @@
 const { useMemo: useM_g } = React;
 
 const HOUR_START = 6;
-const HOUR_END   = 21;
+const HOUR_END   = 18;
 const HOUR_SPAN  = HOUR_END - HOUR_START;
 const TRACK_LEFT = 190;
 const TRACK_RIGHT= 180;
@@ -11,6 +11,7 @@ function GanttBoard() {
   const app     = useApp();
   const flights = app.dayFlights;
   const groupBy = app.tweaks.groupBy || 'instructor';
+  const [ctrlH, handleResizeDown] = useResizable(100, 36, 180);
 
   const rows = useM_g(()=>{
     const map = {};
@@ -46,11 +47,15 @@ function GanttBoard() {
       {/* Settings */}
       <InlineSettings gantt={true}/>
 
-      {/* Date + filter */}
-      <div style={{ padding:'6px 20px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
-        <DateStrip/>
-        <FilterBar/>
+      {/* Date + filter — resizable */}
+      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
+        <div style={{ padding:'6px 20px', display:'flex', flexDirection:'column', gap:6 }}>
+          <DateStrip/>
+          <FilterBar/>
+        </div>
       </div>
+
+      <ResizeHandle onMouseDown={handleResizeDown}/>
 
       {/* Timeline */}
       <div style={{ margin:'4px 24px 14px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
@@ -59,7 +64,7 @@ function GanttBoard() {
           <div className="mono uc" style={{ padding:'9px 14px', fontSize:9, color:'var(--ink-3)' }}>
             {groupBy.toUpperCase()} · {rows.length}
           </div>
-          <div style={{ position:'relative', height:34 }}>
+          <div style={{ position:'relative', height:34, overflow:'hidden' }}>
             {Array.from({length:HOUR_SPAN+1}).map((_,i)=>{
               const h=HOUR_START+i;
               return (
@@ -67,6 +72,7 @@ function GanttBoard() {
                   position:'absolute', left:`${(i/HOUR_SPAN)*100}%`, top:0, bottom:0,
                   borderLeft:i===0?'none':'1px solid var(--line-soft)',
                   paddingLeft:5, fontSize:10, color:'var(--ink-3)', display:'flex', alignItems:'center',
+                  whiteSpace:'nowrap',
                 }}>{String(h).padStart(2,'0')}:00</div>
               );
             })}

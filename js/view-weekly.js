@@ -3,6 +3,7 @@ const { useMemo: useM_w } = React;
 
 function WeeklyBoard() {
   const app = useApp();
+  const [ctrlH, handleResizeDown] = useResizable(60, 30, 140);
 
   const weekFlights = useM_w(()=>{
     return FLIGHTS.filter(f=>{
@@ -47,10 +48,14 @@ function WeeklyBoard() {
 
       <InlineSettings/>
 
-      {/* Filter */}
-      <div style={{ padding:'6px 20px', flexShrink:0 }}>
-        <FilterBar/>
+      {/* Filter — resizable */}
+      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
+        <div style={{ padding:'6px 20px' }}>
+          <FilterBar/>
+        </div>
       </div>
+
+      <ResizeHandle onMouseDown={handleResizeDown}/>
 
       {/* Column grid */}
       <div style={{ flex:1, minHeight:0, padding:'0 20px 12px', overflowX:'auto', overflowY:'hidden', display:'flex', flexDirection:'column' }}>

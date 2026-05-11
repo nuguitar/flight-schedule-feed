@@ -344,6 +344,7 @@ function InlineSettings({ gantt=false }) {
     <div style={{
       padding:'4px 24px', borderBottom:'1px solid var(--line-soft)',
       background:'var(--bg-2)', display:'flex', gap:8, alignItems:'center', flexWrap:'wrap',
+      flexShrink:0,
     }}>
       <span className="mono uc" style={{ fontSize:9, color:'var(--ink-3)' }}>THEME</span>
       {['cockpit','light','board'].map(th=>(
@@ -363,6 +364,52 @@ function InlineSettings({ gantt=false }) {
           <Chip key={g} on={tweaks.groupBy===g} onClick={()=>setTweak('groupBy',g)} color="var(--ink-2)">{g}</Chip>
         ))}
       </>}
+    </div>
+  );
+}
+
+// ─── Resizable split ─────────────────────────────────────────────────────
+function useResizable(initial = 120, min = 36, max = 400) {
+  const [ctrlH, setCtrlH] = useState(initial);
+  const drag = useRef(null);
+
+  const onMouseDown = useCallback(e => {
+    drag.current = { startY: e.clientY, startH: ctrlH };
+    e.preventDefault();
+  }, [ctrlH]);
+
+  useEffect(() => {
+    const onMove = e => {
+      if (!drag.current) return;
+      const next = Math.max(min, Math.min(max, drag.current.startH + (e.clientY - drag.current.startY)));
+      setCtrlH(next);
+    };
+    const onUp = () => { drag.current = null; };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  }, [min, max]);
+
+  return [ctrlH, onMouseDown];
+}
+
+function ResizeHandle({ onMouseDown }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onMouseDown={onMouseDown}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        height: 6, flexShrink: 0, cursor: 'ns-resize', userSelect: 'none',
+        background: hov ? 'color-mix(in oklch,var(--col-pending) 28%,var(--line))' : 'var(--line)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'background .1s',
+      }}>
+      <span style={{
+        width: 28, height: 2, borderRadius: 1,
+        background: hov ? 'var(--col-pending)' : 'var(--ink-3)',
+        transition: 'background .1s',
+      }}/>
     </div>
   );
 }
@@ -432,5 +479,6 @@ Object.assign(window, {
   fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
   FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar,
   DateStrip, FilterBar, InlineSettings, Drawer,
+  useResizable, ResizeHandle,
 });
 

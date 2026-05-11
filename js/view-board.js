@@ -29,6 +29,7 @@ function OpsBoard() {
   const flights = app.dayFlights;
   const [sortCol, setSortCol] = useS_b('start');
   const [sortDir, setSortDir] = useS_b('asc');
+  const [ctrlH, handleResizeDown] = useResizable(170, 50, 280);
 
   const handleSort = col => {
     if (sortCol === col) {
@@ -73,26 +74,28 @@ function OpsBoard() {
       {/* Settings */}
       <InlineSettings/>
 
-      {/* Date hero + stats — compact */}
-      <div style={{ padding:'8px 20px 6px', display:'flex', gap:10, alignItems:'center', flexShrink:0 }}>
-        <div style={{ display:'flex', alignItems:'baseline', gap:8, marginRight:6 }}>
-          <div className="num" style={{ fontSize:38, fontWeight:700, lineHeight:1, letterSpacing:'-0.02em' }}>{String(day).padStart(2,'0')}</div>
-          <div className="mono uc" style={{ fontSize:11, color:'var(--ink-2)' }}>{mo} · {wd}</div>
+      {/* Date hero + stats + filter — resizable */}
+      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
+        <div style={{ padding:'8px 20px 6px', display:'flex', gap:10, alignItems:'center' }}>
+          <div style={{ display:'flex', alignItems:'baseline', gap:8, marginRight:6 }}>
+            <div className="num" style={{ fontSize:38, fontWeight:700, lineHeight:1, letterSpacing:'-0.02em' }}>{String(day).padStart(2,'0')}</div>
+            <div className="mono uc" style={{ fontSize:11, color:'var(--ink-2)' }}>{mo} · {wd}</div>
+          </div>
+          <StatHero label="TOTAL"     value={stats.total}     color="var(--col-pending)"/>
+          <StatHero label="PENDING"   value={stats.Pending}   color="var(--col-pending)"/>
+          <StatHero label="COMPLETED" value={stats.Completed} color="var(--col-done)"/>
+          <StatHero label="CANCELED"  value={stats.Canceled}  color="var(--col-cancel)"/>
+          <StatHero label="AP-127"    value={stats.ap127}     color="var(--highlight)"/>
+          <StatHero label="STANDBY"   value={stats.standby}   color="var(--col-stby)"/>
+          <StatHero label="SIM"       value={stats.sim}       color="var(--col-sim)"/>
         </div>
-        <StatHero label="TOTAL"     value={stats.total}     color="var(--col-pending)"/>
-        <StatHero label="PENDING"   value={stats.Pending}   color="var(--col-pending)"/>
-        <StatHero label="COMPLETED" value={stats.Completed} color="var(--col-done)"/>
-        <StatHero label="CANCELED"  value={stats.Canceled}  color="var(--col-cancel)"/>
-        <StatHero label="AP-127"    value={stats.ap127}     color="var(--highlight)"/>
-        <StatHero label="STANDBY"   value={stats.standby}   color="var(--col-stby)"/>
-        <StatHero label="SIM"       value={stats.sim}       color="var(--col-sim)"/>
+        <div style={{ padding:'0 20px 6px', display:'flex', flexDirection:'column', gap:6 }}>
+          <DateStrip/>
+          <FilterBar/>
+        </div>
       </div>
 
-      {/* Date + filter */}
-      <div style={{ padding:'0 20px 6px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
-        <DateStrip/>
-        <FilterBar/>
-      </div>
+      <ResizeHandle onMouseDown={handleResizeDown}/>
 
       {/* Table */}
       <div style={{ margin:'0 24px 16px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
