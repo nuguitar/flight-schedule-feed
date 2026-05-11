@@ -1,0 +1,175 @@
+// Live Ops Board — departure-board style table
+const { useMemo: useM_b, useState: useS_b } = React;
+
+const SORT_KEYS = {
+  start:      f => minutesOf(f.start) ?? 9999,
+  end:        f => minutesOf(f.end)   ?? 9999,
+  dur:        f => f.durMin ?? 0,
+  batch:      f => f.batch ?? '',
+  student:    f => f.student ?? '',
+  instructor: f => f.instructor ?? '',
+  type:       f => f.type ?? '',
+  tail:       f => f.tail ?? '',
+  lesson:     f => f.lesson ?? '',
+  status:     f => f.status ?? '',
+};
+
+function StatHero({ label, value, color }) {
+  return (
+    <div style={{ flex:1, padding:'6px 10px', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:5, position:'relative', overflow:'hidden', minWidth:72 }}>
+      <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:color }}/>
+      <div className="mono uc" style={{ fontSize:8, color:'var(--ink-3)' }}>{label}</div>
+      <div className="num" style={{ fontSize:22, fontWeight:600, lineHeight:1.1, marginTop:1, color:'var(--ink)' }}>{String(value).padStart(2,'0')}</div>
+    </div>
+  );
+}
+
+function OpsBoard() {
+  const app = useApp();
+  const flights = app.dayFlights;
+  const [sortCol, setSortCol] = useS_b('start');
+  const [sortDir, setSortDir] = useS_b('asc');
+
+  const handleSort = col => {
+    if (sortCol === col) {
+      if (sortDir === 'asc') setSortDir('desc');
+      else { setSortCol('start'); setSortDir('asc'); }
+    } else { setSortCol(col); setSortDir('asc'); }
+  };
+
+  const sorted = useM_b(() => {
+    const arr = [...flights];
+    const fn = SORT_KEYS[sortCol] || (f => minutesOf(f.start) ?? 0);
+    arr.sort((a, b) => {
+      const va = fn(a), vb = fn(b);
+      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb));
+      return sortDir === 'asc' ? cmp : -cmp;
+    });
+    return arr;
+  }, [flights, sortCol, sortDir]);
+
+  const stats = useM_b(()=>{
+    const s={Pending:0,Completed:0,Canceled:0,total:flights.length,sim:0,ap127:0,standby:0};
+    flights.forEach(f=>{ s[f.status]=(s[f.status]||0)+1; if(f.isSim)s.sim++; if(f.batch===HIGHLIGHT_BATCH)s.ap127++; if(f.isStandby)s.standby++; });
+    return s;
+  },[flights]);
+
+  const { wd, mo, day, y } = fmtDay(app.date);
+
+  return (
+    <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
+      <ThemeStyle/>
+      {/* Top bar */}
+      <div style={{ height:38, padding:'0 20px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:20, flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 8px var(--col-done)', animation:'pulse 2s ease-in-out infinite' }}/>
+          <div className="mono uc" style={{ fontSize:11, fontWeight:600 }}>OPS // LIVE BOARD</div>
+        </div>
+        <div className="mono" style={{ fontSize:10, color:'var(--ink-3)' }}>FEED · {window.FLIGHT_DATA.fetchedAt}</div>
+        <div style={{flex:1}}/>
+        <div className="mono uc" style={{ fontSize:10, color:'var(--ink-3)' }}>{window.FLIGHT_DATA.tz}</div>
+      </div>
+
+      {/* Settings */}
+      <InlineSettings/>
+
+      {/* Date hero + stats — compact */}
+      <div style={{ padding:'8px 20px 6px', display:'flex', gap:10, alignItems:'center', flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'baseline', gap:8, marginRight:6 }}>
+          <div className="num" style={{ fontSize:38, fontWeight:700, lineHeight:1, letterSpacing:'-0.02em' }}>{String(day).padStart(2,'0')}</div>
+          <div className="mono uc" style={{ fontSize:11, color:'var(--ink-2)' }}>{mo} · {wd}</div>
+        </div>
+        <StatHero label="TOTAL"     value={stats.total}     color="var(--col-pending)"/>
+        <StatHero label="PENDING"   value={stats.Pending}   color="var(--col-pending)"/>
+        <StatHero label="COMPLETED" value={stats.Completed} color="var(--col-done)"/>
+        <StatHero label="CANCELED"  value={stats.Canceled}  color="var(--col-cancel)"/>
+        <StatHero label="AP-127"    value={stats.ap127}     color="var(--highlight)"/>
+        <StatHero label="STANDBY"   value={stats.standby}   color="var(--col-stby)"/>
+        <StatHero label="SIM"       value={stats.sim}       color="var(--col-sim)"/>
+      </div>
+
+      {/* Date + filter */}
+      <div style={{ padding:'0 20px 6px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
+        <DateStrip/>
+        <FilterBar/>
+      </div>
+
+      {/* Table */}
+      <div style={{ margin:'0 24px 16px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
+        {/* Scrollable area — both axes; header is sticky inside */}
+        <div style={{ flex:1, minHeight:0, overflow:'auto' }}>
+          {/* Sticky header */}
+          <div className="mono uc" style={{
+            display:'grid', gridTemplateColumns:'110px 90px 1.3fr 1.3fr 100px 68px 52px 68px 76px 105px',
+            minWidth:900,
+            gap:10, padding:'7px 16px', fontSize:9, color:'var(--ink-3)',
+            borderBottom:'1px solid var(--line)', background:'var(--bg-2)',
+            position:'sticky', top:0, zIndex:1,
+          }}>
+            {[['status','STATUS'],['batch','BATCH'],['student','STUDENT'],['instructor','INSTRUCTOR'],['lesson','LESSON'],['start','START'],['dur','DUR'],['end','END'],['type','A/C'],['tail','TAIL']].map(([k,label])=>(
+              <span key={k} onClick={()=>handleSort(k)} style={{ cursor:'pointer', userSelect:'none', display:'flex', alignItems:'center', gap:3,
+                color: sortCol===k ? 'var(--col-pending)' : 'var(--ink-3)',
+              }}>
+                {label}
+                {sortCol===k && <span style={{fontSize:8}}>{sortDir==='asc'?'▲':'▼'}</span>}
+              </span>
+            ))}
+          </div>
+          {sorted.length===0 && (
+            <div className="mono uc" style={{ padding:40, textAlign:'center', color:'var(--ink-3)', fontSize:10 }}>No flights match current filters.</div>
+          )}
+          {sorted.map((f,i)=>{
+            const color = STATUS_COLOR(f);
+            const alpha = flightAlpha(f, app.highlightAP127);
+            const dim   = f.status==='Canceled';
+            return (
+              <div key={f.id+i} onClick={()=>app.setDrawer(f.id)}
+                style={{
+                  position:'relative',
+                  display:'grid', gridTemplateColumns:'110px 90px 1.3fr 1.3fr 100px 68px 52px 68px 76px 105px',
+                  minWidth:900,
+                  gap:10, padding:'7px 16px', alignItems:'center',
+                  borderBottom:'1px solid var(--line-soft)',
+                  background: i%2?'transparent':'color-mix(in oklch,var(--ink) 1.5%,transparent)',
+                  borderLeft:`3px solid ${color}`,
+                  cursor:'pointer', opacity:dim?alpha*0.5:alpha,
+                  transition:'opacity .15s, background .12s',
+                }}
+                onMouseEnter={e=>e.currentTarget.style.background='color-mix(in oklch,var(--ink) 5%,transparent)'}
+                onMouseLeave={e=>e.currentTarget.style.background=i%2?'transparent':'color-mix(in oklch,var(--ink) 1.5%,transparent)'}>
+                <span style={{ display:'flex', gap:4, alignItems:'center', flexWrap:'wrap' }}>
+                  <StatusPill status={f.status}/>
+                  {f.isStandby&&<StandbyTag/>}
+                  {f.isSim&&<Tag color="var(--col-sim)" mono>SIM</Tag>}
+                </span>
+                <span className="mono uc"  style={{ fontSize:10, color:f.batch===HIGHLIGHT_BATCH?'var(--highlight)':'var(--ink-2)', fontWeight:f.batch===HIGHLIGHT_BATCH?600:500 }}>{f.batch}</span>
+                <span style={{ fontSize:12, minWidth:0, overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.student||'—'}</span>
+                <span style={{ fontSize:12, color:'var(--ink-2)', minWidth:0, overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.instructor||'—'}</span>
+                <span className="mono" style={{ fontSize:11, color:'var(--ink-2)', minWidth:0, overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.lesson}</span>
+                <span className="mono num" style={{ fontSize:13,fontWeight:600 }}>{f.start}</span>
+                <span className="mono num" style={{ fontSize:11,color:'var(--ink-3)' }}>{f.duration||''}</span>
+                <span className="mono num" style={{ fontSize:12,color:'var(--ink-2)' }}>{f.end}</span>
+                <span className="mono" style={{ fontSize:11, color:'var(--ink-2)' }}>{f.type}</span>
+                <span className="mono" style={{ fontSize:11, padding:'2px 5px', borderRadius:3, background:'var(--bg-2)', border:'1px solid var(--line)', display:'inline-block', textAlign:'center', width:'fit-content' }}>{f.tail||'TBD'}</span>
+              </div>
+            );
+          })}
+        </div>
+        {/* Footer legend */}
+        <div className="mono uc" style={{ padding:'7px 16px', fontSize:9, color:'var(--ink-3)', borderTop:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', gap:16, alignItems:'center', flexShrink:0 }}>
+          <span>{sorted.length} ROWS · CLICK ROW FOR DETAILS</span>
+          <span style={{flex:1}}/>
+          {[['PENDING','var(--col-pending)'],['COMPLETED','var(--col-done)'],['CANCELED','var(--col-cancel)'],['SIM','var(--col-sim)'],['STANDBY','var(--col-stby)']].map(([l,c])=>(
+            <span key={l} style={{ display:'flex',gap:5,alignItems:'center' }}>
+              <span style={{ width:8,height:8,borderRadius:2,background:c }}/>
+              {l}
+            </span>
+          ))}
+        </div>
+      </div>
+      <Drawer/>
+    </ArtboardShell>
+  );
+}
+
+window.OpsBoard = OpsBoard;
