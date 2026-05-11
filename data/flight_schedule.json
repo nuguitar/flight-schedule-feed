@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-11T00:02:07Z",
+  "fetched_at": "2026-05-11T03:03:24Z",
   "timezone": "Asia/Bangkok",
   "schedules": {
     "2026-05-12": [
@@ -92,33 +92,6 @@
         "isActual": false,
         "isSimulator": false,
         "isStandby": false,
-        "start": "10:35",
-        "end": "13:35",
-        "duration": "03:00",
-        "durationMin": 180,
-        "student": "PONGSAKORN A.",
-        "instructor": "EKKAPHOP R.",
-        "batch": "AP-126",
-        "lesson": "CSPXV 40",
-        "condition": "Nav",
-        "type": "DA40TDI",
-        "tail": "HS-TPT",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
-      },
-      {
-        "id": "3109",
-        "date": "2026-05-12",
-        "rowIdx": 3109,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": false,
         "start": "06:30",
         "end": "09:30",
         "duration": "03:00",
@@ -139,9 +112,9 @@
         "inst": 0
       },
       {
-        "id": "3110",
+        "id": "3109",
         "date": "2026-05-12",
-        "rowIdx": 3110,
+        "rowIdx": 3109,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -166,9 +139,9 @@
         "inst": 0
       },
       {
-        "id": "3111",
+        "id": "3110",
         "date": "2026-05-12",
-        "rowIdx": 3111,
+        "rowIdx": 3110,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -193,9 +166,9 @@
         "inst": 0
       },
       {
-        "id": "3112",
+        "id": "3111",
         "date": "2026-05-12",
-        "rowIdx": 3112,
+        "rowIdx": 3111,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -220,9 +193,9 @@
         "inst": 0
       },
       {
-        "id": "3113",
+        "id": "3112",
         "date": "2026-05-12",
-        "rowIdx": 3113,
+        "rowIdx": 3112,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -247,9 +220,9 @@
         "inst": 0
       },
       {
-        "id": "3114",
+        "id": "3113",
         "date": "2026-05-12",
-        "rowIdx": 3114,
+        "rowIdx": 3113,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -274,36 +247,9 @@
         "inst": 0
       },
       {
-        "id": "3115",
+        "id": "3114",
         "date": "2026-05-12",
-        "rowIdx": 3115,
-        "status": "Pending",
-        "isActual": false,
-        "isSimulator": false,
-        "isStandby": false,
-        "start": "10:45",
-        "end": "13:45",
-        "duration": "03:00",
-        "durationMin": 180,
-        "student": "THANACHOTE A.",
-        "instructor": "ITTIPOL P.",
-        "batch": "AP-126",
-        "lesson": "CSPXV 43",
-        "condition": "Nav",
-        "type": "DA40TDI",
-        "tail": "HS-TPX",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
-      },
-      {
-        "id": "3116",
-        "date": "2026-05-12",
-        "rowIdx": 3116,
+        "rowIdx": 3114,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -328,9 +274,9 @@
         "inst": 0
       },
       {
-        "id": "3117",
+        "id": "3115",
         "date": "2026-05-12",
-        "rowIdx": 3117,
+        "rowIdx": 3115,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -355,9 +301,9 @@
         "inst": 0
       },
       {
-        "id": "3118",
+        "id": "3116",
         "date": "2026-05-12",
-        "rowIdx": 3118,
+        "rowIdx": 3116,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -382,9 +328,9 @@
         "inst": 0
       },
       {
-        "id": "3119",
+        "id": "3117",
         "date": "2026-05-12",
-        "rowIdx": 3119,
+        "rowIdx": 3117,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -409,9 +355,9 @@
         "inst": 0
       },
       {
-        "id": "3120",
+        "id": "3118",
         "date": "2026-05-12",
-        "rowIdx": 3120,
+        "rowIdx": 3118,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -436,9 +382,9 @@
         "inst": 0
       },
       {
-        "id": "3121",
+        "id": "3119",
         "date": "2026-05-12",
-        "rowIdx": 3121,
+        "rowIdx": 3119,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -463,9 +409,9 @@
         "inst": 0
       },
       {
-        "id": "3122",
+        "id": "3120",
         "date": "2026-05-12",
-        "rowIdx": 3122,
+        "rowIdx": 3120,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -490,9 +436,9 @@
         "inst": 0
       },
       {
-        "id": "3125",
+        "id": "3123",
         "date": "2026-05-12",
-        "rowIdx": 3125,
+        "rowIdx": 3123,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -517,9 +463,9 @@
         "inst": 0
       },
       {
-        "id": "3126",
+        "id": "3124",
         "date": "2026-05-12",
-        "rowIdx": 3126,
+        "rowIdx": 3124,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -544,9 +490,9 @@
         "inst": 0
       },
       {
-        "id": "3128",
+        "id": "3126",
         "date": "2026-05-12",
-        "rowIdx": 3128,
+        "rowIdx": 3126,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -571,23 +517,50 @@
         "inst": 0
       },
       {
-        "id": "3129",
+        "id": "3130",
         "date": "2026-05-12",
-        "rowIdx": 3129,
+        "rowIdx": 3130,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
-        "isStandby": true,
+        "isStandby": false,
         "start": "10:00",
-        "end": "13:00",
-        "duration": "03:00",
-        "durationMin": 180,
-        "student": "PORNTREETRA R.",
-        "instructor": "SANTI PO.",
-        "batch": "AP-126",
-        "lesson": "CSPXV 43",
-        "condition": "Nav",
-        "type": "DA40TDI",
+        "end": "16:00",
+        "duration": "06:00",
+        "durationMin": 360,
+        "student": "",
+        "instructor": "ITTIPOL P.",
+        "batch": "AP-124",
+        "lesson": "MEETING",
+        "condition": "Meeting",
+        "type": null,
+        "tail": null,
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
+      },
+      {
+        "id": "3131",
+        "date": "2026-05-12",
+        "rowIdx": 3131,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "10:00",
+        "end": "16:00",
+        "duration": "06:00",
+        "durationMin": 360,
+        "student": null,
+        "instructor": "EKKAPHOP R.",
+        "batch": "Meeting",
+        "lesson": "MEETING",
+        "condition": "Meeting",
+        "type": null,
         "tail": null,
         "actualType": null,
         "tkoff": null,
@@ -603,8 +576,8 @@
         "id": "3066",
         "date": "2026-05-11",
         "rowIdx": 3066,
-        "status": "Pending",
-        "isActual": false,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
         "start": "08:30",
@@ -618,12 +591,12 @@
         "condition": null,
         "type": "R44",
         "tail": "HS-TZU",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "Solo",
+        "tkoff": "08:35",
+        "ldgTime": "09:25",
+        "airborne": "00:50",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
@@ -846,8 +819,8 @@
         "id": "3075",
         "date": "2026-05-11",
         "rowIdx": 3075,
-        "status": "Pending",
-        "isActual": false,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
         "start": "06:30",
@@ -861,13 +834,13 @@
         "condition": "IR",
         "type": "DA40CS",
         "tail": "HS-TVA",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
-        "inst": 0
+        "actualType": "SPIC",
+        "tkoff": "06:40",
+        "ldgTime": "09:25",
+        "airborne": "02:45",
+        "ldg": 2,
+        "to": 2,
+        "inst": 1
       },
       {
         "id": "3076",
@@ -1116,27 +1089,27 @@
         "id": "3085",
         "date": "2026-05-11",
         "rowIdx": 3085,
-        "status": "Pending",
-        "isActual": false,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "08:00",
-        "end": "11:00",
-        "duration": "03:00",
-        "durationMin": 180,
+        "start": "08:02",
+        "end": "09:19",
+        "duration": "01:17",
+        "durationMin": 77,
         "student": "PATCHARANAN D.",
         "instructor": "CHAROENCHAI U.",
         "batch": "AP-126",
-        "lesson": "CSPXV 41",
+        "lesson": "CSPXV 41/1",
         "condition": "Nav",
         "type": "DA40TDI",
         "tail": "HS-TPW",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "SPIC",
+        "tkoff": "08:09",
+        "ldgTime": "09:12",
+        "airborne": "01:03",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
@@ -1653,9 +1626,9 @@
         "inst": 0
       },
       {
-        "id": "3127",
+        "id": "3125",
         "date": "2026-05-11",
-        "rowIdx": 3127,
+        "rowIdx": 3125,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1680,9 +1653,9 @@
         "inst": 0
       },
       {
-        "id": "3130",
+        "id": "3127",
         "date": "2026-05-11",
-        "rowIdx": 3130,
+        "rowIdx": 3127,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -1707,9 +1680,9 @@
         "inst": 0
       },
       {
-        "id": "3131",
+        "id": "3128",
         "date": "2026-05-11",
-        "rowIdx": 3131,
+        "rowIdx": 3128,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -2333,8 +2306,8 @@
         "id": "3058",
         "date": "2026-05-08",
         "rowIdx": 3058,
-        "status": "Pending",
-        "isActual": false,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
         "start": "11:00",
@@ -2348,12 +2321,12 @@
         "condition": null,
         "type": "DA40TDI",
         "tail": "HS-TPX",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "Dual",
+        "tkoff": "11:10",
+        "ldgTime": "11:55",
+        "airborne": "00:45",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
@@ -4822,9 +4795,9 @@
     ],
     "2026-05-15": [
       {
-        "id": "3124",
+        "id": "3122",
         "date": "2026-05-15",
-        "rowIdx": 3124,
+        "rowIdx": 3122,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4851,9 +4824,9 @@
     ],
     "2026-05-14": [
       {
-        "id": "3123",
+        "id": "3121",
         "date": "2026-05-14",
-        "rowIdx": 3123,
+        "rowIdx": 3121,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -4876,14 +4849,41 @@
         "ldg": 0,
         "to": 0,
         "inst": 0
+      },
+      {
+        "id": "3129",
+        "date": "2026-05-14",
+        "rowIdx": 3129,
+        "status": "Pending",
+        "isActual": false,
+        "isSimulator": false,
+        "isStandby": false,
+        "start": "06:30",
+        "end": "11:30",
+        "duration": "05:00",
+        "durationMin": 300,
+        "student": "NABHADR P.",
+        "instructor": "SANTI SUK.",
+        "batch": "AP-126",
+        "lesson": "CSXV 45",
+        "condition": "Solo/Nav",
+        "type": "DA40TDI",
+        "tail": null,
+        "actualType": null,
+        "tkoff": null,
+        "ldgTime": null,
+        "airborne": null,
+        "ldg": 0,
+        "to": 0,
+        "inst": 0
       }
     ]
   },
   "leaves": [
     {
       "duration": "Full Day",
-      "name": "KANTAPONG A.",
       "start": "2026-05-11",
+      "name": "KANTAPONG A.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -4896,8 +4896,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "WATTIKORN K.",
       "start": "2026-07-31",
+      "name": "WATTIKORN K.",
       "reason": "Personal Leave",
       "end": "2026-07-31"
     },
@@ -4959,8 +4959,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "PREM P.",
       "start": "2026-05-05",
+      "name": "PREM P.",
       "reason": "Other",
       "end": "2026-05-05"
     },
@@ -4973,22 +4973,22 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "PRITASNA M.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-05"
     },
     {
       "duration": "Full Day",
-      "start": "2026-06-02",
       "name": "WATTIKORN K.",
+      "start": "2026-06-02",
       "reason": "Other",
       "end": "2026-06-02"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-25",
       "name": "GRAVITAT C.",
+      "start": "2026-05-25",
       "reason": "Other",
       "end": "2026-05-25"
     },
@@ -5015,15 +5015,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "PRITASNA M.",
+      "start": "2026-05-11",
       "reason": "Other",
       "end": "2026-05-11"
     },
     {
       "duration": "Full Day",
-      "name": "NUTTAWAT R.",
       "start": "2026-05-15",
+      "name": "NUTTAWAT R.",
       "reason": "Other",
       "end": "2026-05-15"
     },
@@ -5043,22 +5043,22 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-08",
       "name": "NATPAKALP K.",
+      "start": "2026-05-08",
       "reason": "Other",
       "end": "2026-05-17"
     },
     {
       "duration": "Full Day",
-      "name": "NATPAKALP K.",
       "start": "2026-05-05",
+      "name": "NATPAKALP K.",
       "reason": "Other",
       "end": "2026-05-06"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "ANUSORN T.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-06"
     },
@@ -5078,15 +5078,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-18",
       "name": "NABHADR P.",
+      "start": "2026-05-18",
       "reason": "CAAT Exam",
       "end": "2026-05-18"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-25",
       "name": "AWIRUT S.",
+      "start": "2026-05-25",
       "reason": "CAAT Exam",
       "end": "2026-05-25"
     },
@@ -5099,8 +5099,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-04-30",
       "name": "SARACH C.",
+      "start": "2026-04-30",
       "reason": "Personal Leave",
       "end": "2026-05-06"
     },
@@ -5127,8 +5127,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-07",
       "name": "RAKCHON K.",
+      "start": "2026-05-07",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
@@ -5162,15 +5162,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-18",
       "name": "SUPAWAN A.",
+      "start": "2026-05-18",
       "reason": "Personal Leave",
       "end": "2026-05-19"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-08",
       "name": "VASAPHON S.",
+      "start": "2026-05-08",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
@@ -5211,15 +5211,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "NAPON R.",
+      "start": "2026-05-05",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
     {
       "duration": "Full Day",
-      "name": "NATTARAT G.",
       "start": "2026-05-11",
+      "name": "NATTARAT G.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -5239,29 +5239,29 @@
     },
     {
       "duration": "Full Day",
-      "name": "PRITASNA M.",
       "start": "2026-05-11",
+      "name": "PRITASNA M.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
     {
       "duration": "Full Day",
-      "name": "PRITASNA M.",
       "start": "2026-05-15",
+      "name": "PRITASNA M.",
       "reason": "Personal Leave",
       "end": "2026-05-15"
     },
     {
       "duration": "Full Day",
-      "name": "PRITASNA M.",
       "start": "2026-05-22",
+      "name": "PRITASNA M.",
       "reason": "CAAT Exam",
       "end": "2026-05-22"
     },
     {
       "duration": "Full Day",
-      "name": "PREM P.",
       "start": "2026-05-11",
+      "name": "PREM P.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -5302,8 +5302,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "SIWAKORN P.",
       "start": "2026-05-18",
+      "name": "SIWAKORN P.",
       "reason": "Personal Leave",
       "end": "2026-05-18"
     },
@@ -5330,8 +5330,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "SIWAKORN P.",
+      "start": "2026-05-11",
       "reason": "Other",
       "end": "2026-05-12"
     },
@@ -5351,8 +5351,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "VASAPHON S.",
       "start": "2026-05-11",
+      "name": "VASAPHON S.",
       "reason": "Personal Leave",
       "end": "2026-05-11"
     }
