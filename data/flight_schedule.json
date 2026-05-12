@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-12T10:06:17Z",
+  "fetched_at": "2026-05-12T12:28:18Z",
   "timezone": "Asia/Bangkok",
   "schedules": {
     "2026-05-12": [
@@ -88,14 +88,14 @@
         "id": "3108",
         "date": "2026-05-12",
         "rowIdx": 3108,
-        "status": "Pending",
-        "isActual": false,
+        "status": "Completed",
+        "isActual": true,
         "isSimulator": false,
         "isStandby": false,
-        "start": "06:30",
-        "end": "09:30",
-        "duration": "03:00",
-        "durationMin": 180,
+        "start": "06:40",
+        "end": "07:20",
+        "duration": "00:40",
+        "durationMin": 40,
         "student": "POONYAPAT W.",
         "instructor": "ITTIPOL P.",
         "batch": "AP-124",
@@ -103,12 +103,12 @@
         "condition": "IR",
         "type": "DA40TDI",
         "tail": "HS-TPX",
-        "actualType": null,
-        "tkoff": null,
-        "ldgTime": null,
-        "airborne": null,
-        "ldg": 0,
-        "to": 0,
+        "actualType": "SPIC",
+        "tkoff": "06:53",
+        "ldgTime": "07:15",
+        "airborne": "00:22",
+        "ldg": 1,
+        "to": 1,
         "inst": 0
       },
       {
@@ -706,9 +706,9 @@
         "inst": 0
       },
       {
-        "id": "3148",
+        "id": "3131",
         "date": "2026-05-12",
-        "rowIdx": 3148,
+        "rowIdx": 3131,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -733,9 +733,9 @@
         "inst": 0
       },
       {
-        "id": "3149",
+        "id": "3132",
         "date": "2026-05-12",
-        "rowIdx": 3149,
+        "rowIdx": 3132,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -760,9 +760,9 @@
         "inst": 0
       },
       {
-        "id": "3150",
+        "id": "3133",
         "date": "2026-05-12",
-        "rowIdx": 3150,
+        "rowIdx": 3133,
         "status": "Completed",
         "isActual": true,
         "isSimulator": false,
@@ -787,9 +787,9 @@
         "inst": 0
       },
       {
-        "id": "3151",
+        "id": "3134",
         "date": "2026-05-12",
-        "rowIdx": 3151,
+        "rowIdx": 3134,
         "status": "Canceled",
         "isActual": false,
         "isSimulator": false,
@@ -814,9 +814,9 @@
         "inst": 0
       },
       {
-        "id": "3157",
+        "id": "3135",
         "date": "2026-05-12",
-        "rowIdx": 3157,
+        "rowIdx": 3135,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -3115,9 +3115,9 @@
     ],
     "2026-05-19": [
       {
-        "id": "3166",
+        "id": "3163",
         "date": "2026-05-19",
-        "rowIdx": 3166,
+        "rowIdx": 3163,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5418,9 +5418,9 @@
     ],
     "2026-05-15": [
       {
-        "id": "3141",
+        "id": "3157",
         "date": "2026-05-15",
-        "rowIdx": 3141,
+        "rowIdx": 3157,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5445,9 +5445,9 @@
         "inst": 0
       },
       {
-        "id": "3142",
+        "id": "3158",
         "date": "2026-05-15",
-        "rowIdx": 3142,
+        "rowIdx": 3158,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5472,9 +5472,9 @@
         "inst": 0
       },
       {
-        "id": "3143",
+        "id": "3159",
         "date": "2026-05-15",
-        "rowIdx": 3143,
+        "rowIdx": 3159,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5499,9 +5499,9 @@
         "inst": 0
       },
       {
-        "id": "3144",
+        "id": "3160",
         "date": "2026-05-15",
-        "rowIdx": 3144,
+        "rowIdx": 3160,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5526,9 +5526,9 @@
         "inst": 0
       },
       {
-        "id": "3145",
+        "id": "3161",
         "date": "2026-05-15",
-        "rowIdx": 3145,
+        "rowIdx": 3161,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5553,9 +5553,9 @@
         "inst": 0
       },
       {
-        "id": "3146",
+        "id": "3162",
         "date": "2026-05-15",
-        "rowIdx": 3146,
+        "rowIdx": 3162,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5582,9 +5582,9 @@
     ],
     "2026-05-14": [
       {
-        "id": "3131",
+        "id": "3136",
         "date": "2026-05-14",
-        "rowIdx": 3131,
+        "rowIdx": 3136,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5609,9 +5609,9 @@
         "inst": 0
       },
       {
-        "id": "3133",
+        "id": "3137",
         "date": "2026-05-14",
-        "rowIdx": 3133,
+        "rowIdx": 3137,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5636,9 +5636,9 @@
         "inst": 0
       },
       {
-        "id": "3134",
+        "id": "3138",
         "date": "2026-05-14",
-        "rowIdx": 3134,
+        "rowIdx": 3138,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5663,9 +5663,9 @@
         "inst": 0
       },
       {
-        "id": "3135",
+        "id": "3139",
         "date": "2026-05-14",
-        "rowIdx": 3135,
+        "rowIdx": 3139,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5690,9 +5690,9 @@
         "inst": 0
       },
       {
-        "id": "3136",
+        "id": "3140",
         "date": "2026-05-14",
-        "rowIdx": 3136,
+        "rowIdx": 3140,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5717,9 +5717,9 @@
         "inst": 0
       },
       {
-        "id": "3137",
+        "id": "3141",
         "date": "2026-05-14",
-        "rowIdx": 3137,
+        "rowIdx": 3141,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5744,9 +5744,9 @@
         "inst": 0
       },
       {
-        "id": "3138",
+        "id": "3142",
         "date": "2026-05-14",
-        "rowIdx": 3138,
+        "rowIdx": 3142,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5771,9 +5771,9 @@
         "inst": 0
       },
       {
-        "id": "3139",
+        "id": "3143",
         "date": "2026-05-14",
-        "rowIdx": 3139,
+        "rowIdx": 3143,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5798,9 +5798,9 @@
         "inst": 0
       },
       {
-        "id": "3140",
+        "id": "3144",
         "date": "2026-05-14",
-        "rowIdx": 3140,
+        "rowIdx": 3144,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5825,9 +5825,9 @@
         "inst": 0
       },
       {
-        "id": "3152",
+        "id": "3145",
         "date": "2026-05-14",
-        "rowIdx": 3152,
+        "rowIdx": 3145,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5852,9 +5852,9 @@
         "inst": 0
       },
       {
-        "id": "3153",
+        "id": "3146",
         "date": "2026-05-14",
-        "rowIdx": 3153,
+        "rowIdx": 3146,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5879,9 +5879,9 @@
         "inst": 0
       },
       {
-        "id": "3154",
+        "id": "3147",
         "date": "2026-05-14",
-        "rowIdx": 3154,
+        "rowIdx": 3147,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5906,9 +5906,9 @@
         "inst": 0
       },
       {
-        "id": "3155",
+        "id": "3148",
         "date": "2026-05-14",
-        "rowIdx": 3155,
+        "rowIdx": 3148,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5933,9 +5933,9 @@
         "inst": 0
       },
       {
-        "id": "3156",
+        "id": "3149",
         "date": "2026-05-14",
-        "rowIdx": 3156,
+        "rowIdx": 3149,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5960,9 +5960,9 @@
         "inst": 0
       },
       {
-        "id": "3158",
+        "id": "3150",
         "date": "2026-05-14",
-        "rowIdx": 3158,
+        "rowIdx": 3150,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -5987,9 +5987,9 @@
         "inst": 0
       },
       {
-        "id": "3159",
+        "id": "3151",
         "date": "2026-05-14",
-        "rowIdx": 3159,
+        "rowIdx": 3151,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -6014,9 +6014,9 @@
         "inst": 0
       },
       {
-        "id": "3160",
+        "id": "3152",
         "date": "2026-05-14",
-        "rowIdx": 3160,
+        "rowIdx": 3152,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -6041,9 +6041,9 @@
         "inst": 0
       },
       {
-        "id": "3162",
+        "id": "3153",
         "date": "2026-05-14",
-        "rowIdx": 3162,
+        "rowIdx": 3153,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -6068,9 +6068,9 @@
         "inst": 0
       },
       {
-        "id": "3164",
+        "id": "3154",
         "date": "2026-05-14",
-        "rowIdx": 3164,
+        "rowIdx": 3154,
         "status": "Pending",
         "isActual": false,
         "isSimulator": true,
@@ -6095,9 +6095,9 @@
         "inst": 0
       },
       {
-        "id": "3165",
+        "id": "3155",
         "date": "2026-05-14",
-        "rowIdx": 3165,
+        "rowIdx": 3155,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -6122,9 +6122,9 @@
         "inst": 0
       },
       {
-        "id": "3167",
+        "id": "3156",
         "date": "2026-05-14",
-        "rowIdx": 3167,
+        "rowIdx": 3156,
         "status": "Pending",
         "isActual": false,
         "isSimulator": false,
@@ -6160,15 +6160,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-07-27",
       "name": "WATTIKORN K.",
+      "start": "2026-07-27",
       "reason": "Personal Leave",
       "end": "2026-07-27"
     },
     {
       "duration": "Full Day",
-      "name": "WATTIKORN K.",
       "start": "2026-07-31",
+      "name": "WATTIKORN K.",
       "reason": "Personal Leave",
       "end": "2026-07-31"
     },
@@ -6181,8 +6181,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "NUTTAWAT R.",
       "start": "2026-05-15",
+      "name": "NUTTAWAT R.",
       "reason": "CAAT Exam",
       "end": "2026-05-15"
     },
@@ -6202,15 +6202,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "PHAHOLYUTH P.",
+      "start": "2026-05-05",
       "reason": "Personal Leave",
       "end": "2026-05-18"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "PARAMUTT C.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-05"
     },
@@ -6223,8 +6223,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "PICHAKORN J.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-05"
     },
@@ -6237,8 +6237,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "PORNTREETRA R.",
       "start": "2026-05-05",
+      "name": "PORNTREETRA R.",
       "reason": "Other",
       "end": "2026-05-05"
     },
@@ -6258,29 +6258,29 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-25",
       "name": "GRAVITAT C.",
+      "start": "2026-05-25",
       "reason": "Other",
       "end": "2026-05-25"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-18",
       "name": "SUPAWAN A.",
+      "start": "2026-05-18",
       "reason": "Other",
       "end": "2026-05-19"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-18",
       "name": "PORNTREETRA R.",
+      "start": "2026-05-18",
       "reason": "Other",
       "end": "2026-05-18"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-18",
       "name": "PARAMUTT C.",
+      "start": "2026-05-18",
       "reason": "Other",
       "end": "2026-05-18"
     },
@@ -6321,29 +6321,29 @@
     },
     {
       "duration": "Full Day",
+      "start": "2026-05-05",
       "name": "NATPAKALP K.",
-      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-06"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-05",
       "name": "ANUSORN T.",
+      "start": "2026-05-05",
       "reason": "Other",
       "end": "2026-05-06"
     },
     {
       "duration": "Full Day",
-      "name": "SANGYAI P.",
       "start": "2026-05-05",
+      "name": "SANGYAI P.",
       "reason": "Personal Leave",
       "end": "2026-05-15"
     },
     {
       "duration": "Full Day",
-      "name": "SANTI SUK.",
       "start": "2026-04-27",
+      "name": "SANTI SUK.",
       "reason": "Sick",
       "end": "2026-04-27"
     },
@@ -6356,8 +6356,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-25",
       "name": "AWIRUT S.",
+      "start": "2026-05-25",
       "reason": "CAAT Exam",
       "end": "2026-05-25"
     },
@@ -6384,29 +6384,29 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "PAKORN W.",
+      "start": "2026-05-11",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
     {
       "duration": "Full Day",
-      "name": "CHANOL T.",
       "start": "2026-05-27",
+      "name": "CHANOL T.",
       "reason": "CAAT Exam",
       "end": "2026-05-29"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-07",
       "name": "RAKCHON K.",
+      "start": "2026-05-07",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
     {
       "duration": "Full Day",
-      "name": "NUTTAPHAT K.",
       "start": "2026-05-08",
+      "name": "NUTTAPHAT K.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
@@ -6426,8 +6426,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "ANUSORN T.",
       "start": "2026-05-08",
+      "name": "ANUSORN T.",
       "reason": "Other",
       "end": "2026-05-15"
     },
@@ -6440,8 +6440,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "VASAPHON S.",
       "start": "2026-05-08",
+      "name": "VASAPHON S.",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
@@ -6454,8 +6454,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "EKKASIT B.",
+      "start": "2026-05-11",
       "reason": "Official Duty",
       "end": "2026-05-24"
     },
@@ -6482,8 +6482,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "NAPON R.",
       "start": "2026-05-05",
+      "name": "NAPON R.",
       "reason": "Personal Leave",
       "end": "2026-05-08"
     },
@@ -6517,8 +6517,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-15",
       "name": "PRITASNA M.",
+      "start": "2026-05-15",
       "reason": "Personal Leave",
       "end": "2026-05-15"
     },
@@ -6531,22 +6531,22 @@
     },
     {
       "duration": "Full Day",
-      "name": "PREM P.",
       "start": "2026-05-11",
+      "name": "PREM P.",
       "reason": "CAAT Exam",
       "end": "2026-05-11"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-15",
       "name": "BULASET C.",
+      "start": "2026-05-15",
       "reason": "CAAT Exam",
       "end": "2026-05-15"
     },
     {
       "duration": "Full Day",
-      "name": "RAKCHON K.",
       "start": "2026-05-14",
+      "name": "RAKCHON K.",
       "reason": "CAAT Exam",
       "end": "2026-05-15"
     },
@@ -6559,43 +6559,43 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-22",
       "name": "SOWAN C.",
+      "start": "2026-05-22",
       "reason": "Personal Leave",
       "end": "2026-05-22"
     },
     {
       "duration": "Full Day",
-      "start": "2026-06-02",
       "name": "SOWAN C.",
+      "start": "2026-06-02",
       "reason": "Personal Leave",
       "end": "2026-06-02"
     },
     {
       "duration": "Full Day",
-      "name": "SIWAKORN P.",
       "start": "2026-05-18",
+      "name": "SIWAKORN P.",
       "reason": "Personal Leave",
       "end": "2026-05-18"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "EKKASIT B.",
+      "start": "2026-05-11",
       "reason": "Official Duty",
       "end": "2026-05-25"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "KITTIPAT M.",
+      "start": "2026-05-11",
       "reason": "Official Duty",
       "end": "2026-05-25"
     },
     {
       "duration": "Full Day",
-      "name": "KRIDSADA K.",
       "start": "2026-05-11",
+      "name": "KRIDSADA K.",
       "reason": "Official Duty",
       "end": "2026-05-25"
     },
@@ -6615,22 +6615,22 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-11",
       "name": "PICHAKORN J.",
-      "reason": "Personal Leave",
-      "end": "2026-05-11"
-    },
-    {
-      "duration": "Full Day",
       "start": "2026-05-11",
-      "name": "VASAPHON S.",
       "reason": "Personal Leave",
       "end": "2026-05-11"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-15",
+      "name": "VASAPHON S.",
+      "start": "2026-05-11",
+      "reason": "Personal Leave",
+      "end": "2026-05-11"
+    },
+    {
+      "duration": "Full Day",
       "name": "WATCHARAPHOL V.",
+      "start": "2026-05-15",
       "reason": "Personal Leave",
       "end": "2026-05-15"
     },
@@ -6643,15 +6643,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-16",
       "name": "PORNTREETRA R.",
+      "start": "2026-05-16",
       "reason": "CAAT Exam",
       "end": "2026-05-18"
     },
     {
       "duration": "Full Day",
-      "name": "PARAMUTT C.",
       "start": "2026-05-16",
+      "name": "PARAMUTT C.",
       "reason": "CAAT Exam",
       "end": "2026-05-18"
     },
@@ -6664,15 +6664,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-12",
       "name": "PUWADET H.",
+      "start": "2026-05-12",
       "reason": "Personal Leave",
       "end": "2026-05-12"
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-12",
       "name": "NUTTAPHAT K.",
+      "start": "2026-05-12",
       "reason": "Sick Leave",
       "end": "2026-05-12"
     },
@@ -6685,8 +6685,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "KORN S.",
       "start": "2026-05-12",
+      "name": "KORN S.",
       "reason": "Personal Leave",
       "end": "2026-05-12"
     },
@@ -6699,8 +6699,8 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-30",
       "name": "CHANOL T.",
+      "start": "2026-05-30",
       "reason": "CAAT Exam",
       "end": "2026-06-02"
     },
@@ -6720,15 +6720,15 @@
     },
     {
       "duration": "Full Day",
-      "start": "2026-05-23",
       "name": "PICHAKORN J.",
+      "start": "2026-05-23",
       "reason": "Personal Leave",
       "end": "2026-05-24"
     },
     {
       "duration": "Full Day",
-      "name": "SORNSORAWITCH C.",
       "start": "2026-05-16",
+      "name": "SORNSORAWITCH C.",
       "reason": "Personal Leave",
       "end": "2026-05-16"
     },
@@ -6741,8 +6741,8 @@
     },
     {
       "duration": "Full Day",
-      "name": "PICHAKORN J.",
       "start": "2026-06-02",
+      "name": "PICHAKORN J.",
       "reason": "Personal Leave",
       "end": "2026-06-02"
     },
