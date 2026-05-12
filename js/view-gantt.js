@@ -11,7 +11,6 @@ function GanttBoard() {
   const app     = useApp();
   const flights = app.dayFlights;
   const groupBy = app.tweaks.groupBy || 'instructor';
-  const [ctrlH, handleResizeDown] = useResizable(100, 36, 180);
 
   const rows = useM_g(()=>{
     const map = {};
@@ -31,31 +30,40 @@ function GanttBoard() {
 
   const { wd, mo, day } = fmtDay(app.date);
 
+  const GrpChip = ({ g }) => (
+    <button onClick={()=>app.setTweak('groupBy',g)} className="mono uc" style={{
+      padding:'2px 8px', fontSize:8, borderRadius:3, cursor:'pointer',
+      border:`1px solid ${app.tweaks.groupBy===g?'var(--ink-2)':'var(--line)'}`,
+      background:app.tweaks.groupBy===g?`color-mix(in oklch,var(--ink-2) 14%,var(--surface))`:'transparent',
+      color:app.tweaks.groupBy===g?'var(--ink-2)':'var(--ink-3)',
+      fontWeight:app.tweaks.groupBy===g?600:400, transition:'all .1s',
+    }}>{g}</button>
+  );
+
   return (
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
       <ThemeStyle/>
       {/* Header */}
-      <div style={{ height:38, padding:'0 20px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:16, flexShrink:0 }}>
+      <div style={{ padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:12, flexShrink:0, minHeight:38, flexWrap:'wrap' }}>
         <div style={{ display:'flex',alignItems:'center',gap:8 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-pending)',boxShadow:'0 0 8px var(--col-pending)' }}/>
-          <div className="mono uc" style={{ fontSize:11,fontWeight:600 }}>FLIGHT GANTT // {groupBy.toUpperCase()} VIEW</div>
+          <div className="mono uc" style={{ fontSize:11,fontWeight:600 }}>FLIGHT GANTT</div>
+        </div>
+        <div style={{ display:'flex',gap:4,alignItems:'center' }}>
+          <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>GROUP</span>
+          <GrpChip g="instructor"/>
+          <GrpChip g="tail"/>
+          <GrpChip g="batch"/>
         </div>
         <div style={{flex:1}}/>
-        <div className="mono num" style={{ fontSize:13 }}>{String(day).padStart(2,'0')} {mo} · {wd}</div>
+        <div className="mono num" style={{ fontSize:12 }}>{String(day).padStart(2,'0')} {mo} · {wd}</div>
       </div>
 
-      {/* Settings */}
-      <InlineSettings gantt={true}/>
-
-      {/* Date + filter — resizable */}
-      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
-        <div style={{ padding:'6px 20px', display:'flex', flexDirection:'column', gap:6 }}>
-          <DateStrip/>
-          <FilterBar/>
-        </div>
+      {/* Date + filter */}
+      <div style={{ padding:'6px 20px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
+        <DateStrip/>
+        <FilterBar/>
       </div>
-
-      <ResizeHandle onMouseDown={handleResizeDown}/>
 
       {/* Timeline */}
       <div style={{ margin:'4px 24px 14px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
@@ -89,7 +97,6 @@ function GanttBoard() {
             const hasHL    = r.flights.some(f=>f.batch===HIGHLIGHT_BATCH);
             const rowAlpha = app.highlightAP127&&!hasHL ? 0.28 : 1;
 
-            // Right column metric
             const rightMetric = (() => {
               if (groupBy === 'instructor') {
                 const starts = r.flights.map(f=>minutesOf(f.start)).filter(v=>v!=null);
@@ -104,6 +111,7 @@ function GanttBoard() {
               const h = Math.floor(totalMin/60), m = totalMin%60;
               return { label: groupBy==='tail'?'TAIL HRS':'FLT HRS', value:`${h}h${String(m).padStart(2,'0')}`, sub:`${r.flights.length} FLT` };
             })();
+
             return (
               <div key={r.key} style={{
                 display:'grid', gridTemplateColumns:`${TRACK_LEFT}px 1fr ${TRACK_RIGHT}px`,
@@ -111,27 +119,25 @@ function GanttBoard() {
                 background:ri%2?'transparent':'color-mix(in oklch,var(--ink) 1.2%,transparent)',
                 opacity:rowAlpha, transition:'opacity .15s',
               }}>
-                {/* Label */}
                 <div style={{ padding:'10px 14px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)' }}>
                   <div>
                     <div style={{ fontSize:12,color:'var(--ink)',fontWeight:500 }}>{r.key}</div>
                     <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{r.flights.length} FLT · {Math.floor(totalMin/60)}h{totalMin%60?String(totalMin%60).padStart(2,'0'):''}</div>
                   </div>
                 </div>
-                {/* Track */}
                 <div style={{ position:'relative' }}>
                   {Array.from({length:HOUR_SPAN+1}).map((_,i)=>(
                     <div key={i} style={{ position:'absolute',left:`${(i/HOUR_SPAN)*100}%`,top:0,bottom:0,borderLeft:'1px solid var(--line-soft)',opacity:i%2?0.5:1 }}/>
                   ))}
                   {r.flights.map((f,fi)=>{
-                    const startMin   = (minutesOf(f.start)||0) - HOUR_START*60;
-                    const totalSpan  = HOUR_SPAN*60;
-                    const left       = Math.max(0,(startMin/totalSpan)*100);
-                    const width      = ((f.durMin||60)/totalSpan)*100;
-                    const color      = STATUS_COLOR(f);
-                    const done       = f.status==='Completed';
-                    const dim        = f.status==='Canceled';
-                    const stby       = f.isStandby;
+                    const startMin  = (minutesOf(f.start)||0) - HOUR_START*60;
+                    const totalSpan = HOUR_SPAN*60;
+                    const left      = Math.max(0,(startMin/totalSpan)*100);
+                    const width     = ((f.durMin||60)/totalSpan)*100;
+                    const color     = STATUS_COLOR(f);
+                    const done      = f.status==='Completed';
+                    const dim       = f.status==='Canceled';
+                    const stby      = f.isStandby;
                     return (
                       <button key={f.id+fi} onClick={()=>app.setDrawer(f.id)}
                         title={`${f.start}–${f.end} · ${f.student} · ${f.lesson}`}
@@ -143,8 +149,7 @@ function GanttBoard() {
                           borderLeft:`3px ${stby?'dashed':'solid'} ${color}`,
                           borderRadius:4, padding:'3px 6px', textAlign:'left',
                           cursor:'pointer', overflow:'hidden', color:'var(--ink)',
-                          opacity: dim?0.4:1,
-                          textDecoration: dim?'line-through':'none',
+                          opacity: dim?0.4:1, textDecoration: dim?'line-through':'none',
                         }}>
                         <div className="mono num" style={{ fontSize:10,display:'flex',justifyContent:'space-between',gap:4 }}>
                           <span>{f.start}</span>
@@ -160,7 +165,6 @@ function GanttBoard() {
                     );
                   })}
                 </div>
-                {/* Right metric */}
                 <div style={{ padding:'10px 14px',borderLeft:'1px solid var(--line)',display:'flex',flexDirection:'column',justifyContent:'center',gap:2 }}>
                   <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>{rightMetric.label}</div>
                   <div className="mono num" style={{ fontSize:14,fontWeight:600,color:'var(--ink)' }}>{rightMetric.value}</div>

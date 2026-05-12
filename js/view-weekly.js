@@ -3,7 +3,6 @@ const { useMemo: useM_w } = React;
 
 function WeeklyBoard() {
   const app = useApp();
-  const [ctrlH, handleResizeDown] = useResizable(60, 30, 140);
 
   const weekFlights = useM_w(()=>{
     return FLIGHTS.filter(f=>{
@@ -37,28 +36,22 @@ function WeeklyBoard() {
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
       <ThemeStyle/>
       {/* Header */}
-      <div style={{ height:38, padding:'0 20px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:16, flexShrink:0 }}>
+      <div style={{ height:38, padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:16, flexShrink:0 }}>
         <div style={{ display:'flex',alignItems:'center',gap:8 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 8px var(--col-done)' }}/>
           <div className="mono uc" style={{ fontSize:11,fontWeight:600 }}>WEEKLY MONITOR // {ALL_DATES.length} DATES</div>
         </div>
         <div style={{flex:1}}/>
-        <div className="mono uc" style={{ fontSize:10,color:'var(--ink-3)' }}>{FLIGHTS.length} TOTAL FLIGHTS</div>
+        <div className="mono uc" style={{ fontSize:10,color:'var(--ink-3)' }}>{FLIGHTS.length} TOTAL</div>
       </div>
 
-      <InlineSettings/>
-
-      {/* Filter — resizable */}
-      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
-        <div style={{ padding:'6px 20px' }}>
-          <FilterBar/>
-        </div>
+      {/* Filter */}
+      <div style={{ padding:'6px 16px', flexShrink:0 }}>
+        <FilterBar/>
       </div>
-
-      <ResizeHandle onMouseDown={handleResizeDown}/>
 
       {/* Column grid */}
-      <div style={{ flex:1, minHeight:0, padding:'0 20px 12px', overflowX:'auto', overflowY:'hidden', display:'flex', flexDirection:'column' }}>
+      <div style={{ flex:1, minHeight:0, padding:'0 16px 12px', overflowX:'auto', overflowY:'hidden', display:'flex', flexDirection:'column' }}>
         <div style={{ display:'flex', gap:10, height:'100%', minWidth:'max-content' }}>
           {ALL_DATES.map(d=>{
             const { wd, mo, day } = fmtDay(d);
@@ -74,7 +67,7 @@ function WeeklyBoard() {
 
             return (
               <div key={d} style={{
-                width:198, display:'flex', flexDirection:'column',
+                width:192, display:'flex', flexDirection:'column',
                 border:`1px solid ${sel?'var(--col-pending)':tod?'color-mix(in oklch,var(--col-pending) 40%,var(--line))':'var(--line)'}`,
                 borderRadius:8, background:'var(--surface)', overflow:'hidden',
                 opacity: past&&!sel ? 0.65 : 1,

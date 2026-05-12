@@ -14,22 +14,22 @@ const SORT_KEYS = {
   status:     f => f.status ?? '',
 };
 
-function StatHero({ label, value, color }) {
+function StatHero({ label, value, color, small=false }) {
   return (
-    <div style={{ flex:1, padding:'6px 10px', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:5, position:'relative', overflow:'hidden', minWidth:72 }}>
+    <div style={{ flex:1, padding: small?'4px 8px':'6px 10px', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:5, position:'relative', overflow:'hidden', minWidth: small?56:72 }}>
       <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:color }}/>
-      <div className="mono uc" style={{ fontSize:8, color:'var(--ink-3)' }}>{label}</div>
-      <div className="num" style={{ fontSize:22, fontWeight:600, lineHeight:1.1, marginTop:1, color:'var(--ink)' }}>{String(value).padStart(2,'0')}</div>
+      <div className="mono uc" style={{ fontSize:small?7:8, color:'var(--ink-3)' }}>{label}</div>
+      <div className="num" style={{ fontSize:small?16:22, fontWeight:600, lineHeight:1.1, marginTop:1, color:'var(--ink)' }}>{String(value).padStart(2,'0')}</div>
     </div>
   );
 }
 
 function OpsBoard() {
   const app = useApp();
+  const { isMobile } = app;
   const flights = app.dayFlights;
   const [sortCol, setSortCol] = useS_b('start');
   const [sortDir, setSortDir] = useS_b('asc');
-  const [ctrlH, handleResizeDown] = useResizable(170, 50, 280);
 
   const handleSort = col => {
     if (sortCol === col) {
@@ -55,57 +55,49 @@ function OpsBoard() {
     return s;
   },[flights]);
 
-  const { wd, mo, day, y } = fmtDay(app.date);
+  const { wd, mo, day } = fmtDay(app.date);
 
   return (
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
       <ThemeStyle/>
       {/* Top bar */}
-      <div style={{ height:38, padding:'0 20px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:20, flexShrink:0 }}>
+      <div style={{ height:38, padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:16, flexShrink:0 }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 8px var(--col-done)', animation:'pulse 2s ease-in-out infinite' }}/>
           <div className="mono uc" style={{ fontSize:11, fontWeight:600 }}>OPS // LIVE BOARD</div>
         </div>
-        <div className="mono" style={{ fontSize:10, color:'var(--ink-3)' }}>FEED · {window.FLIGHT_DATA.fetchedAt}</div>
         <div style={{flex:1}}/>
-        <div className="mono uc" style={{ fontSize:10, color:'var(--ink-3)' }}>{window.FLIGHT_DATA.tz}</div>
+        <div className="mono uc" style={{ fontSize:9, color:'var(--ink-3)' }}>{FLIGHTS.length} FLIGHTS</div>
       </div>
 
-      {/* Settings */}
-      <InlineSettings/>
-
-      {/* Date hero + stats + filter — resizable */}
-      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
-        <div style={{ padding:'8px 20px 6px', display:'flex', gap:10, alignItems:'center' }}>
-          <div style={{ display:'flex', alignItems:'baseline', gap:8, marginRight:6 }}>
-            <div className="num" style={{ fontSize:38, fontWeight:700, lineHeight:1, letterSpacing:'-0.02em' }}>{String(day).padStart(2,'0')}</div>
-            <div className="mono uc" style={{ fontSize:11, color:'var(--ink-2)' }}>{mo} · {wd}</div>
-          </div>
-          <StatHero label="TOTAL"     value={stats.total}     color="var(--col-pending)"/>
-          <StatHero label="PENDING"   value={stats.Pending}   color="var(--col-pending)"/>
-          <StatHero label="COMPLETED" value={stats.Completed} color="var(--col-done)"/>
-          <StatHero label="CANCELED"  value={stats.Canceled}  color="var(--col-cancel)"/>
-          <StatHero label="AP-127"    value={stats.ap127}     color="var(--highlight)"/>
-          <StatHero label="STANDBY"   value={stats.standby}   color="var(--col-stby)"/>
-          <StatHero label="SIM"       value={stats.sim}       color="var(--col-sim)"/>
+      {/* Date hero + stats */}
+      <div style={{ padding: isMobile?'6px 12px 4px':'8px 20px 6px', display:'flex', gap:isMobile?5:10, alignItems:'center', flexShrink:0, flexWrap:'wrap' }}>
+        <div style={{ display:'flex', alignItems:'baseline', gap:6, marginRight:4 }}>
+          <div className="num" style={{ fontSize:isMobile?26:38, fontWeight:700, lineHeight:1, letterSpacing:'-0.02em' }}>{String(day).padStart(2,'0')}</div>
+          <div className="mono uc" style={{ fontSize:isMobile?9:11, color:'var(--ink-2)' }}>{mo} · {wd}</div>
         </div>
-        <div style={{ padding:'0 20px 6px', display:'flex', flexDirection:'column', gap:6 }}>
-          <DateStrip/>
-          <FilterBar/>
-        </div>
+        <StatHero label="TOTAL"     value={stats.total}     color="var(--col-pending)" small={isMobile}/>
+        <StatHero label="PENDING"   value={stats.Pending}   color="var(--col-pending)" small={isMobile}/>
+        <StatHero label="COMPLETED" value={stats.Completed} color="var(--col-done)"    small={isMobile}/>
+        <StatHero label="CANCELED"  value={stats.Canceled}  color="var(--col-cancel)"  small={isMobile}/>
+        <StatHero label="AP-127"    value={stats.ap127}     color="var(--highlight)"   small={isMobile}/>
+        <StatHero label="STANDBY"   value={stats.standby}   color="var(--col-stby)"    small={isMobile}/>
+        <StatHero label="SIM"       value={stats.sim}       color="var(--col-sim)"     small={isMobile}/>
       </div>
 
-      <ResizeHandle onMouseDown={handleResizeDown}/>
+      {/* Date + filter */}
+      <div style={{ padding: isMobile?'0 12px 6px':'0 20px 6px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
+        <DateStrip/>
+        <FilterBar/>
+      </div>
 
       {/* Table */}
-      <div style={{ margin:'0 24px 16px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
-        {/* Scrollable area — both axes; header is sticky inside */}
+      <div style={{ margin: isMobile?'0 8px 8px':'0 24px 16px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
         <div style={{ flex:1, minHeight:0, overflow:'auto' }}>
           {/* Sticky header */}
           <div className="mono uc" style={{
             display:'grid', gridTemplateColumns:'110px 90px 1.3fr 1.3fr 100px 68px 52px 68px 76px 105px',
-            minWidth:900,
-            gap:10, padding:'7px 16px', fontSize:9, color:'var(--ink-3)',
+            minWidth:900, gap:10, padding:'7px 16px', fontSize:9, color:'var(--ink-3)',
             borderBottom:'1px solid var(--line)', background:'var(--bg-2)',
             position:'sticky', top:0, zIndex:1,
           }}>
@@ -130,8 +122,7 @@ function OpsBoard() {
                 style={{
                   position:'relative',
                   display:'grid', gridTemplateColumns:'110px 90px 1.3fr 1.3fr 100px 68px 52px 68px 76px 105px',
-                  minWidth:900,
-                  gap:10, padding:'7px 16px', alignItems:'center',
+                  minWidth:900, gap:10, padding:'7px 16px', alignItems:'center',
                   borderBottom:'1px solid var(--line-soft)',
                   background: i%2?'transparent':'color-mix(in oklch,var(--ink) 1.5%,transparent)',
                   borderLeft:`3px solid ${color}`,
@@ -159,7 +150,7 @@ function OpsBoard() {
           })}
         </div>
         {/* Footer legend */}
-        <div className="mono uc" style={{ padding:'7px 16px', fontSize:9, color:'var(--ink-3)', borderTop:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', gap:16, alignItems:'center', flexShrink:0 }}>
+        <div className="mono uc" style={{ padding:'7px 16px', fontSize:9, color:'var(--ink-3)', borderTop:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', gap:16, alignItems:'center', flexShrink:0, flexWrap:'wrap' }}>
           <span>{sorted.length} ROWS · CLICK ROW FOR DETAILS</span>
           <span style={{flex:1}}/>
           {[['PENDING','var(--col-pending)'],['COMPLETED','var(--col-done)'],['CANCELED','var(--col-cancel)'],['SIM','var(--col-sim)'],['STANDBY','var(--col-stby)']].map(([l,c])=>(

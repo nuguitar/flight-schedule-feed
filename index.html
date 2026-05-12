@@ -35,90 +35,215 @@
 <!-- Views -->
 <script type="text/babel" src="js/view-board.js"></script>
 <script type="text/babel" src="js/view-gantt.js"></script>
-<script type="text/babel" src="js/view-mobile.js"></script>
 <script type="text/babel" src="js/view-weekly.js"></script>
 <script type="text/babel" src="js/view-summary.js"></script>
 
 <script type="text/babel" data-presets="env,react">
 const VIEWS = [
-  { id:'board',   label:'A · BOARD'    },
-  { id:'gantt',   label:'B · GANTT'    },
-  { id:'weekly',  label:'C · WEEKLY'   },
-  { id:'summary', label:'D · ANALYTICS'},
-  { id:'mobile',  label:'E · MOBILE'   },
+  { id:'board',   label:'BOARD'    },
+  { id:'gantt',   label:'GANTT'    },
+  { id:'weekly',  label:'WEEKLY'   },
+  { id:'summary', label:'ANALYTICS'},
 ];
 
-function NavBar({ view, setView }) {
+// Format ISO timestamp in Thailand timezone
+const formatTH = iso => {
+  try {
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone:'Asia/Bangkok', day:'2-digit', month:'short',
+      year:'numeric', hour:'2-digit', minute:'2-digit', hour12:false,
+    }).format(new Date(iso)).replace(',','').toUpperCase();
+  } catch { return iso || ''; }
+};
+
+// Sidebar — uses useApp() so must be rendered inside AppProvider
+function Sidebar({ view, setView, width, mobile=false, onClose }) {
+  const { tweaks, setTweak, highlightAP127, setHighlightAP127, hideOthers, setHideOthers } = useApp();
+  const Chip = ({ on, onClick, children, color='var(--ink-2)', block=false }) => (
+    <button onClick={onClick} className="mono uc" style={{
+      padding:'4px 10px', fontSize:9, borderRadius:4, cursor:'pointer',
+      border:`1px solid ${on?color:'var(--line)'}`,
+      background:on?`color-mix(in oklch,${color} 14%,var(--surface))`:'transparent',
+      color:on?color:'var(--ink-3)', fontWeight:on?600:400, transition:'all .1s',
+      width:block?'100%':'auto', textAlign:block?'left':'center',
+    }}>{children}</button>
+  );
   return (
     <div style={{
-      height:36, padding:'0 16px', background:'var(--bg-2)',
-      borderBottom:'1px solid var(--line)', display:'flex',
-      alignItems:'center', gap:5, flexShrink:0,
+      width: mobile ? 256 : width,
+      flexShrink: 0,
+      background:'var(--bg-2)',
+      borderRight:'1px solid var(--line)',
+      display:'flex', flexDirection:'column',
+      height: mobile ? '100vh' : '100%',
+      position: mobile ? 'fixed' : 'relative',
+      top: mobile ? 0 : 'auto',
+      left: mobile ? 0 : 'auto',
+      zIndex: mobile ? 200 : 'auto',
+      overflow:'hidden',
+      boxShadow: mobile ? '6px 0 24px oklch(0 0 0 / 0.45)' : 'none',
     }}>
       {/* Wordmark */}
-      <div style={{ display:'flex', alignItems:'center', gap:7, marginRight:10 }}>
-        <span style={{ width:7,height:7,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 6px var(--col-done)',animation:'pulse 2s ease-in-out infinite' }}/>
-        <span className="mono uc" style={{ fontSize:11, fontWeight:700, letterSpacing:'0.08em' }}>AP127 CMD</span>
+      <div style={{ padding:'14px 16px', borderBottom:'1px solid var(--line)', display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
+        <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 6px var(--col-done)',animation:'pulse 2s ease-in-out infinite',flexShrink:0 }}/>
+        <span className="mono uc" style={{ fontSize:12,fontWeight:700,letterSpacing:'0.08em',flex:1 }}>AP127 CMD</span>
+        {mobile && <button onClick={onClose} style={{ background:'none',border:'none',color:'var(--ink-3)',cursor:'pointer',fontSize:18,padding:'2px 6px',lineHeight:1 }}>✕</button>}
       </div>
-      {/* View tabs */}
-      {VIEWS.map(v => (
-        <button key={v.id} onClick={() => setView(v.id)} className="mono uc" style={{
-          padding:'3px 11px', fontSize:10, borderRadius:3, cursor:'pointer',
-          border:`1px solid ${view===v.id?'var(--col-pending)':'var(--line)'}`,
-          background:view===v.id?'color-mix(in oklch,var(--col-pending) 14%,var(--surface))':'transparent',
-          color:view===v.id?'var(--col-pending)':'var(--ink-3)',
-          fontWeight:view===v.id?600:400, transition:'all .1s',
-        }}>{v.label}</button>
-      ))}
-      <div style={{flex:1}}/>
-      <div className="mono uc" style={{ fontSize:9, color:'var(--ink-3)' }}>
-        {window.FLIGHT_DATA.tz} · {window.FLIGHT_DATA.fetchedAt.slice(0,10)}
+
+      {/* Navigation */}
+      <nav style={{ padding:'8px', display:'flex', flexDirection:'column', gap:2, flexShrink:0, borderBottom:'1px solid var(--line-soft)' }}>
+        {VIEWS.map((v,i) => (
+          <button key={v.id} onClick={()=>{ setView(v.id); if(onClose) onClose(); }}
+            className="mono uc"
+            style={{
+              padding:'9px 12px', borderRadius:5, cursor:'pointer', textAlign:'left',
+              background:view===v.id?`color-mix(in oklch,var(--col-pending) 14%,var(--surface))`:'transparent',
+              border:`1px solid ${view===v.id?'var(--col-pending)':'transparent'}`,
+              color:view===v.id?'var(--col-pending)':'var(--ink-3)',
+              fontWeight:view===v.id?600:400, fontSize:10, transition:'all .1s',
+              display:'flex', alignItems:'center', gap:10,
+            }}>
+            <span style={{ fontSize:8, opacity:.6, fontWeight:400 }}>{String.fromCharCode(65+i)}</span>
+            {v.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Settings */}
+      <div style={{ padding:'10px 12px', borderBottom:'1px solid var(--line-soft)', flexShrink:0, display:'flex', flexDirection:'column', gap:6 }}>
+        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginBottom:2 }}>THEME</div>
+        <div style={{ display:'flex',gap:4,flexWrap:'wrap' }}>
+          {['cockpit','light','board'].map(th=>(
+            <Chip key={th} on={tweaks.theme===th} onClick={()=>setTweak('theme',th)}>{th}</Chip>
+          ))}
+        </div>
+        <div style={{ display:'flex',flexDirection:'column',gap:4,marginTop:2 }}>
+          <Chip on={highlightAP127} onClick={()=>setHighlightAP127(v=>!v)} color="var(--highlight)" block>◆ AP-127 FOCUS</Chip>
+          <span style={{ opacity:highlightAP127?1:0.35, transition:'opacity .15s' }}>
+            <Chip on={hideOthers} onClick={()=>setHideOthers(v=>!v)} color="var(--highlight)" block>HIDE OTHERS</Chip>
+          </span>
+          <div style={{ display:'flex',gap:4 }}>
+            <Chip on={tweaks.showSim}     onClick={()=>setTweak('showSim',v=>!v)}     color="var(--col-sim)">SIM</Chip>
+            <Chip on={tweaks.showStandby} onClick={()=>setTweak('showStandby',v=>!v)} color="var(--col-stby)">STBY</Chip>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ flex:1 }}/>
+
+      {/* Last update (TH) */}
+      <div style={{ padding:'12px 16px', borderTop:'1px solid var(--line)', background:'var(--bg)', flexShrink:0 }}>
+        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginBottom:4 }}>LAST UPDATE · TH</div>
+        <div className="mono" style={{ fontSize:10,color:'var(--ink-2)',lineHeight:1.6 }}>
+          {formatTH(window.FLIGHT_DATA.fetchedAt)}
+        </div>
+        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:2 }}>
+          {window.FLIGHT_DATA.tz}
+        </div>
       </div>
     </div>
   );
 }
 
-function MobileFrame({ children }) {
+// Compact top bar shown on mobile in place of full sidebar
+function MobileTopBar({ view, onMenuOpen }) {
+  const labels = { board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS' };
   return (
     <div style={{
-      flex:1, minHeight:0, overflowY:'auto', overflowX:'hidden',
-      display:'flex', justifyContent:'center', alignItems:'flex-start',
-      padding:'24px 0', background:'var(--bg)',
+      height:46, padding:'0 14px', background:'var(--bg-2)',
+      borderBottom:'1px solid var(--line)', display:'flex',
+      alignItems:'center', gap:10, flexShrink:0,
     }}>
-      <div style={{
-        width:390, height:844, flexShrink:0, position:'relative',
-        boxShadow:'0 0 0 1px var(--line), 0 20px 60px oklch(0 0 0 / 0.4)',
-        borderRadius:12, overflow:'hidden',
-      }}>
-        {children}
+      <button onClick={onMenuOpen} style={{
+        background:'none', border:'none', color:'var(--ink)',
+        cursor:'pointer', fontSize:22, lineHeight:1, padding:'0 4px',
+      }}>☰</button>
+      <div style={{ display:'flex',alignItems:'center',gap:7 }}>
+        <span style={{ width:7,height:7,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 5px var(--col-done)' }}/>
+        <span className="mono uc" style={{ fontSize:11,fontWeight:700,letterSpacing:'0.08em' }}>AP127 CMD</span>
       </div>
+      <div style={{ flex:1 }}/>
+      <span className="mono uc" style={{ fontSize:10,color:'var(--col-pending)',fontWeight:600,letterSpacing:'0.05em' }}>
+        {labels[view] || view.toUpperCase()}
+      </span>
     </div>
   );
 }
 
 function App() {
-  const [view, setView]   = React.useState('board');
-  const [tweaks, setTweakState] = React.useState({
-    theme:'cockpit', showSim:false, showStandby:true, groupBy:'batch',
-  });
+  const [view, setView]         = React.useState('board');
+  const [tweaks, setTweakState] = React.useState({ theme:'cockpit', showSim:false, showStandby:true, groupBy:'batch' });
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [windowW, setWindowW]   = React.useState(window.innerWidth);
+  const [sidebarW, setSidebarW] = React.useState(220);
+  const sidebarDrag = React.useRef(null);
+
+  React.useEffect(() => {
+    const h = () => setWindowW(window.innerWidth);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+
+  const isMobile = windowW < 768;
 
   const setTweak = React.useCallback((k, v) => {
     setTweakState(t => ({ ...t, [k]: typeof v === 'function' ? v(t[k]) : v }));
   }, []);
 
-  React.useEffect(() => { document.body.dataset.theme = tweaks.theme; }, [tweaks.theme]);
+  // Sidebar width drag (desktop only)
+  const handleSidebarMouseDown = React.useCallback(e => {
+    sidebarDrag.current = { startX: e.clientX, startW: sidebarW };
+    e.preventDefault();
+  }, [sidebarW]);
+
+  React.useEffect(() => {
+    const onMove = e => {
+      if (!sidebarDrag.current) return;
+      const next = Math.max(180, Math.min(360, sidebarDrag.current.startW + (e.clientX - sidebarDrag.current.startX)));
+      setSidebarW(next);
+    };
+    const onUp = () => { sidebarDrag.current = null; };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  }, []);
 
   return (
-    <AppProvider tweaks={tweaks} setTweak={setTweak}>
+    <AppProvider tweaks={tweaks} setTweak={setTweak} isMobile={isMobile}>
       <ThemeStyle/>
-      <NavBar view={view} setView={setView}/>
-      {/* View content */}
-      <div style={{ flex:1, minHeight:0, overflow:'hidden', position:'relative' }}>
-        {view==='board'   && <OpsBoard/>}
-        {view==='gantt'   && <GanttBoard/>}
-        {view==='weekly'  && <WeeklyBoard/>}
-        {view==='summary' && <SummaryBoard/>}
-        {view==='mobile'  && <MobileFrame><MobileBoard/></MobileFrame>}
+      <div style={{ display:'flex', height:'100%', overflow:'hidden' }}>
+
+        {/* Desktop: persistent sidebar + horizontal resize handle */}
+        {!isMobile && (
+          <>
+            <Sidebar view={view} setView={setView} width={sidebarW}/>
+            <div
+              onMouseDown={handleSidebarMouseDown}
+              onMouseEnter={e => e.currentTarget.style.background='color-mix(in oklch,var(--col-pending) 40%,var(--line))'}
+              onMouseLeave={e => e.currentTarget.style.background='var(--line)'}
+              style={{ width:5, flexShrink:0, cursor:'ew-resize', background:'var(--line)', transition:'background .1s', userSelect:'none' }}
+            />
+          </>
+        )}
+
+        {/* Mobile: overlay sidebar + backdrop */}
+        {isMobile && sidebarOpen && (
+          <>
+            <div onClick={()=>setSidebarOpen(false)} style={{ position:'fixed',inset:0,background:'oklch(0 0 0 / 0.5)',zIndex:199 }}/>
+            <Sidebar view={view} setView={setView} mobile onClose={()=>setSidebarOpen(false)}/>
+          </>
+        )}
+
+        {/* Main content column */}
+        <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column', height:'100%', overflow:'hidden' }}>
+          {isMobile && <MobileTopBar view={view} onMenuOpen={()=>setSidebarOpen(true)}/>}
+          <div style={{ flex:1, minHeight:0, overflow:'hidden', position:'relative' }}>
+            {view==='board'   && <OpsBoard/>}
+            {view==='gantt'   && <GanttBoard/>}
+            {view==='weekly'  && <WeeklyBoard/>}
+            {view==='summary' && <SummaryBoard/>}
+          </div>
+        </div>
       </div>
     </AppProvider>
   );

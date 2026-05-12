@@ -134,7 +134,7 @@ const THEME_CSS = `
 const AppCtx = createContext(null);
 const useApp  = () => useContext(AppCtx);
 
-function AppProvider({ children, tweaks, setTweak }) {
+function AppProvider({ children, tweaks, setTweak, isMobile=false }) {
   const [date, setDate]               = useState(DEFAULT_DATE);
   const [filters, setFilters]         = useState({ batch:'ALL', instructor:'ALL', tail:'ALL', status:'ALL', search:'' });
   const [drawer, setDrawer]           = useState(null);
@@ -171,6 +171,7 @@ function AppProvider({ children, tweaks, setTweak }) {
     tweaks, setTweak: setTweak || (() => {}),
     dayFlights,
     flightById: id => FLIGHTS.find(f => f.id === id),
+    isMobile,
   };
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }
@@ -262,8 +263,35 @@ function HighlightBar({ on }) {
 
 // ─── Date Strip ───────────────────────────────────────────────────────────
 function DateStrip({ compact=false }) {
-  const { date, setDate } = useApp();
+  const { date, setDate, isMobile } = useApp();
+  const [expanded, setExpanded] = useState(true);
+  // Collapse by default on mobile; re-collapse when switching to mobile
+  useEffect(() => { if (isMobile) setExpanded(false); }, [isMobile]);
   const today = new Date().toISOString().slice(0,10);
+  const { wd: selWd, day: selDay, mo: selMo } = fmtDay(date);
+
+  if (!expanded) {
+    return (
+      <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+        <button onClick={() => setDate(date)} className="mono"
+          style={{
+            padding:'4px 8px', border:'1px solid var(--col-pending)',
+            background:'color-mix(in oklch,var(--col-pending) 14%,var(--surface))',
+            color:'var(--ink)', borderRadius:6, cursor:'default',
+            display:'flex', flexDirection:'row', alignItems:'center', gap:6,
+          }}>
+          <span className="mono uc" style={{ fontSize:8, color:'var(--ink-3)' }}>{selWd}</span>
+          <span className="num" style={{ fontSize:15, fontWeight:600 }}>{String(selDay).padStart(2,'0')}</span>
+          <span className="mono uc" style={{ fontSize:8, color:'var(--ink-3)' }}>{selMo}</span>
+        </button>
+        <button onClick={() => setExpanded(true)} className="mono uc" style={{
+          fontSize:9, padding:'4px 8px', borderRadius:4, border:'1px solid var(--line)',
+          background:'transparent', color:'var(--ink-3)', cursor:'pointer',
+        }}>ALL DATES ▾</button>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display:'flex', gap:5, alignItems:'stretch', flexWrap:'wrap' }}>
       {ALL_DATES.map(d => {
@@ -290,6 +318,10 @@ function DateStrip({ compact=false }) {
           </button>
         );
       })}
+      <button onClick={() => setExpanded(false)} className="mono uc"
+        style={{ fontSize:8, padding:'4px 6px', borderRadius:4, border:'1px solid var(--line)', background:'transparent', color:'var(--ink-3)', cursor:'pointer', alignSelf:'center' }}>
+        ▲
+      </button>
     </div>
   );
 }
@@ -368,51 +400,7 @@ function InlineSettings({ gantt=false }) {
   );
 }
 
-// ─── Resizable split ─────────────────────────────────────────────────────
-function useResizable(initial = 120, min = 36, max = 400) {
-  const [ctrlH, setCtrlH] = useState(initial);
-  const drag = useRef(null);
-
-  const onMouseDown = useCallback(e => {
-    drag.current = { startY: e.clientY, startH: ctrlH };
-    e.preventDefault();
-  }, [ctrlH]);
-
-  useEffect(() => {
-    const onMove = e => {
-      if (!drag.current) return;
-      const next = Math.max(min, Math.min(max, drag.current.startH + (e.clientY - drag.current.startY)));
-      setCtrlH(next);
-    };
-    const onUp = () => { drag.current = null; };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-  }, [min, max]);
-
-  return [ctrlH, onMouseDown];
-}
-
-function ResizeHandle({ onMouseDown }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <div onMouseDown={onMouseDown}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        height: 6, flexShrink: 0, cursor: 'ns-resize', userSelect: 'none',
-        background: hov ? 'color-mix(in oklch,var(--col-pending) 28%,var(--line))' : 'var(--line)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'background .1s',
-      }}>
-      <span style={{
-        width: 28, height: 2, borderRadius: 1,
-        background: hov ? 'var(--col-pending)' : 'var(--ink-3)',
-        transition: 'background .1s',
-      }}/>
-    </div>
-  );
-}
+// ─── (sidebar resize is handled directly in App in index.html) ───────────
 
 // ─── Drawer (view-only) ───────────────────────────────────────────────────
 function Drawer() {
@@ -464,6 +452,14 @@ function Drawer() {
           {f.isStandby && <Row k="STANDBY" v={<span style={{color:'var(--col-stby)'}}>Waiting for slot to open</span>}/>}
           <Row k="A/C TYPE"   v={<span className="mono">{f.type}</span>}/>
           <Row k="TAIL"       v={<span className="mono" style={{ display:'inline-block',padding:'2px 8px',borderRadius:3,background:'var(--bg-2)',border:'1px solid var(--line)' }}>{f.tail||'TBD'}</span>}/>
+          {(f.to != null || f.ldg != null) && (
+            <Row k="T/O · LDG" v={
+              <span className="mono" style={{ display:'flex', gap:16 }}>
+                <span>T/O <strong>{f.to ?? '—'}</strong></span>
+                <span>LDG <strong>{f.ldg ?? '—'}</strong></span>
+              </span>
+            }/>
+          )}
         </div>
         <div className="mono uc" style={{ padding:'10px 20px', fontSize:9, color:'var(--ink-3)', borderTop:'1px solid var(--line-soft)', textAlign:'center' }}>
           VIEW ONLY · CLICK OUTSIDE TO CLOSE
@@ -479,6 +475,5 @@ Object.assign(window, {
   fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
   FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar,
   DateStrip, FilterBar, InlineSettings, Drawer,
-  useResizable, ResizeHandle,
 });
 

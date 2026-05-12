@@ -36,9 +36,9 @@ function BreakdownTable({ title, subtitle, rows, nameKey='batch' }) {
 
 function SummaryBoard() {
   const app = useApp();
+  const { isMobile } = app;
   const [dateFrom, setDateFrom] = useS_s(ALL_DATES[0]);
   const [dateTo,   setDateTo]   = useS_s(ALL_DATES[ALL_DATES.length - 1]);
-  const [ctrlH, handleResizeDown] = useResizable(52, 0, 100);
 
   const all = useM_s(()=> {
     return FLIGHTS.filter(f => {
@@ -138,11 +138,8 @@ function SummaryBoard() {
         <div className="mono uc" style={{ fontSize:10,color:'var(--ink-3)' }}>FEED: {window.FLIGHT_DATA.fetchedAt}</div>
       </div>
 
-      <InlineSettings/>
-
-      {/* Date range selector — resizable */}
-      <div style={{ height:ctrlH, overflow:'hidden', flexShrink:0 }}>
-        <div style={{ padding:'8px 24px', borderBottom:'1px solid var(--line-soft)', background:'var(--bg-2)', display:'flex', gap:16, alignItems:'center', flexWrap:'wrap' }}>
+      {/* Date range selector */}
+      <div style={{ padding:'8px 24px', borderBottom:'1px solid var(--line-soft)', background:'var(--bg-2)', display:'flex', gap:16, alignItems:'center', flexWrap:'wrap', flexShrink:0 }}>
           <span className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>DATE RANGE</span>
           {[['FROM', dateFrom, setDateFrom], ['TO', dateTo, setDateTo]].map(([lbl, val, setter])=>(
             <label key={lbl} style={{ display:'flex', alignItems:'center', gap:6 }}>
@@ -158,10 +155,7 @@ function SummaryBoard() {
             RESET
           </button>
           <span className="mono" style={{ fontSize:10, color:'var(--ink-3)', marginLeft:'auto' }}>{all.length} FLIGHTS IN RANGE</span>
-        </div>
       </div>
-
-      <ResizeHandle onMouseDown={handleResizeDown}/>
 
       {/* Body: scrollable data area */}
       <div style={{ flex:1, minHeight:0, overflowY:'auto' }}>
@@ -178,7 +172,7 @@ function SummaryBoard() {
         </div>
 
         {/* Main two-column section */}
-        <div style={{ display:'grid', gridTemplateColumns:'1.1fr 0.9fr', gap:16, alignItems:'start' }}>
+        <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1.1fr 0.9fr', gap:16, alignItems:'start' }}>
 
           {/* Batch breakdown */}
           <BreakdownTable title="BATCH BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={batchStats} nameKey="batch"/>
