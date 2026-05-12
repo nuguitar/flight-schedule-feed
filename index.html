@@ -27,7 +27,7 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <!-- Pre-generated data — run scripts/generate_flight_data.py to refresh -->
-<script src="flight-data.js"></script>
+<script src="flight-data.js?v=1778610943"></script>
 
 <!-- Shared components and context -->
 <script type="text/babel" src="js/app-shared.js"></script>
@@ -58,7 +58,7 @@ const formatTH = iso => {
 
 // Sidebar — uses useApp() so must be rendered inside AppProvider
 function Sidebar({ view, setView, width, mobile=false, onClose }) {
-  const { tweaks, setTweak, highlightAP127, setHighlightAP127, hideOthers, setHideOthers } = useApp();
+  const { tweaks, setTweak } = useApp();
   const Chip = ({ on, onClick, children, color='var(--ink-2)', block=false }) => (
     <button onClick={onClick} className="mono uc" style={{
       padding:'4px 10px', fontSize:9, borderRadius:4, cursor:'pointer',
@@ -92,21 +92,26 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
 
       {/* Navigation */}
       <nav style={{ padding:'8px', display:'flex', flexDirection:'column', gap:2, flexShrink:0, borderBottom:'1px solid var(--line-soft)' }}>
-        {VIEWS.map((v,i) => (
-          <button key={v.id} onClick={()=>{ setView(v.id); if(onClose) onClose(); }}
-            className="mono uc"
-            style={{
-              padding:'9px 12px', borderRadius:5, cursor:'pointer', textAlign:'left',
-              background:view===v.id?`color-mix(in oklch,var(--col-pending) 14%,var(--surface))`:'transparent',
-              border:`1px solid ${view===v.id?'var(--col-pending)':'transparent'}`,
-              color:view===v.id?'var(--col-pending)':'var(--ink-3)',
-              fontWeight:view===v.id?600:400, fontSize:10, transition:'all .1s',
-              display:'flex', alignItems:'center', gap:10,
-            }}>
-            <span style={{ fontSize:8, opacity:.6, fontWeight:400 }}>{String.fromCharCode(65+i)}</span>
-            {v.label}
-          </button>
-        ))}
+        {VIEWS.map((v,i) => {
+          const active = view===v.id;
+          return (
+            <button key={v.id} onClick={()=>{ setView(v.id); if(onClose) onClose(); }}
+              className="mono uc"
+              style={{
+                padding:'8px 12px', borderRadius:5, cursor:'pointer', textAlign:'left',
+                background:active?`color-mix(in oklch,var(--col-pending) 14%,var(--surface))`:'transparent',
+                border:`1px solid ${active?'var(--col-pending)':'transparent'}`,
+                color:active?'var(--col-pending)':'var(--ink-3)',
+                fontWeight:active?600:400, fontSize:10, transition:'all .1s',
+                display:'flex', alignItems:'center', gap:9,
+              }}>
+              <span style={{ opacity: active?1:0.55, flexShrink:0 }}>
+                <ViewIcon id={v.id} size={13} color={active?'var(--col-pending)':'currentColor'}/>
+              </span>
+              {v.label}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Settings */}
@@ -116,16 +121,6 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
           {['cockpit','light','board'].map(th=>(
             <Chip key={th} on={tweaks.theme===th} onClick={()=>setTweak('theme',th)}>{th}</Chip>
           ))}
-        </div>
-        <div style={{ display:'flex',flexDirection:'column',gap:4,marginTop:2 }}>
-          <Chip on={highlightAP127} onClick={()=>setHighlightAP127(v=>!v)} color="var(--highlight)" block>◆ AP-127 FOCUS</Chip>
-          <span style={{ opacity:highlightAP127?1:0.35, transition:'opacity .15s' }}>
-            <Chip on={hideOthers} onClick={()=>setHideOthers(v=>!v)} color="var(--highlight)" block>HIDE OTHERS</Chip>
-          </span>
-          <div style={{ display:'flex',gap:4 }}>
-            <Chip on={tweaks.showSim}     onClick={()=>setTweak('showSim',v=>!v)}     color="var(--col-sim)">SIM</Chip>
-            <Chip on={tweaks.showStandby} onClick={()=>setTweak('showStandby',v=>!v)} color="var(--col-stby)">STBY</Chip>
-          </div>
         </div>
       </div>
 
@@ -147,7 +142,7 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
 
 // Compact top bar shown on mobile in place of full sidebar
 function MobileTopBar({ view, onMenuOpen }) {
-  const labels = { board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS' };
+  const LABELS = { board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS' };
   return (
     <div style={{
       height:46, padding:'0 14px', background:'var(--bg-2)',
@@ -163,16 +158,19 @@ function MobileTopBar({ view, onMenuOpen }) {
         <span className="mono uc" style={{ fontSize:11,fontWeight:700,letterSpacing:'0.08em' }}>AP127 CMD</span>
       </div>
       <div style={{ flex:1 }}/>
-      <span className="mono uc" style={{ fontSize:10,color:'var(--col-pending)',fontWeight:600,letterSpacing:'0.05em' }}>
-        {labels[view] || view.toUpperCase()}
-      </span>
+      <div style={{ display:'flex',alignItems:'center',gap:6,color:'var(--col-pending)' }}>
+        <ViewIcon id={view} size={12} color="var(--col-pending)"/>
+        <span className="mono uc" style={{ fontSize:10,fontWeight:600,letterSpacing:'0.05em' }}>
+          {LABELS[view] || view.toUpperCase()}
+        </span>
+      </div>
     </div>
   );
 }
 
 function App() {
   const [view, setView]         = React.useState('board');
-  const [tweaks, setTweakState] = React.useState({ theme:'cockpit', showSim:false, showStandby:true, groupBy:'batch' });
+  const [tweaks, setTweakState] = React.useState({ theme:'cockpit', showSim:false, showStandby:true, groupBy:'instructor' });
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [windowW, setWindowW]   = React.useState(window.innerWidth);
   const [sidebarW, setSidebarW] = React.useState(220);
@@ -255,10 +253,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
 </body>
 </html>
-tml>
-t>
-
-<style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
-</body>
-</html>
-tml>

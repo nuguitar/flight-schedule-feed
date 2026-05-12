@@ -4,13 +4,14 @@ const { useMemo: useM_g } = React;
 const HOUR_START = 6;
 const HOUR_END   = 18;
 const HOUR_SPAN  = HOUR_END - HOUR_START;
-const TRACK_LEFT = 190;
-const TRACK_RIGHT= 180;
 
 function GanttBoard() {
-  const app     = useApp();
-  const flights = app.dayFlights;
-  const groupBy = app.tweaks.groupBy || 'instructor';
+  const app      = useApp();
+  const { isMobile } = app;
+  const flights  = app.dayFlights;
+  const groupBy  = app.tweaks.groupBy || 'instructor';
+  const TRACK_LEFT  = isMobile ? 90  : 190;
+  const TRACK_RIGHT = isMobile ? 64  : 180;
 
   const rows = useM_g(()=>{
     const map = {};
@@ -44,19 +45,21 @@ function GanttBoard() {
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
       <ThemeStyle/>
       {/* Header */}
-      <div style={{ padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:12, flexShrink:0, minHeight:38, flexWrap:'wrap' }}>
+      <div style={{ padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:8, flexShrink:0, minHeight:38, flexWrap:'wrap' }}>
         <div style={{ display:'flex',alignItems:'center',gap:8 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-pending)',boxShadow:'0 0 8px var(--col-pending)' }}/>
-          <div className="mono uc" style={{ fontSize:11,fontWeight:600 }}>FLIGHT GANTT</div>
+          <ViewIcon id="gantt" size={12} color="var(--ink-2)"/>
+          <div className="mono uc" style={{ fontSize:11,fontWeight:600 }}>GANTT</div>
         </div>
         <div style={{ display:'flex',gap:4,alignItems:'center' }}>
-          <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>GROUP</span>
+          <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>FOCUS</span>
           <GrpChip g="instructor"/>
           <GrpChip g="tail"/>
           <GrpChip g="batch"/>
         </div>
         <div style={{flex:1}}/>
-        <div className="mono num" style={{ fontSize:12 }}>{String(day).padStart(2,'0')} {mo} · {wd}</div>
+        <FocusControls/>
+        {!isMobile && <div className="mono num" style={{ fontSize:11,color:'var(--ink-3)' }}>{String(day).padStart(2,'0')} {mo} · {wd}</div>}
       </div>
 
       {/* Date + filter */}
@@ -119,10 +122,11 @@ function GanttBoard() {
                 background:ri%2?'transparent':'color-mix(in oklch,var(--ink) 1.2%,transparent)',
                 opacity:rowAlpha, transition:'opacity .15s',
               }}>
-                <div style={{ padding:'10px 14px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)' }}>
-                  <div>
-                    <div style={{ fontSize:12,color:'var(--ink)',fontWeight:500 }}>{r.key}</div>
-                    <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{r.flights.length} FLT · {Math.floor(totalMin/60)}h{totalMin%60?String(totalMin%60).padStart(2,'0'):''}</div>
+                <div style={{ padding: isMobile?'6px 8px':'10px 14px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)', overflow:'hidden' }}>
+                  <div style={{ minWidth:0 }}>
+                    <div style={{ fontSize:isMobile?10:12,color:'var(--ink)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{r.key}</div>
+                    {!isMobile && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{r.flights.length} FLT · {Math.floor(totalMin/60)}h{totalMin%60?String(totalMin%60).padStart(2,'0'):''}</div>}
+                    {isMobile && <div className="mono uc" style={{ fontSize:7,color:'var(--ink-3)' }}>{r.flights.length}F</div>}
                   </div>
                 </div>
                 <div style={{ position:'relative' }}>
@@ -165,10 +169,10 @@ function GanttBoard() {
                     );
                   })}
                 </div>
-                <div style={{ padding:'10px 14px',borderLeft:'1px solid var(--line)',display:'flex',flexDirection:'column',justifyContent:'center',gap:2 }}>
-                  <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>{rightMetric.label}</div>
-                  <div className="mono num" style={{ fontSize:14,fontWeight:600,color:'var(--ink)' }}>{rightMetric.value}</div>
-                  <div className="mono" style={{ fontSize:9,color:'var(--ink-3)' }}>{rightMetric.sub}</div>
+                <div style={{ padding: isMobile?'6px 8px':'10px 14px',borderLeft:'1px solid var(--line)',display:'flex',flexDirection:'column',justifyContent:'center',gap:1 }}>
+                  <div className="mono uc" style={{ fontSize:isMobile?7:8,color:'var(--ink-3)' }}>{rightMetric.label}</div>
+                  <div className="mono num" style={{ fontSize:isMobile?11:14,fontWeight:600,color:'var(--ink)' }}>{rightMetric.value}</div>
+                  {!isMobile && <div className="mono" style={{ fontSize:9,color:'var(--ink-3)' }}>{rightMetric.sub}</div>}
                 </div>
               </div>
             );

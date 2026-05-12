@@ -31,7 +31,7 @@ def transform(raw: dict) -> dict:
 
             dur_min = f.get("durationMin") or parse_dur(f.get("duration", ""))
 
-            flights.append({
+            entry = {
                 "id":         flight_id,
                 "date":       f.get("date", date),
                 "status":     f.get("status", "Pending"),
@@ -48,7 +48,16 @@ def transform(raw: dict) -> dict:
                 "cond":       f.get("condition") or None,
                 "type":       f.get("type") or None,
                 "tail":       f.get("tail") or None,
-            })
+            }
+            # Operational data — only present on Completed flights
+            if f.get("status") == "Completed":
+                if f.get("tkoff")   is not None: entry["tkoff"]   = f["tkoff"]
+                if f.get("ldgTime") is not None: entry["ldgTime"] = f["ldgTime"]
+                if f.get("airborne")is not None: entry["airborne"]= f["airborne"]
+                if f.get("to")      is not None: entry["to"]      = f["to"]
+                if f.get("ldg")     is not None: entry["ldg"]     = f["ldg"]
+                if f.get("inst")    is not None: entry["inst"]    = f["inst"]
+            flights.append(entry)
 
     return {
         "fetchedAt":   raw.get("fetched_at") or raw.get("fetchedAt", ""),

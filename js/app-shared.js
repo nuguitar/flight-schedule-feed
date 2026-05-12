@@ -452,11 +452,21 @@ function Drawer() {
           {f.isStandby && <Row k="STANDBY" v={<span style={{color:'var(--col-stby)'}}>Waiting for slot to open</span>}/>}
           <Row k="A/C TYPE"   v={<span className="mono">{f.type}</span>}/>
           <Row k="TAIL"       v={<span className="mono" style={{ display:'inline-block',padding:'2px 8px',borderRadius:3,background:'var(--bg-2)',border:'1px solid var(--line)' }}>{f.tail||'TBD'}</span>}/>
-          {(f.to != null || f.ldg != null) && (
-            <Row k="T/O · LDG" v={
+          {f.status === 'Completed' && (f.tkoff || f.ldgTime || f.airborne) && (
+            <Row k="ACTUAL TIMES" v={
+              <span className="mono" style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
+                {f.tkoff   && <span style={{color:'var(--ink-2)'}}>T/O <strong>{f.tkoff}</strong></span>}
+                {f.ldgTime && <span style={{color:'var(--ink-2)'}}>LDG <strong>{f.ldgTime}</strong></span>}
+                {f.airborne && <span style={{color:'var(--ink-3)'}}>AIR <strong>{f.airborne}</strong></span>}
+              </span>
+            }/>
+          )}
+          {f.status === 'Completed' && (f.to != null || f.ldg != null || f.inst != null) && (
+            <Row k="T/O · LDG · INST" v={
               <span className="mono" style={{ display:'flex', gap:16 }}>
-                <span>T/O <strong>{f.to ?? '—'}</strong></span>
-                <span>LDG <strong>{f.ldg ?? '—'}</strong></span>
+                <span><span style={{color:'var(--ink-3)',fontSize:10}}>T/O</span> <strong style={{fontSize:15}}>{f.to ?? '—'}</strong></span>
+                <span><span style={{color:'var(--ink-3)',fontSize:10}}>LDG</span> <strong style={{fontSize:15}}>{f.ldg ?? '—'}</strong></span>
+                <span><span style={{color:'var(--ink-3)',fontSize:10}}>INST</span> <strong style={{fontSize:15}}>{f.inst ?? '—'}</strong></span>
               </span>
             }/>
           )}
@@ -469,11 +479,72 @@ function Drawer() {
   );
 }
 
+// ─── View icons ───────────────────────────────────────────────────────────
+function ViewIcon({ id, size=13, color='currentColor' }) {
+  if (id === 'board') return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill={color}>
+      <rect x="1" y="1" width="5" height="5" rx="1" opacity=".85"/>
+      <rect x="8" y="1" width="5" height="5" rx="1" opacity=".85"/>
+      <rect x="1" y="8" width="5" height="5" rx="1" opacity=".85"/>
+      <rect x="8" y="8" width="5" height="5" rx="1" opacity=".85"/>
+    </svg>
+  );
+  if (id === 'gantt') return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill={color}>
+      <rect x="2" y="1.5" width="8" height="2.5" rx="1"/>
+      <rect x="5" y="5.5" width="7" height="2.5" rx="1" opacity=".75"/>
+      <rect x="1" y="9.5" width="10" height="2.5" rx="1" opacity=".55"/>
+      <rect x="1" y="1" width="1.5" height="12" rx=".5" opacity=".3"/>
+    </svg>
+  );
+  if (id === 'weekly') return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" stroke={color} strokeWidth="1.3">
+      <rect x="1.5" y="3" width="11" height="9.5" rx="1"/>
+      <line x1="1.5" y1="6" x2="12.5" y2="6"/>
+      <line x1="5.2" y1="3" x2="5.2" y2="12.5"/>
+      <line x1="8.8" y1="3" x2="8.8" y2="12.5"/>
+      <line x1="4" y1="1" x2="4" y2="3.5"/>
+      <line x1="10" y1="1" x2="10" y2="3.5"/>
+    </svg>
+  );
+  if (id === 'summary') return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill={color}>
+      <path d="M7 7L7 1.2A5.8 5.8 0 0 1 12.8 7Z" opacity=".9"/>
+      <path d="M7 7L1.2 7A5.8 5.8 0 0 1 7 1.2Z" opacity=".55"/>
+      <path d="M7 7L12.8 7A5.8 5.8 0 0 1 3.2 11.4Z" opacity=".35"/>
+    </svg>
+  );
+  return null;
+}
+
+// ─── Focus controls (AP-127 highlight + hide-others, shown in view headers) ──
+function FocusControls() {
+  const { highlightAP127, setHighlightAP127, hideOthers, setHideOthers } = useApp();
+  const Chip = ({ on, onClick, children, color }) => (
+    <button onClick={onClick} className="mono uc" style={{
+      padding:'3px 8px', fontSize:9, borderRadius:4, cursor:'pointer',
+      border:`1px solid ${on ? color : 'var(--line)'}`,
+      background: on ? `color-mix(in oklch,${color} 14%,var(--surface))` : 'transparent',
+      color: on ? color : 'var(--ink-3)', fontWeight: on ? 600 : 400, transition:'all .1s',
+      whiteSpace:'nowrap',
+    }}>{children}</button>
+  );
+  return (
+    <div style={{ display:'flex', gap:4, alignItems:'center', flexShrink:0 }}>
+      <Chip on={highlightAP127} onClick={()=>setHighlightAP127(v=>!v)} color="var(--highlight)">◆ AP-127</Chip>
+      <span style={{ opacity: highlightAP127 ? 1 : 0.35, transition:'opacity .15s' }}>
+        <Chip on={hideOthers} onClick={()=>setHideOthers(v=>!v)} color="var(--highlight)">HIDE</Chip>
+      </span>
+    </div>
+  );
+}
+
 Object.assign(window, {
   AppCtx, AppProvider, useApp, ThemeStyle, ArtboardShell,
   FLIGHTS, INSTRUCTORS, RESOURCES, LEAVES, ALL_DATES, DEFAULT_DATE, HIGHLIGHT_BATCH,
   fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
   FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar,
   DateStrip, FilterBar, InlineSettings, Drawer,
+  ViewIcon, FocusControls,
 });
 
