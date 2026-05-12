@@ -37,6 +37,7 @@
 <script type="text/babel" src="js/view-gantt.js"></script>
 <script type="text/babel" src="js/view-weekly.js"></script>
 <script type="text/babel" src="js/view-summary.js"></script>
+<script type="text/babel" src="js/view-roster.js"></script>
 
 <script type="text/babel" data-presets="env,react">
 const VIEWS = [
@@ -44,6 +45,7 @@ const VIEWS = [
   { id:'gantt',   label:'GANTT'    },
   { id:'weekly',  label:'WEEKLY'   },
   { id:'summary', label:'ANALYTICS'},
+  { id:'roster',  label:'ROSTER'   },
 ];
 
 // Format ISO timestamp in Thailand timezone
@@ -124,15 +126,15 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
         </div>
       </div>
 
-      <div style={{ flex:1 }}/>
+      <div style={{ flex:1, minHeight:0 }}/>
 
-      {/* Last update (TH) */}
-      <div style={{ padding:'12px 16px', borderTop:'1px solid var(--line)', background:'var(--bg)', flexShrink:0 }}>
-        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginBottom:4 }}>LAST UPDATE · TH</div>
-        <div className="mono" style={{ fontSize:10,color:'var(--ink-2)',lineHeight:1.6 }}>
+      {/* Last update (TH) — compact single block */}
+      <div style={{ padding:'8px 12px', borderTop:'1px solid var(--line)', background:'var(--bg)', flexShrink:0 }}>
+        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginBottom:3 }}>LAST UPDATE · TH</div>
+        <div className="mono" style={{ fontSize:10,color:'var(--ink-2)' }}>
           {formatTH(window.FLIGHT_DATA.fetchedAt)}
         </div>
-        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:2 }}>
+        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:1 }}>
           {window.FLIGHT_DATA.tz}
         </div>
       </div>
@@ -142,7 +144,7 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
 
 // Compact top bar shown on mobile in place of full sidebar
 function MobileTopBar({ view, onMenuOpen }) {
-  const LABELS = { board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS' };
+  const LABELS = { board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS', roster:'ROSTER' };
   return (
     <div style={{
       height:46, padding:'0 14px', background:'var(--bg-2)',
@@ -173,16 +175,18 @@ function App() {
   const [tweaks, setTweakState] = React.useState({ theme:'cockpit', showSim:false, showStandby:true, groupBy:'instructor' });
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [windowW, setWindowW]   = React.useState(window.innerWidth);
+  const [windowH, setWindowH]   = React.useState(window.innerHeight);
   const [sidebarW, setSidebarW] = React.useState(220);
   const sidebarDrag = React.useRef(null);
 
   React.useEffect(() => {
-    const h = () => setWindowW(window.innerWidth);
+    const h = () => { setWindowW(window.innerWidth); setWindowH(window.innerHeight); };
     window.addEventListener('resize', h);
     return () => window.removeEventListener('resize', h);
   }, []);
 
-  const isMobile = windowW < 768;
+  // Mobile if small portrait OR small landscape (phone rotated)
+  const isMobile = windowW < 768 || (windowW < 1100 && windowH < 560);
 
   const setTweak = React.useCallback((k, v) => {
     setTweakState(t => ({ ...t, [k]: typeof v === 'function' ? v(t[k]) : v }));
@@ -240,6 +244,7 @@ function App() {
             {view==='gantt'   && <GanttBoard/>}
             {view==='weekly'  && <WeeklyBoard/>}
             {view==='summary' && <SummaryBoard/>}
+            {view==='roster'  && <RosterBoard/>}
           </div>
         </div>
       </div>

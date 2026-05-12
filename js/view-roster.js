@@ -1,0 +1,257 @@
+// Roster — instructor × date workload heat-map
+// PM view: spot over/under-loaded instructors and plan capacity across the period
+const { useMemo: useM_r, useState: useS_r } = React;
+
+// Load thresholds (flights per day per instructor)
+const LOAD_COLOR = n => {
+  if (n === 0) return null;
+  if (n === 1) return 'var(--col-done)';
+  if (n <= 3)  return 'var(--col-pending)';
+  return 'var(--col-cancel)';
+};
+const LOAD_OPACITY = n => n === 0 ? 0 : Math.min(0.9, 0.35 + n * 0.14);
+
+function RosterBoard() {
+  const app = useApp();
+  const { isMobile } = app;
+  const [groupBy, setGroupBy] = useS_r('instructor'); // 'instructor' | 'batch'
+  const today = new Date().toISOString().slice(0,10);
+
+  // Build matrix: rowKey × date → { flights, hours, batches[], statuses }
+  const { keys, matrix, dateMax } = useM_r(() => {
+    const m = {};
+    const keySet = new Set();
+    let maxFlights = 0;
+
+    FLIGHTS.forEach(f => {
+      const key = groupBy === 'instructor'
+        ? (f.instructor || '—')
+        : (f.batch || '—');
+      if (!key) return;
+      keySet.add(key);
+      if (!m[key]) m[key] = {};
+      if (!m[key][f.date]) m[key][f.date] = { flights:0, hours:0, batches:new Set(), ap127:0, completed:0 };
+      const cell = m[key][f.date];
+      cell.flights++;
+      cell.hours += (f.durMin || 0) / 60;
+      cell.batches.add(f.batch);
+      if (f.batch === HIGHLIGHT_BATCH) cell.ap127++;
+      if (f.status === 'Completed') cell.completed++;
+      maxFlights = Math.max(maxFlights, cell.flights);
+    });
+
+    // Sort keys: AP-127 related first, then alphabetical
+    const sorted = [...keySet].sort((a, b) => {
+      if (groupBy === 'instructor') return a.localeCompare(b);
+      // For batch: AP- batches first, sorted; others after
+      const aAP = /^AP-/i.test(a), bAP = /^AP-/i.test(b);
+      if (aAP !== bAP) return aAP ? -1 : 1;
+      return a.localeCompare(b);
+    });
+
+    return { keys: sorted, matrix: m, dateMax: maxFlights };
+  }, [groupBy]);
+
+  // Summary stats per date (bottom row)
+  const dateTotals = useM_r(() => {
+    const t = {};
+    ALL_DATES.forEach(d => { t[d] = { flights:0, hours:0 }; });
+    FLIGHTS.forEach(f => {
+      if (!t[f.date]) return;
+      t[f.date].flights++;
+      t[f.date].hours += (f.durMin||0)/60;
+    });
+    return t;
+  }, []);
+
+  const CELL_W = isMobile ? 32 : 44;
+  const ROW_H  = isMobile ? 28 : 34;
+  const LABEL_W = isMobile ? 90 : 160;
+
+  const GrpChip = ({ g, label }) => (
+    <button onClick={()=>setGroupBy(g)} className="mono uc" style={{
+      padding:'2px 8px', fontSize:8, borderRadius:3, cursor:'pointer',
+      border:`1px solid ${groupBy===g?'var(--ink-2)':'var(--line)'}`,
+      background:groupBy===g?`color-mix(in oklch,var(--ink-2) 14%,var(--surface))`:'transparent',
+      color:groupBy===g?'var(--ink-2)':'var(--ink-3)',
+      fontWeight:groupBy===g?600:400, transition:'all .1s',
+    }}>{label}</button>
+  );
+
+  return (
+    <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
+      <ThemeStyle/>
+      {/* Header */}
+      <div style={{ height:38, padding:'0 10px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
+        <div style={{ display:'flex',alignItems:'center',gap:7 }}>
+          <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 6px var(--col-done)' }}/>
+          <ViewIcon id="roster" size={12} color="var(--ink-2)"/>
+          <div className="mono uc" style={{ fontSize:11,fontWeight:600 }}>ROSTER</div>
+        </div>
+        <div style={{ display:'flex',gap:4,alignItems:'center' }}>
+          <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>VIEW</span>
+          <GrpChip g="instructor" label="INSTRUCTOR"/>
+          <GrpChip g="batch"      label="BATCH"/>
+        </div>
+        <div style={{flex:1}}/>
+        <FocusControls/>
+        <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{keys.length} {groupBy.toUpperCase()}S</div>
+      </div>
+
+      {/* Legend */}
+      <div style={{ padding:'3px 10px', borderBottom:'1px solid var(--line-soft)', background:'var(--bg-2)', display:'flex', gap:14, alignItems:'center', flexShrink:0 }}>
+        <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>LOAD:</span>
+        {[[1,'1 FLT','var(--col-done)'],[2,'2–3','var(--col-pending)'],[4,'4+','var(--col-cancel)']].map(([n,lbl,c])=>(
+          <span key={n} style={{ display:'flex',gap:5,alignItems:'center' }}>
+            <span style={{ width:14,height:10,borderRadius:2,background:c,opacity:LOAD_OPACITY(n) }}/>
+            <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>{lbl}</span>
+          </span>
+        ))}
+        <span style={{ display:'flex',gap:5,alignItems:'center' }}>
+          <span className="mono" style={{ fontSize:10,color:'var(--highlight)' }}>◆</span>
+          <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>AP-127</span>
+        </span>
+        <div style={{flex:1}}/>
+        <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>CLICK CELL → BOARD</span>
+      </div>
+
+      {/* Scrollable matrix */}
+      <div style={{ flex:1, minHeight:0, overflow:'auto' }}>
+        <table style={{ borderCollapse:'collapse', minWidth:'max-content' }}>
+          {/* Column header: dates */}
+          <thead>
+            <tr>
+              <th style={{
+                width:LABEL_W, minWidth:LABEL_W, padding:'6px 8px', textAlign:'left',
+                background:'var(--bg-2)', borderBottom:'1px solid var(--line)',
+                position:'sticky', top:0, left:0, zIndex:3,
+              }}>
+                <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>{groupBy.toUpperCase()}</span>
+              </th>
+              {ALL_DATES.map(d => {
+                const { wd, day } = fmtDay(d);
+                const isPastDate = d < today;
+                const isTodayDate = d === today;
+                return (
+                  <th key={d} style={{
+                    width:CELL_W, minWidth:CELL_W, padding:'4px 2px', textAlign:'center',
+                    background: isTodayDate ? 'color-mix(in oklch,var(--col-pending) 10%,var(--bg-2))' : 'var(--bg-2)',
+                    borderBottom:`1px solid ${isTodayDate?'var(--col-pending)':'var(--line)'}`,
+                    borderLeft:'1px solid var(--line-soft)',
+                    position:'sticky', top:0, zIndex:2,
+                    opacity: isPastDate && !isTodayDate ? 0.6 : 1,
+                  }}>
+                    <div className="mono uc" style={{ fontSize:isMobile?6:7, color:'var(--ink-3)' }}>{wd}</div>
+                    <div className="num" style={{ fontSize:isMobile?10:12, fontWeight:600, color: isTodayDate?'var(--col-pending)':'var(--ink)' }}>{String(day).padStart(2,'0')}</div>
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {keys.map((key, ki) => {
+              const rowData = matrix[key] || {};
+              const rowTotal = ALL_DATES.reduce((s,d) => s + (rowData[d]?.flights||0), 0);
+              const rowHours = ALL_DATES.reduce((s,d) => s + (rowData[d]?.hours||0), 0);
+              const isHL = groupBy === 'batch' ? key === HIGHLIGHT_BATCH
+                : ALL_DATES.some(d => rowData[d]?.ap127 > 0);
+              const rowAlpha = app.highlightAP127 && !isHL ? 0.3 : 1;
+
+              return (
+                <tr key={key} style={{ opacity: rowAlpha, transition:'opacity .15s' }}>
+                  {/* Row label */}
+                  <td style={{
+                    padding:'4px 8px', background:'var(--bg-2)',
+                    borderBottom:'1px solid var(--line-soft)',
+                    borderRight:'1px solid var(--line)',
+                    position:'sticky', left:0, zIndex:1,
+                    background: ki%2 ? 'var(--bg-2)' : 'color-mix(in oklch,var(--ink) 1.5%,var(--bg-2))',
+                  }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                      {isHL && <span style={{ color:'var(--highlight)',fontSize:9 }}>◆</span>}
+                      <span style={{
+                        fontSize: isMobile?9:11, fontWeight:500,
+                        color: isHL?'var(--highlight)':'var(--ink)',
+                        overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+                        maxWidth: LABEL_W - 30,
+                        display:'block',
+                      }}>{key}</span>
+                    </div>
+                    {!isMobile && (
+                      <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:1 }}>
+                        {rowTotal} FLT · {rowHours.toFixed(1)}h
+                      </div>
+                    )}
+                  </td>
+                  {/* Cells */}
+                  {ALL_DATES.map(d => {
+                    const cell = rowData[d];
+                    const n = cell?.flights || 0;
+                    const color = LOAD_COLOR(n);
+                    const isTodayDate = d === today;
+                    return (
+                      <td key={d}
+                        onClick={() => {
+                          if (n > 0) { app.setDate(d); /* could navigate to gantt */ }
+                        }}
+                        title={n > 0 ? `${key} · ${d} · ${n} FLT · ${(cell.hours).toFixed(1)}h` : undefined}
+                        style={{
+                          width:CELL_W, height:ROW_H, textAlign:'center', verticalAlign:'middle',
+                          borderBottom:'1px solid var(--line-soft)',
+                          borderLeft:`1px solid ${isTodayDate?'color-mix(in oklch,var(--col-pending) 30%,var(--line-soft))':'var(--line-soft)'}`,
+                          background: color
+                            ? `color-mix(in oklch,${color} ${Math.round(LOAD_OPACITY(n)*100)}%,var(--surface))`
+                            : ki%2 ? 'transparent' : 'color-mix(in oklch,var(--ink) 0.8%,transparent)',
+                          cursor: n > 0 ? 'pointer' : 'default',
+                          transition:'background .1s',
+                          position:'relative',
+                        }}>
+                        {n > 0 && (
+                          <>
+                            <span className="mono num" style={{ fontSize:isMobile?9:11, fontWeight:600, color: n>=4?'var(--ink)':'var(--ink)', display:'block', lineHeight:1 }}>{n}</span>
+                            {cell.ap127 > 0 && (
+                              <span style={{ position:'absolute', top:2, right:3, fontSize:7, color:'var(--highlight)', lineHeight:1 }}>◆</span>
+                            )}
+                          </>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+
+            {/* Summary row */}
+            <tr style={{ borderTop:'2px solid var(--line)' }}>
+              <td style={{
+                padding:'4px 8px', position:'sticky', left:0, zIndex:1,
+                background:'var(--bg-2)', borderTop:'1px solid var(--line)',
+              }}>
+                <span className="mono uc" style={{ fontSize:9,fontWeight:600,color:'var(--ink-2)' }}>DAILY TOTAL</span>
+              </td>
+              {ALL_DATES.map(d => {
+                const t = dateTotals[d] || { flights:0, hours:0 };
+                const isTodayDate = d === today;
+                return (
+                  <td key={d} style={{
+                    textAlign:'center', padding:'3px 2px',
+                    background: isTodayDate ? 'color-mix(in oklch,var(--col-pending) 8%,var(--bg-2))' : 'var(--bg-2)',
+                    borderLeft:'1px solid var(--line-soft)',
+                    borderTop:'1px solid var(--line)',
+                  }}>
+                    <div className="mono num" style={{ fontSize:isMobile?9:11, fontWeight:600, color:'var(--ink)', lineHeight:1 }}>{t.flights||''}</div>
+                    {!isMobile && <div className="mono" style={{ fontSize:7,color:'var(--ink-3)' }}>{t.flights?t.hours.toFixed(0)+'h':''}</div>}
+                  </td>
+                );
+              })}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <Drawer/>
+    </ArtboardShell>
+  );
+}
+
+window.RosterBoard = RosterBoard;

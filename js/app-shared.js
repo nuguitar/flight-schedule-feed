@@ -514,6 +514,20 @@ function ViewIcon({ id, size=13, color='currentColor' }) {
       <path d="M7 7L12.8 7A5.8 5.8 0 0 1 3.2 11.4Z" opacity=".35"/>
     </svg>
   );
+  if (id === 'roster') return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill={color}>
+      <rect x="1"   y="4.5" width="3.5" height="2"   rx=".4" opacity=".9"/>
+      <rect x="5.5" y="4.5" width="3.5" height="2"   rx=".4" opacity=".5"/>
+      <rect x="10"  y="4.5" width="3.5" height="2"   rx=".4" opacity=".7"/>
+      <rect x="1"   y="7.5" width="3.5" height="2"   rx=".4" opacity=".5"/>
+      <rect x="5.5" y="7.5" width="3.5" height="2"   rx=".4" opacity=".9"/>
+      <rect x="10"  y="7.5" width="3.5" height="2"   rx=".4" opacity=".4"/>
+      <rect x="1"   y="10.5" width="3.5" height="2"  rx=".4" opacity=".3"/>
+      <rect x="5.5" y="10.5" width="3.5" height="2"  rx=".4" opacity=".6"/>
+      <rect x="10"  y="10.5" width="3.5" height="2"  rx=".4" opacity=".8"/>
+      <line x1="1" y1="3.5" x2="13" y2="3.5" stroke={color} strokeWidth="1" opacity=".5"/>
+    </svg>
+  );
   return null;
 }
 

@@ -48,12 +48,12 @@ function WeeklyBoard() {
       </div>
 
       {/* Filter */}
-      <div style={{ padding:'6px 16px', flexShrink:0 }}>
+      <div style={{ padding:'4px 8px', flexShrink:0 }}>
         <FilterBar/>
       </div>
 
       {/* Column grid */}
-      <div style={{ flex:1, minHeight:0, padding:'0 16px 12px', overflowX:'auto', overflowY:'hidden', display:'flex', flexDirection:'column' }}>
+      <div style={{ flex:1, minHeight:0, padding:'0 6px 6px', overflowX:'auto', overflowY:'hidden', display:'flex', flexDirection:'column' }}>
         <div style={{ display:'flex', gap:10, height:'100%', minWidth:'max-content' }}>
           {ALL_DATES.map(d=>{
             const { wd, mo, day } = fmtDay(d);

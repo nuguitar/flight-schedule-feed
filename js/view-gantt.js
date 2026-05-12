@@ -63,13 +63,13 @@ function GanttBoard() {
       </div>
 
       {/* Date + filter */}
-      <div style={{ padding:'6px 20px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
+      <div style={{ padding:'4px 8px', display:'flex', flexDirection:'column', gap:4, flexShrink:0 }}>
         <DateStrip/>
         <FilterBar/>
       </div>
 
       {/* Timeline */}
-      <div style={{ margin:'4px 24px 14px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
+      <div style={{ margin:'2px 6px 6px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
         {/* Hour ruler */}
         <div style={{ display:'grid', gridTemplateColumns:`${TRACK_LEFT}px 1fr ${TRACK_RIGHT}px`, borderBottom:'1px solid var(--line)', background:'var(--bg-2)', flexShrink:0 }}>
           <div className="mono uc" style={{ padding:'9px 14px', fontSize:9, color:'var(--ink-3)' }}>
@@ -122,11 +122,9 @@ function GanttBoard() {
                 background:ri%2?'transparent':'color-mix(in oklch,var(--ink) 1.2%,transparent)',
                 opacity:rowAlpha, transition:'opacity .15s',
               }}>
-                <div style={{ padding: isMobile?'6px 8px':'10px 14px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)', overflow:'hidden' }}>
+                <div style={{ padding: isMobile?'4px 6px':'8px 10px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)', overflow:'hidden' }}>
                   <div style={{ minWidth:0 }}>
                     <div style={{ fontSize:isMobile?10:12,color:'var(--ink)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{r.key}</div>
-                    {!isMobile && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{r.flights.length} FLT · {Math.floor(totalMin/60)}h{totalMin%60?String(totalMin%60).padStart(2,'0'):''}</div>}
-                    {isMobile && <div className="mono uc" style={{ fontSize:7,color:'var(--ink-3)' }}>{r.flights.length}F</div>}
                   </div>
                 </div>
                 <div style={{ position:'relative' }}>

@@ -73,7 +73,7 @@ function OpsBoard() {
       </div>
 
       {/* Date hero + stats */}
-      <div style={{ padding: isMobile?'6px 12px 4px':'8px 20px 6px', display:'flex', gap:isMobile?5:10, alignItems:'center', flexShrink:0, flexWrap:'wrap' }}>
+      <div style={{ padding: isMobile?'4px 8px 3px':'6px 10px 4px', display:'flex', gap:isMobile?4:8, alignItems:'center', flexShrink:0, flexWrap:'wrap' }}>
         <div style={{ display:'flex', alignItems:'baseline', gap:6, marginRight:4 }}>
           <div className="num" style={{ fontSize:isMobile?26:38, fontWeight:700, lineHeight:1, letterSpacing:'-0.02em' }}>{String(day).padStart(2,'0')}</div>
           <div className="mono uc" style={{ fontSize:isMobile?9:11, color:'var(--ink-2)' }}>{mo} · {wd}</div>
@@ -88,13 +88,13 @@ function OpsBoard() {
       </div>
 
       {/* Date + filter */}
-      <div style={{ padding: isMobile?'0 12px 6px':'0 20px 6px', display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
+      <div style={{ padding: isMobile?'0 8px 4px':'0 10px 4px', display:'flex', flexDirection:'column', gap:4, flexShrink:0 }}>
         <DateStrip/>
         <FilterBar/>
       </div>
 
       {/* Table */}
-      <div style={{ margin: isMobile?'0 8px 8px':'0 24px 16px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
+      <div style={{ margin: isMobile?'0 4px 4px':'0 6px 6px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
         <div style={{ flex:1, minHeight:0, overflow:'auto' }}>
           {/* Sticky header */}
           <div className="mono uc" style={{

@@ -1,15 +1,15 @@
 // Analytics Summary — batch breakdown, instructor load, AP-127 spotlight
 const { useMemo: useM_s, useState: useS_s } = React;
 
-// Palette for AP batches (cycles if more than defined)
+// Palette for non-AP-127 AP batches (pink/320 intentionally excluded — reserved for AP-127 highlight)
 const BATCH_COLORS = [
-  'oklch(0.72 0.18 260)',  // blue-ish
+  'oklch(0.72 0.18 260)',  // blue
   'oklch(0.75 0.18 145)',  // green
   'oklch(0.80 0.16  75)',  // amber
-  'oklch(0.78 0.18 320)',  // pink/highlight (AP-127 slot)
   'oklch(0.72 0.16  30)',  // red-orange
   'oklch(0.70 0.14 200)',  // teal
   'oklch(0.74 0.15 290)',  // purple
+  'oklch(0.72 0.18 175)',  // mint
 ];
 
 // Simple SVG donut chart
@@ -88,8 +88,14 @@ function BreakdownTable({ title, subtitle, rows, nameKey='batch' }) {
 function SummaryBoard() {
   const app = useApp();
   const { isMobile } = app;
-  const [dateFrom, setDateFrom] = useS_s(ALL_DATES[0]);
-  const [dateTo,   setDateTo]   = useS_s(ALL_DATES[ALL_DATES.length - 1]);
+  const [dateFrom, setDateFrom] = useS_s(()=>{
+    const weekAgo = new Date(Date.now() - 7*86400000).toISOString().slice(0,10);
+    return ALL_DATES.find(d => d >= weekAgo) || ALL_DATES[0];
+  });
+  const [dateTo, setDateTo] = useS_s(()=>{
+    const today = new Date().toISOString().slice(0,10);
+    return [...ALL_DATES].reverse().find(d => d <= today) || ALL_DATES[ALL_DATES.length-1];
+  });
 
   const all = useM_s(()=> {
     return FLIGHTS.filter(f => {
@@ -171,16 +177,16 @@ function SummaryBoard() {
   // AP-batch pie: only batches starting with "AP-"
   const apBatchSlices = useM_s(()=>{
     const apBatches = batchStats.filter(b => /^AP-/i.test(b.batch));
-    // Sort by batch name ascending (AP-124, AP-125, ...)
     apBatches.sort((a,b) => a.batch.localeCompare(b.batch));
-    return apBatches.map((b, i) => ({
-      label: b.batch,
-      value: b.total,
-      hours: b.hours,
-      color: b.batch === HIGHLIGHT_BATCH
-        ? 'var(--highlight)'
-        : BATCH_COLORS[i % BATCH_COLORS.length],
-    }));
+    let colorIdx = 0;
+    return apBatches.map(b => {
+      if (b.batch === HIGHLIGHT_BATCH) {
+        return { label:b.batch, value:b.total, hours:b.hours, color:'var(--highlight)' };
+      }
+      const color = BATCH_COLORS[colorIdx % BATCH_COLORS.length];
+      colorIdx++;
+      return { label:b.batch, value:b.total, hours:b.hours, color };
+    });
   }, [batchStats]);
 
   const SumTile = ({label,value,color,sub}) => (
@@ -224,7 +230,7 @@ function SummaryBoard() {
 
       {/* Body: scrollable data area */}
       <div style={{ flex:1, minHeight:0, overflowY:'auto' }}>
-      <div style={{ padding:'14px 20px 24px', display:'flex', flexDirection:'column', gap:16 }}>
+      <div style={{ padding:'10px 10px 20px', display:'flex', flexDirection:'column', gap:12 }}>
 
         {/* Stat tiles */}
         <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
