@@ -253,7 +253,7 @@ const DEFAULT_DATE    = ...;     // today if in range, else nearest future date
 
 Three themes via CSS custom properties on `body[data-theme="..."]`:
 
-| Token | Cockpit (dark) | Light | Board (dark warm) |
+| Token | Cockpit (dark) | Light | Warm (dark amber) |
 |-------|----------------|-------|-------------------|
 | `--bg` | near-black | near-white | jet black |
 | `--col-pending` | amber | dark amber | bright amber |
@@ -349,11 +349,12 @@ For `status === 'Completed'`, shows two additional rows:
 
 ### Helper functions
 ```js
+localToday()       // "YYYY-MM-DD" in local (Bangkok) time — use this, never new Date().toISOString().slice(0,10)
 minutesOf(hhmm)    // "06:30" → 390
 fmtDay(dateStr)    // "2026-05-12" → { wd:"MON", mo:"MAY", day:12, y:2026 }
 fmtHM(hhmm)        // identity or "—"
-isPast(dateStr)    // bool
-isToday(dateStr)   // bool
+isPast(dateStr)    // bool (uses localToday())
+isToday(dateStr)   // bool (uses localToday())
 STATUS_COLOR(f)    // returns CSS var string
 flightAlpha(f, hlOn) // 0.22 if dimmed, 1.0 otherwise
 ```
@@ -490,4 +491,5 @@ Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent brow
 | 6 | Replaced NavBar with persistent Sidebar; removed Mobile tab; added hamburger overlay; sidebar drag-resize; collapsible DateStrip; AP-127 FOCUS moved to sidebar; TH last-update time |
 | 7 (Round 7 in session) | LDG/TO/INST in Drawer; SVG view icons; FocusControls moved to view headers; remove SIM/STBY chips from sidebar; Gantt "FOCUS" label + instructor default; Analytics donut chart + AP batch colors; mobile landscape fix; padding reduction |
 | 8 | Gantt row cleanup (no FLT sub-label); ROSTER heat-map view; AP-128 color fix; 1-week default date range in Analytics; last-update two-line fix on mobile |
-| 9 (latest) | Gantt TAIL sort by aircraft type then alpha; Weekly week-by-week pagination (Mon-Sun, prev/next nav); Analytics barMode toggle (# flights vs hours), AP-127 0hr student seeding, all breakdowns sorted by active metric; Roster student groupBy, ◆ AP-127 ONLY filter, cell-click inline detail overlay |
+| 9 | Gantt TAIL sort by aircraft type then alpha; Weekly week-by-week pagination (Mon-Sun, prev/next nav); Analytics barMode toggle (# flights vs hours), AP-127 0hr student seeding, all breakdowns sorted by active metric; Roster student groupBy, ◆ AP-127 ONLY filter, cell-click inline detail overlay |
+| 10 (latest) | **Bug fixes + UX polish:** `localToday()` helper replaces all `new Date().toISOString().slice(0,10)` usages (fixes Bangkok midnight off-by-one in Board, Roster, Weekly, Analytics, DateStrip); "board" theme renamed to "warm" (no longer clashes with BOARD view name); localStorage persistence for last-used theme and view; view descriptions shown under active nav label in sidebar; Board sort-column hover affordance + title tooltips; FocusControls tooltip hints |
