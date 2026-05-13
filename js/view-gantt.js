@@ -25,6 +25,12 @@ function GanttBoard() {
         const ah=a.flights.some(f=>f.batch===HIGHLIGHT_BATCH);
         const bh=b.flights.some(f=>f.batch===HIGHLIGHT_BATCH);
         if(ah!==bh) return ah?-1:1;
+        // Tail focus: sort by aircraft type first, then tail number alphabetically
+        if (groupBy === 'tail') {
+          const aType = a.flights[0]?.type || '';
+          const bType = b.flights[0]?.type || '';
+          if (aType !== bType) return aType.localeCompare(bType);
+        }
         return a.key.localeCompare(b.key);
       });
   },[flights,groupBy]);

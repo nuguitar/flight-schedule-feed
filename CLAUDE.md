@@ -283,13 +283,17 @@ Timeline bars for selected date, grouped by INSTRUCTOR / TAIL / BATCH.
 - Time ruler: 06:00 – 18:00
 - Track widths responsive: 190/180px desktop → 90/64px mobile
 - Right column: DUTY PERIOD (instructor) or FLT HRS (tail/batch)
+- TAIL focus sorts rows by aircraft type first, then alphabetically by tail number
 - Clicking a bar opens Drawer
 
 ### C — WEEKLY (`view-weekly.js`)
-All dates as columns; flight cards scrollable per column.
-- Each column header shows date + P/C/X/S counts
+Dates grouped into Mon-Sun calendar weeks; one week shown at a time with prev/next nav.
+- Week navigation bar: `‹ PREV` · week label (`DD – DD MMM YYYY`) · `NEXT ›` · WK N/total
+- Current week's dates shown as equal-width grid columns (CSS grid `repeat(N, 1fr)`)
+- Each column header shows date + P/C/X/S counts + TODAY/PAST badge
 - Cards show time · batch · student · tail
-- Horizontal scroll; columns are 192px wide
+- `buildWeeks(dates)` helper groups ALL_DATES by Mon boundary
+- Defaults to the week containing today (or nearest future week)
 
 ### D — ANALYTICS (`view-summary.js`)
 Aggregate stats with date-range filter (default: last 7 days → today).
@@ -297,21 +301,25 @@ Aggregate stats with date-range filter (default: last 7 days → today).
 - **AP BATCH COMPARISON**: SVG donut chart, AP-xxx batches only
   - AP-127 always gets `var(--highlight)` (pink); other batches use `BATCH_COLORS[]` (no pink)
   - `BATCH_COLORS`: blue · green · amber · red-orange · teal · purple · mint
-- **◆ AP-127 STUDENTS**: Breakdown bar chart for AP-127 cohort
-- **BATCH BREAKDOWN**: All batches bar chart
-- **INSTRUCTOR BREAKDOWN**: All instructors bar chart
-- **STUDENT BREAKDOWN**: All students bar chart
+- **◆ AP-127 STUDENTS**: All cohort members seeded from full `FLIGHTS` (0-hr students appear); sorted by barMode metric
+- **Bar mode toggle**: `# FLIGHTS` | `HOURS` chips — controls sort order + bar widths for all breakdowns
+  - Bar container width ∝ selected metric; inner coloured segments flex-proportional to status flight counts
+- **BATCH BREAKDOWN** / **INSTRUCTOR BREAKDOWN** / **STUDENT BREAKDOWN**: sorted by active metric
 
 ### E — ROSTER (`view-roster.js`)
 **PM tool** — workload heat-map.
-- Rows: instructors (or batches, toggle VIEW chip)
+- Rows: instructors, batches, **or students** (toggle VIEW chip: INSTRUCTOR · BATCH · STUDENT)
+- **◆ AP-127 ONLY** filter chip — shows only AP-127 rows and date totals
 - Columns: ALL_DATES
 - Cell color = load: green (1 flt) · amber (2–3) · red (4+)
 - ◆ badge on cells with AP-127 flights
-- DAILY TOTAL footer row
+- DAILY TOTAL footer row (respects AP-127 only filter)
 - Respects `highlightAP127` / `hideOthers` (opacity dimming)
 - Sticky first column + sticky header row
-- Click cell → sets date (for Gantt/Board cross-navigation)
+- **Click cell → inline detail overlay** listing all flights for that row × date
+  - Each flight shows time, student/instructor, lesson, tail, STBY badge
+  - Tap flight in overlay → sets date + opens global Drawer
+  - Click backdrop or ✕ to dismiss
 
 ---
 
@@ -481,4 +489,5 @@ Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent brow
 | 5 | Analytics scroll fix; Gantt time grid 06–18; Instructor breakdown; resizable panels (vertical — later removed) |
 | 6 | Replaced NavBar with persistent Sidebar; removed Mobile tab; added hamburger overlay; sidebar drag-resize; collapsible DateStrip; AP-127 FOCUS moved to sidebar; TH last-update time |
 | 7 (Round 7 in session) | LDG/TO/INST in Drawer; SVG view icons; FocusControls moved to view headers; remove SIM/STBY chips from sidebar; Gantt "FOCUS" label + instructor default; Analytics donut chart + AP batch colors; mobile landscape fix; padding reduction |
-| 8 (latest) | Gantt row cleanup (no FLT sub-label); ROSTER heat-map view; AP-128 color fix; 1-week default date range in Analytics; last-update two-line fix on mobile |
+| 8 | Gantt row cleanup (no FLT sub-label); ROSTER heat-map view; AP-128 color fix; 1-week default date range in Analytics; last-update two-line fix on mobile |
+| 9 (latest) | Gantt TAIL sort by aircraft type then alpha; Weekly week-by-week pagination (Mon-Sun, prev/next nav); Analytics barMode toggle (# flights vs hours), AP-127 0hr student seeding, all breakdowns sorted by active metric; Roster student groupBy, ◆ AP-127 ONLY filter, cell-click inline detail overlay |

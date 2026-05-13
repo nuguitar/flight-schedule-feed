@@ -14,7 +14,6 @@ const BATCH_COLORS = [
 
 // Simple SVG donut chart
 function DonutChart({ slices, size=150, ring=22 }) {
-  // slices: [{label, value, color}]
   const total = slices.reduce((a, s) => a + s.value, 0);
   if (total === 0) return (
     <div style={{ width:size,height:size,display:'flex',alignItems:'center',justifyContent:'center' }}>
@@ -46,15 +45,20 @@ function DonutChart({ slices, size=150, ring=22 }) {
         offset += frac;
         return el;
       })}
-      {/* Inner ring */}
       <circle cx={cx} cy={cy} r={r - ring/2 - 4} fill="var(--bg-2)" opacity={0.6}/>
     </svg>
   );
 }
 
-function BreakdownTable({ title, subtitle, rows, nameKey='batch' }) {
-  const maxTotal = Math.max(...rows.map(r=>r.total), 1);
-  const pct = w => `${((w/maxTotal)*100).toFixed(1)}%`;
+// barMode: 'flights' | 'hours'
+// Bar container width ∝ selected metric; inner coloured segments flex-proportional to flight-count per status
+function BreakdownTable({ title, subtitle, rows, nameKey='batch', barMode='flights', highlightKey=null }) {
+  const sorted = [...rows].sort((a, b) =>
+    barMode === 'hours' ? b.hours - a.hours : b.total - a.total
+  );
+  const maxFlights = Math.max(...sorted.map(r => r.total), 1);
+  const maxHours   = Math.max(...sorted.map(r => r.hours), 0.01);
+
   return (
     <div style={{ background:'var(--surface)', border:'1px solid var(--line)', borderRadius:8, overflow:'hidden' }}>
       <div style={{ padding:'8px 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)' }}>
@@ -62,21 +66,38 @@ function BreakdownTable({ title, subtitle, rows, nameKey='batch' }) {
         {subtitle && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',marginTop:1 }}>{subtitle}</div>}
       </div>
       <div style={{ padding:'10px 16px', display:'flex', flexDirection:'column', gap:8 }}>
-        {rows.length === 0 && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',padding:'8px 0' }}>NO DATA</div>}
-        {rows.map(r=>{
-          const name = r[nameKey];
-          const isHL = name === HIGHLIGHT_BATCH;
+        {sorted.length === 0 && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',padding:'8px 0' }}>NO DATA</div>}
+        {sorted.map(r => {
+          const name  = r[nameKey];
+          const isHL  = name === HIGHLIGHT_BATCH || name === highlightKey;
+          const barW  = barMode === 'hours'
+            ? `${((r.hours   / maxHours)   * 100).toFixed(1)}%`
+            : `${((r.total   / maxFlights) * 100).toFixed(1)}%`;
           return (
-            <div key={name} style={{ display:'flex',gap:10,alignItems:'center' }}>
-              <div className="mono uc" style={{ width:120,fontSize:10,flexShrink:0,color:isHL?'var(--highlight)':'var(--ink-2)',fontWeight:isHL?600:400,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={name}>{name}</div>
-              <div style={{ flex:1, position:'relative', height:18, display:'flex', borderRadius:3, overflow:'hidden', gap:1, background:'var(--bg-2)' }}>
-                {r.pending>0   && <div title={`Pending: ${r.pending}`}   style={{ width:pct(r.pending),   background:'var(--col-pending)', opacity:.85, transition:'width .3s' }}/>}
-                {r.completed>0 && <div title={`Completed: ${r.completed}`} style={{ width:pct(r.completed), background:'var(--col-done)',    opacity:.85, transition:'width .3s' }}/>}
-                {r.canceled>0  && <div title={`Canceled: ${r.canceled}`}  style={{ width:pct(r.canceled),  background:'var(--col-cancel)',  opacity:.85, transition:'width .3s' }}/>}
-                {r.standby>0   && <div title={`Standby: ${r.standby}`}    style={{ width:pct(r.standby),   background:'var(--col-stby)',    opacity:.85, transition:'width .3s' }}/>}
+            <div key={name} style={{ display:'flex', gap:10, alignItems:'center' }}>
+              <div className="mono uc" style={{
+                width:120, fontSize:10, flexShrink:0,
+                color: isHL ? 'var(--highlight)' : 'var(--ink-2)',
+                fontWeight: isHL ? 600 : 400,
+                overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+              }} title={name}>{name}</div>
+              {/* Bar track */}
+              <div style={{ flex:1, height:18, background:'var(--bg-2)', borderRadius:3, overflow:'hidden' }}>
+                <div style={{ width:barW, height:'100%', display:'flex', gap:1, transition:'width .3s' }}>
+                  {r.pending   > 0 && <div title={`Pending: ${r.pending}`}   style={{ flex:r.pending,   background:'var(--col-pending)', opacity:.85 }}/>}
+                  {r.completed > 0 && <div title={`Completed: ${r.completed}`} style={{ flex:r.completed, background:'var(--col-done)',    opacity:.85 }}/>}
+                  {r.canceled  > 0 && <div title={`Canceled: ${r.canceled}`}  style={{ flex:r.canceled,  background:'var(--col-cancel)',  opacity:.85 }}/>}
+                  {r.standby   > 0 && <div title={`Standby: ${r.standby}`}    style={{ flex:r.standby,   background:'var(--col-stby)',    opacity:.85 }}/>}
+                  {r.total === 0   && <div style={{ flex:1, background:'var(--line)', opacity:.2 }}/>}
+                </div>
               </div>
-              <div className="mono num" style={{ width:26,fontSize:10,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.total}</div>
-              <div className="mono num" style={{ width:44,fontSize:9,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
+              {barMode === 'hours'
+                ? <div className="mono num" style={{ width:50, fontSize:10, color:'var(--ink-3)', textAlign:'right', flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
+                : <>
+                    <div className="mono num" style={{ width:26, fontSize:10, color:'var(--ink-3)', textAlign:'right', flexShrink:0 }}>{r.total}</div>
+                    <div className="mono num" style={{ width:44, fontSize:9,  color:'var(--ink-3)', textAlign:'right', flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
+                  </>
+              }
             </div>
           );
         })}
@@ -96,6 +117,7 @@ function SummaryBoard() {
     const today = new Date().toISOString().slice(0,10);
     return [...ALL_DATES].reverse().find(d => d <= today) || ALL_DATES[ALL_DATES.length-1];
   });
+  const [barMode, setBarMode] = useS_s('flights'); // 'flights' | 'hours'
 
   const all = useM_s(()=> {
     return FLIGHTS.filter(f => {
@@ -129,7 +151,7 @@ function SummaryBoard() {
       if(f.status==='Canceled')  m[b].canceled++;
       if(f.isStandby)            m[b].standby++;
     });
-    return Object.values(m).sort((a,b)=>b.total-a.total);
+    return Object.values(m);
   },[all]);
 
   const instrStats = useM_s(()=>{
@@ -143,7 +165,7 @@ function SummaryBoard() {
       if(f.status==='Canceled')  m[k].canceled++;
       if(f.isStandby)            m[k].standby++;
     });
-    return Object.values(m).sort((a,b)=>b.total-a.total);
+    return Object.values(m);
   },[all]);
 
   const studentStats = useM_s(()=>{
@@ -157,21 +179,28 @@ function SummaryBoard() {
       if(f.status==='Canceled')  m[k].canceled++;
       if(f.isStandby)            m[k].standby++;
     });
-    return Object.values(m).sort((a,b)=>b.total-a.total);
+    return Object.values(m);
   },[all]);
 
+  // AP-127 students: seed all known AP-127 students from full FLIGHTS so 0-hr students appear
   const ap127StudentStats = useM_s(()=>{
     const m={};
-    all.filter(f=>f.batch===HIGHLIGHT_BATCH).forEach(f=>{
-      const k=f.student||'—';
-      if(!m[k]) m[k]={name:k,total:0,hours:0,pending:0,completed:0,canceled:0,standby:0};
-      m[k].total++; m[k].hours+=(f.durMin||0)/60;
+    // Seed every known AP-127 student from entire dataset
+    FLIGHTS.filter(f => f.batch === HIGHLIGHT_BATCH && f.student).forEach(f => {
+      const k = f.student;
+      if (!m[k]) m[k] = {name:k, total:0, hours:0, pending:0, completed:0, canceled:0, standby:0};
+    });
+    // Accumulate from the active date range
+    all.filter(f => f.batch === HIGHLIGHT_BATCH).forEach(f => {
+      const k = f.student || '—';
+      if (!m[k]) m[k] = {name:k, total:0, hours:0, pending:0, completed:0, canceled:0, standby:0};
+      m[k].total++; m[k].hours += (f.durMin||0)/60;
       if(f.status==='Pending')   m[k].pending++;
       if(f.status==='Completed') m[k].completed++;
       if(f.status==='Canceled')  m[k].canceled++;
       if(f.isStandby)            m[k].standby++;
     });
-    return Object.values(m).sort((a,b)=>b.total-a.total);
+    return Object.values(m).sort((a,b) => b.hours - a.hours || b.total - a.total || a.name.localeCompare(b.name));
   },[all]);
 
   // AP-batch pie: only batches starting with "AP-"
@@ -195,6 +224,16 @@ function SummaryBoard() {
       <div className="num" style={{ fontSize:24,fontWeight:600,lineHeight:1.1,color:'var(--ink)',marginTop:2 }}>{String(value).padStart(2,'0')}</div>
       {sub&&<div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:2 }}>{sub}</div>}
     </div>
+  );
+
+  const BarModeChip = ({ mode, label }) => (
+    <button onClick={() => setBarMode(mode)} className="mono uc" style={{
+      padding:'2px 8px', fontSize:8, borderRadius:3, cursor:'pointer',
+      border:`1px solid ${barMode===mode?'var(--ink-2)':'var(--line)'}`,
+      background: barMode===mode ? `color-mix(in oklch,var(--ink-2) 14%,var(--surface))` : 'transparent',
+      color: barMode===mode ? 'var(--ink-2)' : 'var(--ink-3)',
+      fontWeight: barMode===mode ? 600 : 400, transition:'all .1s',
+    }}>{label}</button>
   );
 
   return (
@@ -268,43 +307,66 @@ function SummaryBoard() {
             </div>
           </div>
 
-          {/* AP-127 student breakdown */}
+          {/* AP-127 student breakdown — uses barMode */}
           <div style={{ background:'var(--surface)', border:'1px solid var(--highlight)', borderRadius:8, overflow:'hidden' }}>
             <div style={{ padding:'8px 16px', borderBottom:'1px solid var(--line)', background:'color-mix(in oklch,var(--highlight) 8%,var(--bg-2))' }}>
               <div className="mono uc" style={{ fontSize:10,color:'var(--highlight)',fontWeight:600 }}>◆ AP-127 STUDENTS</div>
-              <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',marginTop:1 }}>PENDING · COMPLETED · CANCELED</div>
+              <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',marginTop:1 }}>ALL COHORT MEMBERS · SORTED BY {barMode==='hours'?'HOURS':'FLIGHTS'}</div>
             </div>
             <div style={{ padding:'10px 16px', display:'flex', flexDirection:'column', gap:8 }}>
-              {ap127StudentStats.length === 0 && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',padding:'8px 0' }}>NO AP-127 FLIGHTS IN RANGE</div>}
-              {ap127StudentStats.map(r=>{
-                const maxT = Math.max(...ap127StudentStats.map(x=>x.total), 1);
-                const pct = w => `${((w/maxT)*100).toFixed(1)}%`;
-                return (
-                  <div key={r.name} style={{ display:'flex',gap:10,alignItems:'center' }}>
-                    <div className="mono uc" style={{ width:120,fontSize:10,flexShrink:0,color:'var(--highlight)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={r.name}>{r.name}</div>
-                    <div style={{ flex:1, height:18, display:'flex', borderRadius:3, overflow:'hidden', gap:1, background:'var(--bg-2)' }}>
-                      {r.pending>0   && <div title={`Pending: ${r.pending}`}   style={{ width:pct(r.pending),   background:'var(--col-pending)', opacity:.85 }}/>}
-                      {r.completed>0 && <div title={`Completed: ${r.completed}`} style={{ width:pct(r.completed), background:'var(--col-done)',    opacity:.85 }}/>}
-                      {r.canceled>0  && <div title={`Canceled: ${r.canceled}`}  style={{ width:pct(r.canceled),  background:'var(--col-cancel)',  opacity:.85 }}/>}
-                      {r.standby>0   && <div title={`Standby: ${r.standby}`}    style={{ width:pct(r.standby),   background:'var(--col-stby)',    opacity:.85 }}/>}
-                    </div>
-                    <div className="mono num" style={{ width:26,fontSize:10,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.total}</div>
-                    <div className="mono num" style={{ width:44,fontSize:9,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
-                  </div>
+              {ap127StudentStats.length === 0 && <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)',padding:'8px 0' }}>NO AP-127 STUDENTS FOUND</div>}
+              {(()=>{
+                const sorted127 = [...ap127StudentStats].sort((a,b) =>
+                  barMode === 'hours' ? b.hours - a.hours : b.total - a.total
                 );
-              })}
+                const maxF127 = Math.max(...sorted127.map(r=>r.total), 1);
+                const maxH127 = Math.max(...sorted127.map(r=>r.hours), 0.01);
+                return sorted127.map(r => {
+                  const barW = barMode === 'hours'
+                    ? `${((r.hours / maxH127) * 100).toFixed(1)}%`
+                    : `${((r.total / maxF127) * 100).toFixed(1)}%`;
+                  return (
+                    <div key={r.name} style={{ display:'flex', gap:10, alignItems:'center' }}>
+                      <div className="mono uc" style={{ width:120,fontSize:10,flexShrink:0,color:'var(--highlight)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={r.name}>{r.name}</div>
+                      <div style={{ flex:1, height:18, background:'var(--bg-2)', borderRadius:3, overflow:'hidden' }}>
+                        <div style={{ width:barW, height:'100%', display:'flex', gap:1, transition:'width .3s' }}>
+                          {r.pending   > 0 && <div title={`Pending: ${r.pending}`}   style={{ flex:r.pending,   background:'var(--col-pending)', opacity:.85 }}/>}
+                          {r.completed > 0 && <div title={`Completed: ${r.completed}`} style={{ flex:r.completed, background:'var(--col-done)',    opacity:.85 }}/>}
+                          {r.canceled  > 0 && <div title={`Canceled: ${r.canceled}`}  style={{ flex:r.canceled,  background:'var(--col-cancel)',  opacity:.85 }}/>}
+                          {r.standby   > 0 && <div title={`Standby: ${r.standby}`}    style={{ flex:r.standby,   background:'var(--col-stby)',    opacity:.85 }}/>}
+                          {r.total === 0   && <div style={{ flex:1, background:'var(--line)', opacity:.2 }}/>}
+                        </div>
+                      </div>
+                      {barMode === 'hours'
+                        ? <div className="mono num" style={{ width:50,fontSize:10,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
+                        : <>
+                            <div className="mono num" style={{ width:26,fontSize:10,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.total}</div>
+                            <div className="mono num" style={{ width:44,fontSize:9,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
+                          </>
+                      }
+                    </div>
+                  );
+                });
+              })()}
             </div>
           </div>
         </div>
 
+        {/* Bar mode toggle + breakdown section header */}
+        <div style={{ display:'flex', alignItems:'center', gap:8, padding:'4px 0' }}>
+          <span className="mono uc" style={{ fontSize:9, color:'var(--ink-3)' }}>BREAKDOWN BY</span>
+          <BarModeChip mode="flights" label="# FLIGHTS"/>
+          <BarModeChip mode="hours"   label="HOURS"/>
+        </div>
+
         {/* Batch breakdown */}
-        <BreakdownTable title="BATCH BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={batchStats} nameKey="batch"/>
+        <BreakdownTable title="BATCH BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={batchStats} nameKey="batch" barMode={barMode}/>
 
         {/* Instructor breakdown */}
-        <BreakdownTable title="INSTRUCTOR BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={instrStats} nameKey="name"/>
+        <BreakdownTable title="INSTRUCTOR BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={instrStats} nameKey="name" barMode={barMode}/>
 
         {/* Student breakdown */}
-        <BreakdownTable title="STUDENT BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={studentStats} nameKey="name"/>
+        <BreakdownTable title="STUDENT BREAKDOWN" subtitle="PENDING · COMPLETED · CANCELED · STANDBY" rows={studentStats} nameKey="name" barMode={barMode}/>
 
       </div>{/* end inner flex column */}
       </div>{/* end scroll container */}
