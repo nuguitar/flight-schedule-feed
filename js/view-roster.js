@@ -18,7 +18,7 @@ function RosterBoard() {
   const [ap127Only,  setAp127Only]  = useS_r(false);
   // cellDetail: { key, date } | null — the cell whose flight list is shown in the overlay
   const [cellDetail, setCellDetail] = useS_r(null);
-  const today = new Date().toISOString().slice(0,10);
+  const today = localToday();
 
   // Build matrix: rowKey × date → { flights, hours, batches[], ap127, completed }
   const { keys, matrix, flightsByKeyDate } = useM_r(() => {

@@ -22,9 +22,12 @@ const ALL_DATES = (() => {
   return result;
 })();
 
+// Use local date (not UTC) so Bangkok users see the correct "today" at all hours
+const localToday = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+
 // Default to today if available, else nearest future date
 const DEFAULT_DATE = (() => {
-  const today = new Date().toISOString().slice(0,10);
+  const today = localToday();
   if (ALL_DATES.includes(today)) return today;
   return ALL_DATES.find(d => d >= today) || ALL_DATES[ALL_DATES.length - 1];
 })();
@@ -39,8 +42,8 @@ const fmtDay   = d => {
 };
 const minutesOf = hhmm => { if (!hhmm) return null; const [h,m]=hhmm.split(':').map(Number); return h*60+m; };
 const fmtHM     = hhmm => hhmm || '—';
-const isPast    = d => d < new Date().toISOString().slice(0,10);
-const isToday   = d => d === new Date().toISOString().slice(0,10);
+const isPast    = d => d < localToday();
+const isToday   = d => d === localToday();
 
 // ─── Color system ─────────────────────────────────────────────────────────
 const STATUS_COLOR = f => {
@@ -103,7 +106,7 @@ const THEME_CSS = `
     --highlight-bg:   oklch(0.95 0.06 330);
     --shadow: 0 4px 14px oklch(0 0 0 / 0.07);
   }
-  body[data-theme="board"] {
+  body[data-theme="warm"] {
     --bg:       oklch(0.06 0 0);
     --bg-2:     oklch(0.10 0 0);
     --surface:  oklch(0.10 0 0);
@@ -267,7 +270,7 @@ function DateStrip({ compact=false }) {
   const [expanded, setExpanded] = useState(true);
   // Collapse by default on mobile; re-collapse when switching to mobile
   useEffect(() => { if (isMobile) setExpanded(false); }, [isMobile]);
-  const today = new Date().toISOString().slice(0,10);
+  const today = localToday();
   const { wd: selWd, day: selDay, mo: selMo } = fmtDay(date);
 
   if (!expanded) {
@@ -379,7 +382,7 @@ function InlineSettings({ gantt=false }) {
       flexShrink:0,
     }}>
       <span className="mono uc" style={{ fontSize:9, color:'var(--ink-3)' }}>THEME</span>
-      {['cockpit','light','board'].map(th=>(
+      {['cockpit','light','warm'].map(th=>(
         <Chip key={th} on={tweaks.theme===th} onClick={()=>setTweak('theme',th)} color="var(--ink-2)">{th}</Chip>
       ))}
       <div style={{ width:1,height:16,background:'var(--line)',margin:'0 4px' }}/>
@@ -545,9 +548,12 @@ function FocusControls() {
   );
   return (
     <div style={{ display:'flex', gap:4, alignItems:'center', flexShrink:0 }}>
-      <Chip on={highlightAP127} onClick={()=>setHighlightAP127(v=>!v)} color="var(--highlight)">◆ AP-127</Chip>
-      <span style={{ opacity: highlightAP127 ? 1 : 0.35, transition:'opacity .15s' }}>
-        <Chip on={hideOthers} onClick={()=>setHideOthers(v=>!v)} color="var(--highlight)">HIDE</Chip>
+      <Chip on={highlightAP127} onClick={()=>setHighlightAP127(v=>!v)} color="var(--highlight)"
+        title="Highlight AP-127 batch flights. Toggle off to show all batches equally.">◆ AP-127</Chip>
+      <span style={{ opacity: highlightAP127 ? 1 : 0.35, transition:'opacity .15s' }}
+        title={highlightAP127 ? '' : 'Enable AP-127 focus first to use HIDE'}>
+        <Chip on={hideOthers} onClick={()=>setHideOthers(v=>!v)} color="var(--highlight)"
+          title="Hide all non-AP-127 flights from the current view.">HIDE</Chip>
       </span>
     </div>
   );
@@ -556,7 +562,7 @@ function FocusControls() {
 Object.assign(window, {
   AppCtx, AppProvider, useApp, ThemeStyle, ArtboardShell,
   FLIGHTS, INSTRUCTORS, RESOURCES, LEAVES, ALL_DATES, DEFAULT_DATE, HIGHLIGHT_BATCH,
-  fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
+  localToday, fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
   FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar,
   DateStrip, FilterBar, InlineSettings, Drawer,
   ViewIcon, FocusControls,

@@ -104,8 +104,13 @@ function OpsBoard() {
             position:'sticky', top:0, zIndex:1,
           }}>
             {[['status','STATUS'],['batch','BATCH'],['student','STUDENT'],['instructor','INSTRUCTOR'],['lesson','LESSON'],['start','START'],['dur','DUR'],['end','END'],['type','A/C'],['tail','TAIL']].map(([k,label])=>(
-              <span key={k} onClick={()=>handleSort(k)} style={{ cursor:'pointer', userSelect:'none', display:'flex', alignItems:'center', gap:3,
-                color: sortCol===k ? 'var(--col-pending)' : 'var(--ink-3)',
+              <span key={k} onClick={()=>handleSort(k)}
+                title={`Sort by ${label.toLowerCase()}${sortCol===k ? (sortDir==='asc'?' (click for descending)':' (click to reset)') : ''}`}
+                onMouseEnter={e=>e.currentTarget.style.color='var(--ink)'}
+                onMouseLeave={e=>e.currentTarget.style.color=sortCol===k?'var(--col-pending)':'var(--ink-3)'}
+                style={{ cursor:'pointer', userSelect:'none', display:'flex', alignItems:'center', gap:3,
+                  color: sortCol===k ? 'var(--col-pending)' : 'var(--ink-3)',
+                  transition:'color .1s',
               }}>
                 {label}
                 {sortCol===k && <span style={{fontSize:8}}>{sortDir==='asc'?'▲':'▼'}</span>}

@@ -22,7 +22,7 @@ function WeeklyBoard() {
   const weeks = useM_w(() => buildWeeks(ALL_DATES), []);
 
   // Default to the week that contains today (or the last week if all past)
-  const today = new Date().toISOString().slice(0,10);
+  const today = localToday();
   const defaultWeekIdx = useM_w(() => {
     const idx = weeks.findIndex(w => w.includes(today));
     if (idx !== -1) return idx;

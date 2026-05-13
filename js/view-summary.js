@@ -110,11 +110,13 @@ function SummaryBoard() {
   const app = useApp();
   const { isMobile } = app;
   const [dateFrom, setDateFrom] = useS_s(()=>{
-    const weekAgo = new Date(Date.now() - 7*86400000).toISOString().slice(0,10);
-    return ALL_DATES.find(d => d >= weekAgo) || ALL_DATES[0];
+    const today = localToday();
+    const weekAgo = new Date(new Date(today+'T00:00:00').getTime() - 7*86400000);
+    const weekAgoStr = `${weekAgo.getFullYear()}-${String(weekAgo.getMonth()+1).padStart(2,'0')}-${String(weekAgo.getDate()).padStart(2,'0')}`;
+    return ALL_DATES.find(d => d >= weekAgoStr) || ALL_DATES[0];
   });
   const [dateTo, setDateTo] = useS_s(()=>{
-    const today = new Date().toISOString().slice(0,10);
+    const today = localToday();
     return [...ALL_DATES].reverse().find(d => d <= today) || ALL_DATES[ALL_DATES.length-1];
   });
   const [barMode, setBarMode] = useS_s('flights'); // 'flights' | 'hours'
