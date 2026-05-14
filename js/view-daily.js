@@ -229,7 +229,8 @@ function DailyBoard() {
     const m = {};
     flights.forEach(f => {
       if (f.isSim) return;
-      const k = f.tail || 'TBD';
+      if (!f.tail) return;  // Skip unassigned aircraft
+      const k = f.tail;
       if (!m[k]) m[k] = { name: k, type: f.type || '—', total: 0, completed: 0, canceled: 0, hours: 0 };
       m[k].total++;
       if (f.status === 'Completed') m[k].completed++;
@@ -342,61 +343,86 @@ function DailyBoard() {
 
           {/* Charts row */}
           <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: 12 }}>
-            {/* Schedule Pulse — hourly bar chart */}
-            <Section title="SCHEDULE PULSE" hint="FLIGHTS BY START HOUR (06–21)">
+            {/* Schedule Pulse — smoothed line graph with filled areas (6–18) */}
+            <Section title="SCHEDULE PULSE" hint="FLIGHTS BY START HOUR (06–18)" fullWidth>
               {flights.length === 0 ? (
                 <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '32px 0', textAlign: 'center' }}>NO FLIGHTS</div>
               ) : (
-                <div style={{ borderBottom: '1px solid var(--line)' }}>
-                  {/* alignItems:stretch (default) so each column fills the fixed height —
-                      the inner flex:1 bar track then has real space to grow into */}
-                  <div style={{ display: 'flex', alignItems: 'stretch', gap: 3, height: 124 }}>
-                    {hourly.HOURS.map(h => {
-                      const b = hourly.buckets[h];
-                      const hPct  = hourly.max > 0 ? b.total / hourly.max : 0;
-                      const apPct = b.total > 0 ? b.ap127 / b.total : 0;
-                      const peak  = b.total === hourly.max && b.total > 0;
-                      return (
-                        <div key={h} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 0 }}>
-                          {/* count label — fixed height keeps all bar baselines aligned */}
-                          <div className="mono num" style={{
-                            fontSize: 8, height: 11, fontWeight: 600,
-                            color: b.total > 0 ? (peak ? 'var(--col-pending)' : 'var(--ink-2)') : 'transparent',
-                          }}>{b.total > 0 ? b.total : '0'}</div>
-                          {/* bar track — flex:1 fills remaining column height */}
-                          <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'flex-end', minHeight: 0 }}>
-                            <div style={{
-                              width: '100%',
-                              height: b.total > 0 ? `${Math.max(6, hPct * 100)}%` : '0%',
-                              minHeight: b.total > 0 ? 4 : 0,
-                              background: 'var(--col-pending)', opacity: 0.85,
-                              borderRadius: '3px 3px 0 0',
-                              display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                              transition: 'height .3s ease',
-                            }} title={`${String(h).padStart(2,'0')}:00 — ${b.total} flight${b.total === 1 ? '' : 's'} · ${b.ap127} AP-127 · ${b.completed} completed`}>
-                              {apPct > 0 && <div style={{ width: '100%', height: `${apPct * 100}%`, background: 'var(--highlight)', borderRadius: apPct >= 1 ? '3px 3px 0 0' : 0 }}/>}
-                            </div>
-                          </div>
-                          {/* hour label */}
-                          <div className="mono num" style={{ fontSize: 8, color: 'var(--ink-3)' }}>{String(h).padStart(2, '0')}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {(() => {
+                    // Hourly breakdown for 6–18 only
+                    const hrs = [];
+                    for (let h = 6; h <= 18; h++) hrs.push(h);
+                    const buckets = Object.fromEntries(hrs.map(h => [h, { total: 0, ap127: 0, ap126: 0, ap124: 0, ap129: 0 }]));
+                    flights.forEach(f => {
+                      const m = minutesOf(f.start);
+                      if (m == null) return;
+                      const h = Math.floor(m / 60);
+                      if (!buckets[h]) return;
+                      buckets[h].total++;
+                      if (f.batch === 'AP-127') buckets[h].ap127++;
+                      else if (f.batch === 'AP-126') buckets[h].ap126++;
+                      else if (f.batch === 'AP-124') buckets[h].ap124++;
+                      else if (f.batch === 'AP-129') buckets[h].ap129++;
+                    });
+
+                    // Get max for scaling
+                    const maxVal = Math.max(1, ...hrs.map(h => buckets[h].total));
+
+                    // SVG curve generation helper
+                    const genPath = (vals, w = 300, h = 100) => {
+                      const pts = vals;
+                      const px = w / (hrs.length - 1), py = h / maxVal;
+                      let path = `M 0 ${h}`;
+                      for (let i = 0; i < pts.length - 1; i++) {
+                        const x0 = i * px, y0 = h - pts[i] * py;
+                        const x1 = (i + 1) * px, y1 = h - pts[i + 1] * py;
+                        const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+                        path += ` Q ${cx} ${cy} ${x1} ${y1}`;
+                      }
+                      path += ` L ${w} ${h} Z`;
+                      return path;
+                    };
+
+                    const totalPts = hrs.map(h => buckets[h].total);
+                    const ap127Pts = hrs.map(h => buckets[h].ap127);
+                    const ap126Pts = hrs.map(h => buckets[h].ap126);
+                    const ap124Pts = hrs.map(h => buckets[h].ap124);
+                    const ap129Pts = hrs.map(h => buckets[h].ap129);
+
+                    return (
+                      <>
+                        <svg width="100%" height="140" viewBox="0 0 300 110" style={{ overflow: 'visible' }}>
+                          {/* Grid lines */}
+                          {[0, 4, 8, 12].map(i => (
+                            <line key={`grid-${i}`} x1={i * 300 / 12} y1="0" x2={i * 300 / 12} y2="100" stroke="var(--line-soft)" strokeWidth="0.5" />
+                          ))}
+                          {/* Filled areas (opaque, slightly transparent) */}
+                          <path d={genPath(ap124Pts)} fill="var(--col-ap124)" opacity="0.22" />
+                          <path d={genPath(ap126Pts)} fill="var(--col-ap126)" opacity="0.22" />
+                          <path d={genPath(ap127Pts)} fill="var(--col-ap127)" opacity="0.22" />
+                          <path d={genPath(ap129Pts)} fill="var(--col-ap129)" opacity="0.22" />
+                          {/* Total line (bold, opaque) */}
+                          <path d={genPath(totalPts)} fill="none" stroke="var(--ink-2)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                          {/* Hour tick labels */}
+                          {[6, 9, 12, 15, 18].map(h => {
+                            const idx = h - 6;
+                            const x = idx * 300 / 12;
+                            return <text key={`hr-${h}`} x={x} y="108" fontSize="8" textAnchor="middle" fill="var(--ink-3)" className="mono">{h}:00</text>;
+                          })}
+                        </svg>
+                        <div style={{ display: 'flex', gap: 12, fontSize: 9, flexWrap: 'wrap' }}>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap127)', borderRadius: 2, marginRight: 4 }} />AP-127</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap126)', borderRadius: 2, marginRight: 4 }} />AP-126</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap124)', borderRadius: 2, marginRight: 4 }} />AP-124</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap129)', borderRadius: 2, marginRight: 4 }} />AP-129</span>
+                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 10, height: 2, background: 'var(--ink-2)', marginRight: 4 }} />TOTAL</span>
                         </div>
-                      );
-                    })}
-                  </div>
+                      </>
+                    );
+                  })()}
                 </div>
               )}
-              <div className="mono uc" style={{ fontSize: 8, color: 'var(--ink-3)', display: 'flex', gap: 12, marginTop: 8 }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 8, height: 8, background: 'var(--col-pending)', opacity: 0.85, borderRadius: 2 }}/>ALL FLIGHTS
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 8, height: 8, background: 'var(--highlight)', borderRadius: 2 }}/>AP-127 SHARE
-                </span>
-                <span style={{ marginLeft: 'auto' }}>BUSIEST: {(() => {
-                  const pk = hourly.HOURS.reduce((a, h) => hourly.buckets[h].total > hourly.buckets[a].total ? h : a, hourly.HOURS[0]);
-                  return hourly.buckets[pk].total > 0 ? `${String(pk).padStart(2, '0')}:00 (${hourly.buckets[pk].total})` : '—';
-                })()}</span>
-              </div>
             </Section>
 
             {/* Status Mix donut */}
@@ -426,30 +452,75 @@ function DailyBoard() {
             </Section>
           </div>
 
-          {/* Batch breakdown */}
-          <Section title="BATCH BREAKDOWN" hint={`${byBatch.length} BATCH${byBatch.length === 1 ? '' : 'ES'} FLYING`}>
+          {/* Batch breakdown — donut chart */}
+          <Section title="BATCH BREAKDOWN" hint={`${byBatch.length} BATCH${byBatch.length === 1 ? '' : 'ES'}`}>
             {byBatch.length === 0 ? (
               <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '8px 0' }}>NO DATA</div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {(() => {
-                  const max = Math.max(...byBatch.map(b => b.total), 1);
-                  return byBatch.map(b => {
-                    const isHL = b.name === HIGHLIGHT_BATCH;
+              <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {/* Donut chart */}
+                <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
+                  <svg width={120} height={120} style={{ transform: 'rotate(-90deg)' }}>
+                    {(() => {
+                      const r = 40, cx = 60, cy = 60, innerR = 22;
+                      const C = 2 * Math.PI * r;
+                      const total = byBatch.reduce((a, b) => a + b.total, 0) || 1;
+                      let off = 0;
+                      const slices = byBatch.map(b => {
+                        const frac = b.total / total;
+                        if (frac === 0) return null;
+                        const dash = frac * C, gap = C - dash;
+                        const color = b.name === HIGHLIGHT_BATCH ? 'var(--highlight)' : (
+                          b.name === 'AP-124' ? 'var(--col-ap124)' :
+                          b.name === 'AP-126' ? 'var(--col-ap126)' :
+                          b.name === 'AP-129' ? 'var(--col-ap129)' : 'var(--ink-3)'
+                        );
+                        const el = (
+                          <circle key={b.name} cx={cx} cy={cy} r={r} fill="none"
+                            stroke={color} strokeWidth={18}
+                            strokeDasharray={`${dash} ${gap}`}
+                            strokeDashoffset={-off * C} opacity={0.9}
+                            strokeLinecap="butt"/>
+                        );
+                        off += frac;
+                        return el;
+                      });
+                      return (
+                        <>
+                          <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--line)" strokeWidth={18} opacity={0.25}/>
+                          {slices}
+                        </>
+                      );
+                    })()}
+                  </svg>
+                  <div style={{
+                    position: 'absolute', inset: 0, display: 'flex',
+                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    pointerEvents: 'none',
+                  }}>
+                    <span className="num" style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>{byBatch.reduce((a, b) => a + b.total, 0)}</span>
+                    <span className="mono uc" style={{ fontSize: 8, color: 'var(--ink-3)', marginTop: 2 }}>FLIGHTS</span>
+                  </div>
+                </div>
+                {/* Legend */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 140 }}>
+                  {byBatch.map(b => {
+                    const pct = (b.total / (byBatch.reduce((a, bb) => a + bb.total, 0) || 1)) * 100;
+                    const color = b.name === HIGHLIGHT_BATCH ? 'var(--highlight)' : (
+                      b.name === 'AP-124' ? 'var(--col-ap124)' :
+                      b.name === 'AP-126' ? 'var(--col-ap126)' :
+                      b.name === 'AP-129' ? 'var(--col-ap129)' : 'var(--ink-3)'
+                    );
                     return (
-                      <div key={b.name} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                        <div className="mono uc" style={{
-                          width: 86, fontSize: 11, flexShrink: 0,
-                          color: isHL ? 'var(--highlight)' : 'var(--ink-2)',
-                          fontWeight: isHL ? 700 : 500,
-                        }}>{isHL ? '◆ ' : ''}{b.name}</div>
-                        <StackBar pending={b.pending} completed={b.completed} canceled={b.canceled} standby={b.standby} total={b.total} max={max}/>
-                        <div className="mono num" style={{ width: 28, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{b.total}</div>
-                        <div className="mono num" style={{ width: 50, fontSize: 10, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(b.hours)}h</div>
+                      <div key={b.name} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10 }}>
+                        <span style={{ width: 10, height: 10, background: color, borderRadius: 2, flexShrink: 0 }}/>
+                        <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', flex: 1, fontWeight: b.name === HIGHLIGHT_BATCH ? 700 : 500 }}>{b.name === HIGHLIGHT_BATCH ? '◆ ' : ''}{b.name}</span>
+                        <span className="mono num" style={{ fontSize: 10, fontWeight: 600, color: 'var(--ink)' }}>{b.total}</span>
+                        <span className="mono num" style={{ fontSize: 9, color: 'var(--ink-3)', width: 28, textAlign: 'right' }}>{pct.toFixed(0)}%</span>
                       </div>
                     );
-                  });
-                })()}
+                  })}
+                </div>
               </div>
             )}
           </Section>
@@ -464,7 +535,6 @@ function DailyBoard() {
                   {(() => {
                     const max = Math.max(...byInstructor.map(i => i.total), 1);
                     return byInstructor.slice(0, 12).map(i => {
-                      const rate = (i.completed + i.canceled) > 0 ? (i.completed / (i.completed + i.canceled)) * 100 : null;
                       return (
                         <div key={i.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11 }}>
                           <div style={{
@@ -480,7 +550,6 @@ function DailyBoard() {
                           </div>
                           <div className="mono num" style={{ width: 22, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{i.total}</div>
                           <div className="mono num" style={{ width: 38, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(i.hours)}h</div>
-                          {rate != null && <div className="mono num" style={{ width: 32, fontSize: 9, color: rate >= 80 ? 'var(--col-done)' : (rate >= 50 ? 'var(--col-pending)' : 'var(--col-cancel)'), textAlign: 'right' }}>{rate.toFixed(0)}%</div>}
                         </div>
                       );
                     });
@@ -497,7 +566,6 @@ function DailyBoard() {
                   {(() => {
                     const max = Math.max(...byTail.map(t => t.total), 1);
                     return byTail.map(t => {
-                      const rate = (t.completed + t.canceled) > 0 ? (t.completed / (t.completed + t.canceled)) * 100 : null;
                       return (
                         <div key={t.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11 }}>
                           <div className="mono" style={{ width: 70, fontSize: 11, color: 'var(--ink)', fontWeight: 600, flexShrink: 0 }}>{t.name}</div>
@@ -507,7 +575,6 @@ function DailyBoard() {
                           </div>
                           <div className="mono num" style={{ width: 22, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{t.total}</div>
                           <div className="mono num" style={{ width: 38, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(t.hours)}h</div>
-                          {rate != null && <div className="mono num" style={{ width: 32, fontSize: 9, color: rate >= 80 ? 'var(--col-done)' : (rate >= 50 ? 'var(--col-pending)' : 'var(--col-cancel)'), textAlign: 'right' }}>{rate.toFixed(0)}%</div>}
                         </div>
                       );
                     });

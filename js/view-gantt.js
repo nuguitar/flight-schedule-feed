@@ -103,7 +103,7 @@ function GanttBoard() {
                       borderLeft:i===0?'none':'1px solid var(--line-soft)',
                       paddingLeft:5, fontSize:isMobile?9:10, color:'var(--ink-3)', display:'flex', alignItems:'center',
                       whiteSpace:'nowrap',
-                    }}>{showLabel ? (isMobile ? fmtHour(h) : `${String(h).padStart(2,'0')}:00`) : ''}</div>
+                    }}>{showLabel ? (isMobile ? fmtHour(h) : `${h}`) : ''}</div>
                   );
                 })}
               </div>
