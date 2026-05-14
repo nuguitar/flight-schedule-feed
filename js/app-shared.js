@@ -517,6 +517,19 @@ function ViewIcon({ id, size=13, color='currentColor' }) {
       <path d="M7 7L12.8 7A5.8 5.8 0 0 1 3.2 11.4Z" opacity=".35"/>
     </svg>
   );
+  if (id === 'daily') return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" stroke={color} strokeWidth="1.2">
+      <circle cx="7" cy="7" r="3" fill={color} stroke="none"/>
+      <line x1="7" y1="0.5" x2="7" y2="2.5"/>
+      <line x1="7" y1="11.5" x2="7" y2="13.5"/>
+      <line x1="0.5" y1="7" x2="2.5" y2="7"/>
+      <line x1="11.5" y1="7" x2="13.5" y2="7"/>
+      <line x1="2.3" y1="2.3" x2="3.7" y2="3.7"/>
+      <line x1="10.3" y1="10.3" x2="11.7" y2="11.7"/>
+      <line x1="11.7" y1="2.3" x2="10.3" y2="3.7"/>
+      <line x1="3.7" y1="10.3" x2="2.3" y2="11.7"/>
+    </svg>
+  );
   if (id === 'roster') return (
     <svg width={size} height={size} viewBox="0 0 14 14" fill={color}>
       <rect x="1"   y="4.5" width="3.5" height="2"   rx=".4" opacity=".9"/>

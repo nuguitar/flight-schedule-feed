@@ -33,6 +33,7 @@
 <script type="text/babel" src="js/app-shared.js"></script>
 
 <!-- Views -->
+<script type="text/babel" src="js/view-daily.js"></script>
 <script type="text/babel" src="js/view-board.js"></script>
 <script type="text/babel" src="js/view-gantt.js"></script>
 <script type="text/babel" src="js/view-weekly.js"></script>
@@ -41,6 +42,7 @@
 
 <script type="text/babel" data-presets="env,react">
 const VIEWS = [
+  { id:'daily',   label:'DAY GLANCE', desc:'Single-day overview — KPIs, schedule pulse, batch/instructor/fleet stats, AP-127 spotlight' },
   { id:'board',   label:'BOARD',     desc:'Sortable daily ops table — all flights for the selected date' },
   { id:'gantt',   label:'GANTT',     desc:'Timeline bars grouped by instructor, aircraft, or batch' },
   { id:'weekly',  label:'WEEKLY',    desc:'Week-by-week calendar showing scheduled flights per day' },
@@ -148,7 +150,7 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
 
 // Compact top bar shown on mobile in place of full sidebar
 function MobileTopBar({ view, onMenuOpen }) {
-  const LABELS = { board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS', roster:'ROSTER' };
+  const LABELS = { daily:'DAY GLANCE', board:'BOARD', gantt:'GANTT', weekly:'WEEKLY', summary:'ANALYTICS', roster:'ROSTER' };
   return (
     <div style={{
       height:46, padding:'0 14px', background:'var(--bg-2)',
@@ -175,7 +177,10 @@ function MobileTopBar({ view, onMenuOpen }) {
 }
 
 function App() {
-  const [view, setView]         = React.useState(() => localStorage.getItem('ap127-view') || 'board');
+  const [view, setView]         = React.useState(() => {
+    const saved = localStorage.getItem('ap127-view');
+    return VIEWS.some(v => v.id === saved) ? saved : 'daily';
+  });
   const [tweaks, setTweakState] = React.useState(() => ({ theme: localStorage.getItem('ap127-theme') || 'cockpit', showSim:false, showStandby:true, groupBy:'instructor' }));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [windowW, setWindowW]   = React.useState(window.innerWidth);
@@ -248,6 +253,7 @@ function App() {
         <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column', height:'100%', overflow:'hidden' }}>
           {isMobile && <MobileTopBar view={view} onMenuOpen={()=>setSidebarOpen(true)}/>}
           <div style={{ flex:1, minHeight:0, overflow:'hidden', position:'relative' }}>
+            {view==='daily'   && <DailyBoard/>}
             {view==='board'   && <OpsBoard/>}
             {view==='gantt'   && <GanttBoard/>}
             {view==='weekly'  && <WeeklyBoard/>}
