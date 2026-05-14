@@ -95,7 +95,7 @@ function GanttBoard() {
               <div style={{ position:'relative', height:34, overflow:'hidden' }}>
                 {Array.from({length:HOUR_SPAN+1}).map((_,i)=>{
                   const h=HOUR_START+i;
-                  // On mobile only label every 3rd hour (avoids overlap) and use the compact "6AM" form
+                  // On mobile only label every 3rd hour (avoids overlap)
                   const showLabel = !isMobile || h % 3 === 0;
                   return (
                     <div key={i} className="mono num" style={{
@@ -103,7 +103,7 @@ function GanttBoard() {
                       borderLeft:i===0?'none':'1px solid var(--line-soft)',
                       paddingLeft:5, fontSize:isMobile?9:10, color:'var(--ink-3)', display:'flex', alignItems:'center',
                       whiteSpace:'nowrap',
-                    }}>{showLabel ? (isMobile ? fmtHour(h) : `${h}`) : ''}</div>
+                    }}>{showLabel ? `${h}` : ''}</div>
                   );
                 })}
               </div>

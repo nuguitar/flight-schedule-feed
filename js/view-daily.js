@@ -341,10 +341,10 @@ function DailyBoard() {
             <DKPI label="◆ AP-127"  value={stats.ap127}        sub={`${ap127.students.size} STUDENTS`} color="var(--highlight)" small={isMobile}/>
           </div>
 
-          {/* Charts row */}
+          {/* Charts row — Schedule Pulse + Batch Breakdown side by side */}
           <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: 12 }}>
             {/* Schedule Pulse — smoothed line graph with filled areas (6–18) */}
-            <Section title="SCHEDULE PULSE" hint="FLIGHTS BY START HOUR (06–18)" fullWidth>
+            <Section title="SCHEDULE PULSE" hint="FLIGHTS BY START HOUR (06–18)">
               {flights.length === 0 ? (
                 <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '32px 0', textAlign: 'center' }}>NO FLIGHTS</div>
               ) : (
@@ -369,16 +369,36 @@ function DailyBoard() {
                     // Get max for scaling
                     const maxVal = Math.max(1, ...hrs.map(h => buckets[h].total));
 
-                    // SVG curve generation helper
-                    const genPath = (vals, w = 300, h = 100) => {
+                    // Catmull-Rom spline interpolation for smooth curves
+                    const catmullRom = (p0, p1, p2, p3, t) => {
+                      const t2 = t * t, t3 = t2 * t;
+                      return 0.5 * (
+                        2 * p1 +
+                        (-p0 + p2) * t +
+                        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
+                        (-p0 + 3 * p1 - 3 * p2 + p3) * t3
+                      );
+                    };
+
+                    // Generate smooth path using Catmull-Rom
+                    const genPath = (vals, w = 280, h = 100) => {
                       const pts = vals;
-                      const px = w / (hrs.length - 1), py = h / maxVal;
+                      const px = w / (pts.length - 1), py = h / maxVal;
+
                       let path = `M 0 ${h}`;
+
+                      // Draw curve through all points with Catmull-Rom spline
                       for (let i = 0; i < pts.length - 1; i++) {
-                        const x0 = i * px, y0 = h - pts[i] * py;
-                        const x1 = (i + 1) * px, y1 = h - pts[i + 1] * py;
-                        const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-                        path += ` Q ${cx} ${cy} ${x1} ${y1}`;
+                        const p0 = i === 0 ? pts[0] : pts[i - 1];
+                        const p1 = pts[i];
+                        const p2 = pts[i + 1];
+                        const p3 = i === pts.length - 2 ? pts[pts.length - 1] : pts[i + 2];
+
+                        for (let t = 0; t <= 1; t += 0.25) {
+                          const y = catmullRom(p0, p1, p2, p3, t);
+                          const x = (i + t) * px;
+                          path += ` L ${x} ${h - y * py}`;
+                        }
                       }
                       path += ` L ${w} ${h} Z`;
                       return path;
@@ -392,31 +412,33 @@ function DailyBoard() {
 
                     return (
                       <>
-                        <svg width="100%" height="140" viewBox="0 0 300 110" style={{ overflow: 'visible' }}>
-                          {/* Grid lines */}
-                          {[0, 4, 8, 12].map(i => (
-                            <line key={`grid-${i}`} x1={i * 300 / 12} y1="0" x2={i * 300 / 12} y2="100" stroke="var(--line-soft)" strokeWidth="0.5" />
-                          ))}
-                          {/* Filled areas (opaque, slightly transparent) */}
-                          <path d={genPath(ap124Pts)} fill="var(--col-ap124)" opacity="0.22" />
-                          <path d={genPath(ap126Pts)} fill="var(--col-ap126)" opacity="0.22" />
-                          <path d={genPath(ap127Pts)} fill="var(--col-ap127)" opacity="0.22" />
-                          <path d={genPath(ap129Pts)} fill="var(--col-ap129)" opacity="0.22" />
-                          {/* Total line (bold, opaque) */}
-                          <path d={genPath(totalPts)} fill="none" stroke="var(--ink-2)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                          {/* Hour tick labels */}
-                          {[6, 9, 12, 15, 18].map(h => {
-                            const idx = h - 6;
-                            const x = idx * 300 / 12;
-                            return <text key={`hr-${h}`} x={x} y="108" fontSize="8" textAnchor="middle" fill="var(--ink-3)" className="mono">{h}:00</text>;
-                          })}
-                        </svg>
+                        <div style={{ background: 'color-mix(in oklch,var(--ink) 2%,transparent)', borderRadius: 6, padding: 8 }}>
+                          <svg width="100%" height="140" viewBox="0 0 280 110" style={{ overflow: 'visible' }}>
+                            {/* Grid lines */}
+                            {[0, 4, 8, 12].map(i => (
+                              <line key={`grid-${i}`} x1={i * 280 / 12} y1="0" x2={i * 280 / 12} y2="100" stroke="var(--line-soft)" strokeWidth="0.5" opacity="0.5" />
+                            ))}
+                            {/* Filled areas (more opaque for visibility) */}
+                            <path d={genPath(ap127Pts)} fill="var(--col-ap127)" opacity="0.35" />
+                            <path d={genPath(ap126Pts)} fill="var(--col-ap126)" opacity="0.35" />
+                            <path d={genPath(ap124Pts)} fill="var(--col-ap124)" opacity="0.35" />
+                            <path d={genPath(ap129Pts)} fill="var(--col-ap129)" opacity="0.35" />
+                            {/* Total line (bold, opaque) */}
+                            <path d={genPath(totalPts)} fill="none" stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                            {/* Hour tick labels */}
+                            {[6, 9, 12, 15, 18].map(h => {
+                              const idx = h - 6;
+                              const x = idx * 280 / 12;
+                              return <text key={`hr-${h}`} x={x} y="108" fontSize="8" textAnchor="middle" fill="var(--ink-3)" className="mono">{h}:00</text>;
+                            })}
+                          </svg>
+                        </div>
                         <div style={{ display: 'flex', gap: 12, fontSize: 9, flexWrap: 'wrap' }}>
                           <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap127)', borderRadius: 2, marginRight: 4 }} />AP-127</span>
                           <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap126)', borderRadius: 2, marginRight: 4 }} />AP-126</span>
                           <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap124)', borderRadius: 2, marginRight: 4 }} />AP-124</span>
                           <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap129)', borderRadius: 2, marginRight: 4 }} />AP-129</span>
-                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 10, height: 2, background: 'var(--ink-2)', marginRight: 4 }} />TOTAL</span>
+                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 10, height: 2.5, background: 'var(--ink)', marginRight: 4 }} />TOTAL</span>
                         </div>
                       </>
                     );
@@ -435,7 +457,6 @@ function DailyBoard() {
                     { label: 'PENDING',   value: stats.mix.pending,   color: 'var(--col-pending)' },
                     { label: 'STANDBY',   value: stats.mix.standby,   color: 'var(--col-stby)' },
                     { label: 'CANCELED',  value: stats.mix.canceled,  color: 'var(--col-cancel)' },
-                    { label: 'SIM',       value: stats.mix.sim,        color: 'var(--col-sim)' },
                   ].map(s => {
                     const pct = stats.total > 0 ? (s.value / stats.total) * 100 : 0;
                     return (
@@ -452,78 +473,45 @@ function DailyBoard() {
             </Section>
           </div>
 
-          {/* Batch breakdown — donut chart */}
-          <Section title="BATCH BREAKDOWN" hint={`${byBatch.length} BATCH${byBatch.length === 1 ? '' : 'ES'}`}>
-            {byBatch.length === 0 ? (
-              <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '8px 0' }}>NO DATA</div>
-            ) : (
-              <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {/* Donut chart */}
-                <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
-                  <svg width={120} height={120} style={{ transform: 'rotate(-90deg)' }}>
-                    {(() => {
-                      const r = 40, cx = 60, cy = 60, innerR = 22;
-                      const C = 2 * Math.PI * r;
-                      const total = byBatch.reduce((a, b) => a + b.total, 0) || 1;
-                      let off = 0;
-                      const slices = byBatch.map(b => {
-                        const frac = b.total / total;
-                        if (frac === 0) return null;
-                        const dash = frac * C, gap = C - dash;
-                        const color = b.name === HIGHLIGHT_BATCH ? 'var(--highlight)' : (
-                          b.name === 'AP-124' ? 'var(--col-ap124)' :
-                          b.name === 'AP-126' ? 'var(--col-ap126)' :
-                          b.name === 'AP-129' ? 'var(--col-ap129)' : 'var(--ink-3)'
-                        );
-                        const el = (
-                          <circle key={b.name} cx={cx} cy={cy} r={r} fill="none"
-                            stroke={color} strokeWidth={18}
-                            strokeDasharray={`${dash} ${gap}`}
-                            strokeDashoffset={-off * C} opacity={0.9}
-                            strokeLinecap="butt"/>
-                        );
-                        off += frac;
-                        return el;
-                      });
-                      return (
-                        <>
-                          <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--line)" strokeWidth={18} opacity={0.25}/>
-                          {slices}
-                        </>
+            {/* Batch breakdown — stacked bar chart */}
+            <Section title="BATCH BREAKDOWN" hint={`${byBatch.length} BATCH${byBatch.length === 1 ? '' : 'ES'} FLYING`}>
+              {byBatch.length === 0 ? (
+                <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '8px 0' }}>NO DATA</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {(() => {
+                    const max = Math.max(...byBatch.map(b => b.total), 1);
+                    return byBatch.map(b => {
+                      const isHL = b.name === HIGHLIGHT_BATCH;
+                      const color = isHL ? 'var(--col-ap127)' : (
+                        b.name === 'AP-124' ? 'var(--col-ap124)' :
+                        b.name === 'AP-126' ? 'var(--col-ap126)' :
+                        b.name === 'AP-129' ? 'var(--col-ap129)' : 'var(--ink-3)'
                       );
-                    })()}
-                  </svg>
-                  <div style={{
-                    position: 'absolute', inset: 0, display: 'flex',
-                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    pointerEvents: 'none',
-                  }}>
-                    <span className="num" style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>{byBatch.reduce((a, b) => a + b.total, 0)}</span>
-                    <span className="mono uc" style={{ fontSize: 8, color: 'var(--ink-3)', marginTop: 2 }}>FLIGHTS</span>
-                  </div>
+                      return (
+                        <div key={b.name} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                          <div className="mono uc" style={{
+                            width: 70, fontSize: 11, flexShrink: 0,
+                            color: color,
+                            fontWeight: isHL ? 700 : 500,
+                          }}>{isHL ? '◆ ' : ''}{b.name}</div>
+                          <div style={{ flex: 1, height: 16, background: 'var(--bg-2)', borderRadius: 3, overflow: 'hidden' }}>
+                            <div style={{
+                              width: `${(b.total / max) * 100}%`, height: '100%',
+                              background: color, opacity: 0.85,
+                              transition: 'width .25s'
+                            }}/>
+                          </div>
+                          <div className="mono num" style={{ width: 28, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{b.total}</div>
+                          <div className="mono num" style={{ width: 50, fontSize: 10, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(b.hours)}h</div>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
-                {/* Legend */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 140 }}>
-                  {byBatch.map(b => {
-                    const pct = (b.total / (byBatch.reduce((a, bb) => a + bb.total, 0) || 1)) * 100;
-                    const color = b.name === HIGHLIGHT_BATCH ? 'var(--highlight)' : (
-                      b.name === 'AP-124' ? 'var(--col-ap124)' :
-                      b.name === 'AP-126' ? 'var(--col-ap126)' :
-                      b.name === 'AP-129' ? 'var(--col-ap129)' : 'var(--ink-3)'
-                    );
-                    return (
-                      <div key={b.name} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10 }}>
-                        <span style={{ width: 10, height: 10, background: color, borderRadius: 2, flexShrink: 0 }}/>
-                        <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', flex: 1, fontWeight: b.name === HIGHLIGHT_BATCH ? 700 : 500 }}>{b.name === HIGHLIGHT_BATCH ? '◆ ' : ''}{b.name}</span>
-                        <span className="mono num" style={{ fontSize: 10, fontWeight: 600, color: 'var(--ink)' }}>{b.total}</span>
-                        <span className="mono num" style={{ fontSize: 9, color: 'var(--ink-3)', width: 28, textAlign: 'right' }}>{pct.toFixed(0)}%</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </Section>
+              )}
+            </Section>
+          </div>
 
           {/* Instructor + Aircraft grid */}
           <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: 12 }}>
@@ -535,6 +523,7 @@ function DailyBoard() {
                   {(() => {
                     const max = Math.max(...byInstructor.map(i => i.total), 1);
                     return byInstructor.slice(0, 12).map(i => {
+                      const pct = (i.hours / 8) * 100;
                       return (
                         <div key={i.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11 }}>
                           <div style={{
@@ -550,6 +539,7 @@ function DailyBoard() {
                           </div>
                           <div className="mono num" style={{ width: 22, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{i.total}</div>
                           <div className="mono num" style={{ width: 38, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(i.hours)}h</div>
+                          <div className="mono num" style={{ width: 32, fontSize: 9, color: pct >= 100 ? 'var(--col-done)' : (pct >= 50 ? 'var(--col-pending)' : 'var(--col-cancel)'), textAlign: 'right' }}>{pct.toFixed(0)}%</div>
                         </div>
                       );
                     });

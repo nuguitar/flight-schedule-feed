@@ -233,7 +233,7 @@ function App() {
 
         {/* Main content column */}
         <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column', height:'100%', overflow:'hidden' }}>
-          {isMobile && <MobileTopBar view={view} onMenuOpen={()=>setSidebarOpen(true)}/>}
+          {isMobile && <MobileTopBar view={view} onMenuOpen={()=>setSidebarOpen(s=>!s)}/>}
           <div style={{ flex:1, minHeight:0, overflow:'hidden', position:'relative' }}>
             {view==='daily'   && <DailyBoard/>}
             {view==='board'   && <OpsBoard/>}
