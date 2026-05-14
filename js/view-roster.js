@@ -178,7 +178,7 @@ function RosterBoard() {
       <CellDetailOverlay/>
 
       {/* Header */}
-      <div style={{ height:38, padding:'0 10px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
+      <div style={{ minHeight:38, padding:'0 10px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:8, flexShrink:0, flexWrap:'wrap' }}>
         <div style={{ display:'flex',alignItems:'center',gap:7 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 6px var(--col-done)' }}/>
           <ViewIcon id="roster" size={12} color="var(--ink-2)"/>
@@ -201,6 +201,7 @@ function RosterBoard() {
         <div style={{flex:1}}/>
         <FocusControls/>
         <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{keys.length} {groupBy==='instructor'?'INSTRUCTORS':groupBy==='batch'?'BATCHES':'STUDENTS'}</div>
+        <LastUpdate/>
       </div>
 
       {/* Legend */}

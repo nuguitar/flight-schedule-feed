@@ -286,8 +286,8 @@ function DailyBoard() {
 
       {/* Top bar */}
       <div style={{
-        height: 38, padding: '0 16px', borderBottom: '1px solid var(--line)',
-        background: 'var(--bg-2)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
+        minHeight: 38, padding: '0 16px', borderBottom: '1px solid var(--line)',
+        background: 'var(--bg-2)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, flexWrap: 'wrap',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 8, height: 8, borderRadius: 999, background: 'var(--col-done)', boxShadow: '0 0 8px var(--col-done)', animation: 'pulse 2s ease-in-out infinite' }}/>
@@ -296,6 +296,7 @@ function DailyBoard() {
         </div>
         <div style={{ flex: 1 }}/>
         <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)' }}>{flights.length} FLTS · {FLIGHTS.length} TOTAL</div>
+        <LastUpdate/>
       </div>
 
       {/* Scrollable body */}
@@ -342,44 +343,59 @@ function DailyBoard() {
           {/* Charts row */}
           <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: 12 }}>
             {/* Schedule Pulse — hourly bar chart */}
-            <Section title="SCHEDULE PULSE" hint="FLIGHTS BY HOUR (06–21)">
+            <Section title="SCHEDULE PULSE" hint="FLIGHTS BY START HOUR (06–21)">
               {flights.length === 0 ? (
-                <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '20px 0', textAlign: 'center' }}>NO FLIGHTS</div>
+                <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '32px 0', textAlign: 'center' }}>NO FLIGHTS</div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 110 }}>
-                  {hourly.HOURS.map(h => {
-                    const b = hourly.buckets[h];
-                    const hPct = b.total / hourly.max;
-                    const apPct = b.total > 0 ? b.ap127 / b.total : 0;
-                    return (
-                      <div key={h} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 0 }}>
-                        <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'flex-end' }}>
-                          <div style={{
-                            width: '100%',
-                            height: `${Math.max(2, hPct * 100)}%`,
-                            background: 'var(--col-pending)',
-                            opacity: 0.85,
-                            borderRadius: '2px 2px 0 0',
-                            position: 'relative',
-                            display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                          }} title={`${String(h).padStart(2,'0')}:00 — ${b.total} flights (${b.ap127} AP-127, ${b.completed} done)`}>
-                            {apPct > 0 && <div style={{ width: '100%', height: `${apPct * 100}%`, background: 'var(--highlight)', borderRadius: 2 }}/>}
+                <div style={{ borderBottom: '1px solid var(--line)' }}>
+                  {/* alignItems:stretch (default) so each column fills the fixed height —
+                      the inner flex:1 bar track then has real space to grow into */}
+                  <div style={{ display: 'flex', alignItems: 'stretch', gap: 3, height: 124 }}>
+                    {hourly.HOURS.map(h => {
+                      const b = hourly.buckets[h];
+                      const hPct  = hourly.max > 0 ? b.total / hourly.max : 0;
+                      const apPct = b.total > 0 ? b.ap127 / b.total : 0;
+                      const peak  = b.total === hourly.max && b.total > 0;
+                      return (
+                        <div key={h} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 0 }}>
+                          {/* count label — fixed height keeps all bar baselines aligned */}
+                          <div className="mono num" style={{
+                            fontSize: 8, height: 11, fontWeight: 600,
+                            color: b.total > 0 ? (peak ? 'var(--col-pending)' : 'var(--ink-2)') : 'transparent',
+                          }}>{b.total > 0 ? b.total : '0'}</div>
+                          {/* bar track — flex:1 fills remaining column height */}
+                          <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'flex-end', minHeight: 0 }}>
+                            <div style={{
+                              width: '100%',
+                              height: b.total > 0 ? `${Math.max(6, hPct * 100)}%` : '0%',
+                              minHeight: b.total > 0 ? 4 : 0,
+                              background: 'var(--col-pending)', opacity: 0.85,
+                              borderRadius: '3px 3px 0 0',
+                              display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                              transition: 'height .3s ease',
+                            }} title={`${String(h).padStart(2,'0')}:00 — ${b.total} flight${b.total === 1 ? '' : 's'} · ${b.ap127} AP-127 · ${b.completed} completed`}>
+                              {apPct > 0 && <div style={{ width: '100%', height: `${apPct * 100}%`, background: 'var(--highlight)', borderRadius: apPct >= 1 ? '3px 3px 0 0' : 0 }}/>}
+                            </div>
                           </div>
+                          {/* hour label */}
+                          <div className="mono num" style={{ fontSize: 8, color: 'var(--ink-3)' }}>{String(h).padStart(2, '0')}</div>
                         </div>
-                        <div className="mono num" style={{ fontSize: 8, color: 'var(--ink-3)' }}>{String(h).padStart(2, '0')}</div>
-                        {b.total > 0 && <div className="mono num" style={{ fontSize: 8, color: 'var(--ink-2)', fontWeight: 600 }}>{b.total}</div>}
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               )}
               <div className="mono uc" style={{ fontSize: 8, color: 'var(--ink-3)', display: 'flex', gap: 12, marginTop: 8 }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 8, height: 8, background: 'var(--col-pending)', opacity: 0.85, borderRadius: 2 }}/>ALL
+                  <span style={{ width: 8, height: 8, background: 'var(--col-pending)', opacity: 0.85, borderRadius: 2 }}/>ALL FLIGHTS
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 8, height: 8, background: 'var(--highlight)', borderRadius: 2 }}/>AP-127
+                  <span style={{ width: 8, height: 8, background: 'var(--highlight)', borderRadius: 2 }}/>AP-127 SHARE
                 </span>
+                <span style={{ marginLeft: 'auto' }}>BUSIEST: {(() => {
+                  const pk = hourly.HOURS.reduce((a, h) => hourly.buckets[h].total > hourly.buckets[a].total ? h : a, hourly.HOURS[0]);
+                  return hourly.buckets[pk].total > 0 ? `${String(pk).padStart(2, '0')}:00 (${hourly.buckets[pk].total})` : '—';
+                })()}</span>
               </div>
             </Section>
 

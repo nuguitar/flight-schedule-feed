@@ -4,6 +4,8 @@ const { useMemo: useM_g } = React;
 const HOUR_START = 6;
 const HOUR_END   = 18;
 const HOUR_SPAN  = HOUR_END - HOUR_START;
+// Compact 12-hour label for tight mobile rulers, e.g. 6 -> "6AM", 13 -> "1PM"
+const fmtHour = h => `${h % 12 === 0 ? 12 : h % 12}${h < 12 ? 'AM' : 'PM'}`;
 
 function GanttBoard() {
   const app      = useApp();
@@ -66,6 +68,7 @@ function GanttBoard() {
         <div style={{flex:1}}/>
         <FocusControls/>
         {!isMobile && <div className="mono num" style={{ fontSize:11,color:'var(--ink-3)' }}>{String(day).padStart(2,'0')} {mo} · {wd}</div>}
+        <LastUpdate/>
       </div>
 
       {/* Date + filter */}
@@ -76,32 +79,42 @@ function GanttBoard() {
 
       {/* Timeline */}
       <div style={{ margin:'2px 6px 6px', flex:1, minHeight:0, border:'1px solid var(--line)', borderRadius:6, background:'var(--surface)', display:'flex', flexDirection:'column', overflow:'hidden' }}>
-        {/* Hour ruler */}
-        <div style={{ display:'grid', gridTemplateColumns:`${TRACK_LEFT}px 1fr ${TRACK_RIGHT}px`, borderBottom:'1px solid var(--line)', background:'var(--bg-2)', flexShrink:0 }}>
-          <div className="mono uc" style={{ padding:'9px 14px', fontSize:9, color:'var(--ink-3)' }}>
-            {groupBy.toUpperCase()} · {rows.length}
-          </div>
-          <div style={{ position:'relative', height:34, overflow:'hidden' }}>
-            {Array.from({length:HOUR_SPAN+1}).map((_,i)=>{
-              const h=HOUR_START+i;
-              return (
-                <div key={i} className="mono num" style={{
-                  position:'absolute', left:`${(i/HOUR_SPAN)*100}%`, top:0, bottom:0,
-                  borderLeft:i===0?'none':'1px solid var(--line-soft)',
-                  paddingLeft:5, fontSize:10, color:'var(--ink-3)', display:'flex', alignItems:'center',
-                  whiteSpace:'nowrap',
-                }}>{String(h).padStart(2,'0')}:00</div>
-              );
-            })}
-          </div>
-          <div className="mono uc" style={{ padding:'9px 14px', fontSize:9, color:'var(--ink-3)', borderLeft:'1px solid var(--line)' }}>
-            {groupBy==='instructor'?'DUTY PERIOD':groupBy==='tail'?'TAIL HRS':'BATCH HRS'}
-          </div>
-        </div>
+        {/* Single scroll viewport — scrolls both axes. On mobile the inner content
+            gets a min-width so the timeline isn't cramped; the hour ruler stays
+            pinned to the top and the label column stays pinned to the left while
+            you swipe/scroll. (One scroll container is required for position:sticky
+            to track the same scroll on both axes.) */}
+        <div style={{ flex:1, minHeight:0, overflow:'auto' }}>
+          <div style={{ minWidth: isMobile ? 720 : 'auto' }}>
+            {/* Hour ruler — sticky to the top of the viewport */}
+            <div style={{ display:'grid', gridTemplateColumns:`${TRACK_LEFT}px 1fr ${TRACK_RIGHT}px`, borderBottom:'1px solid var(--line)', background:'var(--bg-2)', position:'sticky', top:0, zIndex:4 }}>
+              <div className="mono uc" style={{ padding:'9px 14px', fontSize:9, color:'var(--ink-3)',
+                position:'sticky', left:0, zIndex:5, background:'var(--bg-2)' }}>
+                {groupBy.toUpperCase()} · {rows.length}
+              </div>
+              <div style={{ position:'relative', height:34, overflow:'hidden' }}>
+                {Array.from({length:HOUR_SPAN+1}).map((_,i)=>{
+                  const h=HOUR_START+i;
+                  // On mobile only label every 3rd hour (avoids overlap) and use the compact "6AM" form
+                  const showLabel = !isMobile || h % 3 === 0;
+                  return (
+                    <div key={i} className="mono num" style={{
+                      position:'absolute', left:`${(i/HOUR_SPAN)*100}%`, top:0, bottom:0,
+                      borderLeft:i===0?'none':'1px solid var(--line-soft)',
+                      paddingLeft:5, fontSize:isMobile?9:10, color:'var(--ink-3)', display:'flex', alignItems:'center',
+                      whiteSpace:'nowrap',
+                    }}>{showLabel ? (isMobile ? fmtHour(h) : `${String(h).padStart(2,'0')}:00`) : ''}</div>
+                  );
+                })}
+              </div>
+              <div className="mono uc" style={{ padding:'9px 14px', fontSize:9, color:'var(--ink-3)', borderLeft:'1px solid var(--line)' }}>
+                {groupBy==='instructor'?'DUTY PERIOD':groupBy==='tail'?'TAIL HRS':'BATCH HRS'}
+              </div>
+            </div>
 
-        {/* Rows */}
-        <div style={{ overflowY:'auto', flex:1 }}>
-          {rows.map((r,ri)=>{
+            {/* Rows */}
+            <div>
+              {rows.map((r,ri)=>{
             const totalMin = r.flights.reduce((a,b)=>a+(b.durMin||0),0);
             const hasHL    = r.flights.some(f=>f.batch===HIGHLIGHT_BATCH);
             const rowAlpha = app.highlightAP127&&!hasHL ? 0.28 : 1;
@@ -128,7 +141,8 @@ function GanttBoard() {
                 background:ri%2?'transparent':'color-mix(in oklch,var(--ink) 1.2%,transparent)',
                 opacity:rowAlpha, transition:'opacity .15s',
               }}>
-                <div style={{ padding: isMobile?'4px 6px':'8px 10px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)', overflow:'hidden' }}>
+                <div style={{ padding: isMobile?'4px 6px':'8px 10px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)', overflow:'hidden',
+                  ...(isMobile ? { position:'sticky', left:0, zIndex:2, background:'var(--bg-2)' } : {}) }}>
                   <div style={{ minWidth:0 }}>
                     <div style={{ fontSize:isMobile?10:12,color:'var(--ink)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{r.key}</div>
                   </div>
@@ -184,6 +198,8 @@ function GanttBoard() {
           {rows.length===0&&(
             <div className="mono uc" style={{ padding:40,textAlign:'center',color:'var(--ink-3)',fontSize:10 }}>No flights match current filters.</div>
           )}
+            </div>
+          </div>
         </div>
 
         {/* Legend */}

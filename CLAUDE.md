@@ -293,7 +293,8 @@ Sortable table of all flights for selected date.
 Timeline bars for selected date, grouped by INSTRUCTOR / TAIL / BATCH.
 - `FOCUS` label (renamed from "GROUP") with chip toggle
 - Default group: **instructor**
-- Time ruler: 06:00 – 18:00
+- Time ruler: 06:00 – 18:00. Desktop labels every hour as `HH:00`; **mobile** uses the compact `fmtHour()` form (`6AM`/`12PM`) and only labels every 3rd hour to avoid overlap.
+- **Single scroll viewport** (`overflow:auto`, both axes): the hour ruler is `position:sticky top:0` and the label column is `position:sticky left:0` (mobile only — desktop keeps the transparent row background). On mobile the inner content has `min-width:720` so the timeline isn't cramped — swipe sideways to reach all hours.
 - Track widths responsive: 190/180px desktop → 90/64px mobile
 - Right column: DUTY PERIOD (instructor) or FLT HRS (tail/batch)
 - TAIL focus sorts rows by aircraft type first, then alphabetically by tail number
@@ -345,6 +346,7 @@ Aggregate stats with date-range filter (default: last 7 days → today).
 | `DateStrip` | Horizontal date pill selector; collapsible (collapsed by default on mobile) |
 | `FilterBar` | SEARCH + BATCH + INSTRUCTOR + AIRCRAFT + STATUS dropdowns |
 | `FocusControls` | Compact `◆ AP-127` + `HIDE` chips — used in every view header (top-right) |
+| `LastUpdate` | Data-freshness chip (`● UPDATED DD MON HH:MM` in Bangkok time) — in every view header; self-hides on mobile unless `showOnMobile` (MobileTopBar passes that). Replaced the old sidebar-footer block. |
 | `ViewIcon` | SVG icon per view id: `daily` · `board` · `gantt` · `weekly` · `summary` · `roster` |
 | `Drawer` | Slide-over flight detail panel (right side, 380px wide) |
 | `StatusPill` | Colored rounded status badge |
@@ -407,13 +409,13 @@ flightAlpha(f, hlOn) // 0.22 if dimmed, 1.0 otherwise
 
 ### Sidebar sections (both desktop and mobile overlay)
 1. Wordmark: green pulse dot · "AP127 CMD" · ✕ (mobile only)
-2. Nav: A–E buttons with `ViewIcon` + label
-3. Settings: THEME chips (COCKPIT · LIGHT · BOARD)
+2. Nav: view buttons with `ViewIcon` + label (active item shows a description line)
+3. Settings: THEME chips (COCKPIT · LIGHT · WARM)
 4. Flex spacer
-5. Footer: "LAST UPDATE · TH" + `formatTH(fetchedAt)` + timezone
 
 > **AP-127 FOCUS** and **HIDE OTHERS** were moved OUT of the sidebar into each view's header (`FocusControls` component).  
-> **SIM** and **STBY** toggle chips were removed entirely.
+> **SIM** and **STBY** toggle chips were removed entirely.  
+> The **last-update** block was moved out of the sidebar footer into each view header via the shared `LastUpdate` component (on mobile it lives in `MobileTopBar` instead).
 
 ---
 
@@ -477,7 +479,7 @@ GIT_EDITOR=true git rebase --continue
 git push origin main
 ```
 
-Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent browsers from serving stale data.
+Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent browsers from serving stale data. The app JS files (`js/app-shared.js` + the `js/view-*.js` files) also carry a `?v=<token>` query — **bump that token whenever a `js/` file changes** so browsers don't serve stale code after a deploy.
 
 ---
 
@@ -507,4 +509,5 @@ Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent brow
 | 8 | Gantt row cleanup (no FLT sub-label); ROSTER heat-map view; AP-128 color fix; 1-week default date range in Analytics; last-update two-line fix on mobile |
 | 9 | Gantt TAIL sort by aircraft type then alpha; Weekly week-by-week pagination (Mon-Sun, prev/next nav); Analytics barMode toggle (# flights vs hours), AP-127 0hr student seeding, all breakdowns sorted by active metric; Roster student groupBy, ◆ AP-127 ONLY filter, cell-click inline detail overlay |
 | 10 | **Bug fixes + UX polish:** `localToday()` helper replaces all `new Date().toISOString().slice(0,10)` usages (fixes Bangkok midnight off-by-one in Board, Roster, Weekly, Analytics, DateStrip); "board" theme renamed to "warm" (no longer clashes with BOARD view name); localStorage persistence for last-used theme and view; view descriptions shown under active nav label in sidebar; Board sort-column hover affordance + title tooltips; FocusControls tooltip hints |
-| 11 (latest) | **New DAY GLANCE view** (`view-daily.js`): comprehensive single-day dashboard — date hero, hero KPI strip, hourly Schedule Pulse chart, Status Mix donut, Batch Breakdown, Instructor Load + Aircraft Fleet utilization, and a dedicated full-width AP-127 Spotlight (KPIs, AP-127-vs-school completion comparison, flight roster, lesson chips). Added as the first tab and the new default landing view; new `daily` ViewIcon (sun glyph). Stale-localStorage view guard added in `App`. |
+| 11 | **New DAY GLANCE view** (`view-daily.js`): comprehensive single-day dashboard — date hero, hero KPI strip, hourly Schedule Pulse chart, Status Mix donut, Batch Breakdown, Instructor Load + Aircraft Fleet utilization, and a dedicated full-width AP-127 Spotlight (KPIs, AP-127-vs-school completion comparison, flight roster, lesson chips). Added as the first tab and the new default landing view; new `daily` ViewIcon (sun glyph). Stale-localStorage view guard added in `App`. |
+| 12 (latest) | **Schedule Pulse chart fix** (the hourly bar chart's columns collapsed because the row used `alignItems:flex-end` — now `stretch` so bars have height). **`LastUpdate` component**: data-freshness chip moved from the sidebar footer into every view header (and `MobileTopBar` on mobile); `formatTH` removed from `index.html`. **Gantt mobile fixes**: compact `fmtHour()` ruler labels (`6AM`/`12PM`) every 3rd hour, single scroll viewport with `position:sticky` hour ruler (top) + label column (left), `min-width:720` so the timeline isn't cramped. **Cache-busting** `?v=` token added to all `js/` script tags in `index.html`. |

@@ -547,6 +547,35 @@ function ViewIcon({ id, size=13, color='currentColor' }) {
   return null;
 }
 
+// ─── Last-update indicator (shown in every view header) ──────────────────
+// Self-hides on mobile unless `showOnMobile` is set (MobileTopBar uses that).
+function LastUpdate({ showOnMobile = false }) {
+  const app = useApp();
+  const mob = !!(app && app.isMobile);
+  if (mob && !showOnMobile) return null;
+  const iso = window.FLIGHT_DATA && window.FLIGHT_DATA.fetchedAt;
+  const tz  = (window.FLIGHT_DATA && window.FLIGHT_DATA.tz) || 'Asia/Bangkok';
+  let label = '—';
+  if (iso) {
+    try {
+      label = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Bangkok', day: '2-digit', month: 'short',
+        hour: '2-digit', minute: '2-digit', hour12: false,
+      }).format(new Date(iso)).replace(',', '').toUpperCase();
+    } catch { label = String(iso); }
+  }
+  return (
+    <div className="mono uc" title={`Flight data last fetched ${label} · ${tz}`} style={{
+      display: 'flex', alignItems: 'center', gap: 5, fontSize: 9,
+      whiteSpace: 'nowrap', flexShrink: 0,
+    }}>
+      <span style={{ width: 6, height: 6, borderRadius: 999, background: 'var(--col-done)', boxShadow: '0 0 5px var(--col-done)', flexShrink: 0 }}/>
+      {!mob && <span style={{ color: 'var(--ink-3)' }}>UPDATED</span>}
+      <span style={{ color: 'var(--ink-2)' }}>{label}</span>
+    </div>
+  );
+}
+
 // ─── Focus controls (AP-127 highlight + hide-others, shown in view headers) ──
 function FocusControls() {
   const { highlightAP127, setHighlightAP127, hideOthers, setHideOthers } = useApp();
@@ -578,6 +607,6 @@ Object.assign(window, {
   localToday, fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
   FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar,
   DateStrip, FilterBar, InlineSettings, Drawer,
-  ViewIcon, FocusControls,
+  ViewIcon, FocusControls, LastUpdate,
 });
 

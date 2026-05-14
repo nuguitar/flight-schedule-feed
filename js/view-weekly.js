@@ -90,7 +90,7 @@ function WeeklyBoard() {
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
       <ThemeStyle/>
       {/* Header */}
-      <div style={{ height:38, padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+      <div style={{ minHeight:38, padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:10, flexShrink:0, flexWrap:'wrap' }}>
         <div style={{ display:'flex',alignItems:'center',gap:8 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 8px var(--col-done)' }}/>
           <ViewIcon id="weekly" size={12} color="var(--ink-2)"/>
@@ -99,6 +99,7 @@ function WeeklyBoard() {
         <div style={{flex:1}}/>
         <FocusControls/>
         <div className="mono uc" style={{ fontSize:9,color:'var(--ink-3)' }}>{weeks.length} WKS</div>
+        <LastUpdate/>
       </div>
 
       {/* Week navigation bar */}

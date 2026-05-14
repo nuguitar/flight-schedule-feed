@@ -29,16 +29,18 @@
 <!-- Pre-generated data — run scripts/generate_flight_data.py to refresh -->
 <script src="flight-data.js?v=1778610943"></script>
 
-<!-- Shared components and context -->
-<script type="text/babel" src="js/app-shared.js"></script>
+<!-- Shared components and context.
+     The ?v= token cache-busts the app JS — bump it whenever a js/ file changes
+     so browsers don't serve stale code after a deploy. -->
+<script type="text/babel" src="js/app-shared.js?v=r11b"></script>
 
 <!-- Views -->
-<script type="text/babel" src="js/view-daily.js"></script>
-<script type="text/babel" src="js/view-board.js"></script>
-<script type="text/babel" src="js/view-gantt.js"></script>
-<script type="text/babel" src="js/view-weekly.js"></script>
-<script type="text/babel" src="js/view-summary.js"></script>
-<script type="text/babel" src="js/view-roster.js"></script>
+<script type="text/babel" src="js/view-daily.js?v=r11b"></script>
+<script type="text/babel" src="js/view-board.js?v=r11b"></script>
+<script type="text/babel" src="js/view-gantt.js?v=r11b"></script>
+<script type="text/babel" src="js/view-weekly.js?v=r11b"></script>
+<script type="text/babel" src="js/view-summary.js?v=r11b"></script>
+<script type="text/babel" src="js/view-roster.js?v=r11b"></script>
 
 <script type="text/babel" data-presets="env,react">
 const VIEWS = [
@@ -49,16 +51,6 @@ const VIEWS = [
   { id:'summary', label:'ANALYTICS', desc:'Aggregate stats, AP-127 student progress, and batch breakdowns' },
   { id:'roster',  label:'ROSTER',    desc:'Instructor workload heat-map — spot over/under-loaded days' },
 ];
-
-// Format ISO timestamp in Thailand timezone
-const formatTH = iso => {
-  try {
-    return new Intl.DateTimeFormat('en-GB', {
-      timeZone:'Asia/Bangkok', day:'2-digit', month:'short',
-      year:'numeric', hour:'2-digit', minute:'2-digit', hour12:false,
-    }).format(new Date(iso)).replace(',','').toUpperCase();
-  } catch { return iso || ''; }
-};
 
 // Sidebar — uses useApp() so must be rendered inside AppProvider
 function Sidebar({ view, setView, width, mobile=false, onClose }) {
@@ -133,17 +125,6 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
       </div>
 
       <div style={{ flex:1, minHeight:0 }}/>
-
-      {/* Last update (TH) — compact single block */}
-      <div style={{ padding:'8px 12px', borderTop:'1px solid var(--line)', background:'var(--bg)', flexShrink:0 }}>
-        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginBottom:3 }}>LAST UPDATE · TH</div>
-        <div className="mono" style={{ fontSize:10,color:'var(--ink-2)' }}>
-          {formatTH(window.FLIGHT_DATA.fetchedAt)}
-        </div>
-        <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:1 }}>
-          {window.FLIGHT_DATA.tz}
-        </div>
-      </div>
     </div>
   );
 }
@@ -166,6 +147,7 @@ function MobileTopBar({ view, onMenuOpen }) {
         <span className="mono uc" style={{ fontSize:11,fontWeight:700,letterSpacing:'0.08em' }}>AP127 CMD</span>
       </div>
       <div style={{ flex:1 }}/>
+      <LastUpdate showOnMobile/>
       <div style={{ display:'flex',alignItems:'center',gap:6,color:'var(--col-pending)' }}>
         <ViewIcon id={view} size={12} color="var(--col-pending)"/>
         <span className="mono uc" style={{ fontSize:10,fontWeight:600,letterSpacing:'0.05em' }}>

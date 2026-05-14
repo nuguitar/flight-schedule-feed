@@ -242,7 +242,7 @@ function SummaryBoard() {
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
       <ThemeStyle/>
       {/* Header — compact single strip */}
-      <div style={{ height:38, padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:8, flexShrink:0, flexWrap:'nowrap' }}>
+      <div style={{ minHeight:38, padding:'0 16px', borderBottom:'1px solid var(--line)', background:'var(--bg-2)', display:'flex', alignItems:'center', gap:8, flexShrink:0, flexWrap:'wrap' }}>
         <div style={{ display:'flex',alignItems:'center',gap:7 }}>
           <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-pending)',boxShadow:'0 0 8px var(--col-pending)' }}/>
           <ViewIcon id="summary" size={12} color="var(--ink-2)"/>
@@ -267,6 +267,7 @@ function SummaryBoard() {
         <div style={{flex:1}}/>
         <FocusControls/>
         <span className="mono uc" style={{ fontSize:9, color:'var(--ink-3)' }}>{all.length} FLT</span>
+        <LastUpdate/>
       </div>
 
       {/* Body: scrollable data area */}
