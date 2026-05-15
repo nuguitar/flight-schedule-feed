@@ -270,13 +270,12 @@ function DailyBoard() {
   const schoolRate = stats.completionRate;
   const apRate     = ap127.completionRate;
 
-  // Status mix slices for donut — mutually exclusive, sums to stats.total
+  // Status mix slices for donut — mutually exclusive (SIM excluded)
   const statusSlices = [
     { label: 'Completed', value: stats.mix.completed, color: 'var(--col-done)' },
     { label: 'Pending',   value: stats.mix.pending,   color: 'var(--col-pending)' },
     { label: 'Standby',   value: stats.mix.standby,   color: 'var(--col-stby)' },
     { label: 'Canceled',  value: stats.mix.canceled,  color: 'var(--col-cancel)' },
-    { label: 'SIM',       value: stats.mix.sim,        color: 'var(--col-sim)' },
   ].filter(s => s.value > 0);
 
   const gridCols = isMobile ? '1fr' : 'repeat(2, minmax(0, 1fr))';
@@ -447,33 +446,7 @@ function DailyBoard() {
               )}
             </Section>
 
-            {/* Status Mix donut */}
-            <Section title="STATUS MIX" hint="OUTCOME DISTRIBUTION">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
-                <DailyDonut slices={statusSlices} size={isMobile ? 130 : 150}/>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 140 }}>
-                  {[
-                    { label: 'COMPLETED', value: stats.mix.completed, color: 'var(--col-done)' },
-                    { label: 'PENDING',   value: stats.mix.pending,   color: 'var(--col-pending)' },
-                    { label: 'STANDBY',   value: stats.mix.standby,   color: 'var(--col-stby)' },
-                    { label: 'CANCELED',  value: stats.mix.canceled,  color: 'var(--col-cancel)' },
-                  ].map(s => {
-                    const pct = stats.total > 0 ? (s.value / stats.total) * 100 : 0;
-                    return (
-                      <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11 }}>
-                        <span style={{ width: 10, height: 10, background: s.color, borderRadius: 2, flexShrink: 0 }}/>
-                        <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', flex: 1 }}>{s.label}</span>
-                        <span className="mono num" style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{s.value}</span>
-                        <span className="mono num" style={{ fontSize: 9, color: 'var(--ink-3)', width: 36, textAlign: 'right' }}>{pct.toFixed(0)}%</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </Section>
-          </div>
-
-            {/* Batch breakdown — stacked bar chart */}
+            {/* Batch breakdown — stacked bar chart, side by side with Schedule Pulse */}
             <Section title="BATCH BREAKDOWN" hint={`${byBatch.length} BATCH${byBatch.length === 1 ? '' : 'ES'} FLYING`}>
               {byBatch.length === 0 ? (
                 <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '8px 0' }}>NO DATA</div>
@@ -492,15 +465,10 @@ function DailyBoard() {
                         <div key={b.name} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                           <div className="mono uc" style={{
                             width: 70, fontSize: 11, flexShrink: 0,
-                            color: color,
-                            fontWeight: isHL ? 700 : 500,
+                            color: color, fontWeight: isHL ? 700 : 500,
                           }}>{isHL ? '◆ ' : ''}{b.name}</div>
                           <div style={{ flex: 1, height: 16, background: 'var(--bg-2)', borderRadius: 3, overflow: 'hidden' }}>
-                            <div style={{
-                              width: `${(b.total / max) * 100}%`, height: '100%',
-                              background: color, opacity: 0.85,
-                              transition: 'width .25s'
-                            }}/>
+                            <div style={{ width: `${(b.total / max) * 100}%`, height: '100%', background: color, opacity: 0.85, transition: 'width .25s' }}/>
                           </div>
                           <div className="mono num" style={{ width: 28, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{b.total}</div>
                           <div className="mono num" style={{ width: 50, fontSize: 10, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(b.hours)}h</div>
@@ -512,6 +480,31 @@ function DailyBoard() {
               )}
             </Section>
           </div>
+
+          {/* Status Mix — full row below the pulse+batch grid */}
+          <Section title="STATUS MIX" hint="OUTCOME DISTRIBUTION">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <DailyDonut slices={statusSlices} size={isMobile ? 110 : 130}/>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 140 }}>
+                {[
+                  { label: 'COMPLETED', value: stats.mix.completed, color: 'var(--col-done)' },
+                  { label: 'PENDING',   value: stats.mix.pending,   color: 'var(--col-pending)' },
+                  { label: 'STANDBY',   value: stats.mix.standby,   color: 'var(--col-stby)' },
+                  { label: 'CANCELED',  value: stats.mix.canceled,  color: 'var(--col-cancel)' },
+                ].map(s => {
+                  const pct = stats.total > 0 ? (s.value / stats.total) * 100 : 0;
+                  return (
+                    <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11 }}>
+                      <span style={{ width: 10, height: 10, background: s.color, borderRadius: 2, flexShrink: 0 }}/>
+                      <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', flex: 1 }}>{s.label}</span>
+                      <span className="mono num" style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{s.value}</span>
+                      <span className="mono num" style={{ fontSize: 9, color: 'var(--ink-3)', width: 36, textAlign: 'right' }}>{pct.toFixed(0)}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </Section>
 
           {/* Instructor + Aircraft grid */}
           <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: 12 }}>
