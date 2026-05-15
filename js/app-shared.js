@@ -79,10 +79,15 @@ const THEME_CSS = `
     --col-done-bg:    oklch(0.28 0.06 145 / 0.45);
     --col-cancel:     oklch(0.68 0.14  25);
     --col-cancel-bg:  oklch(0.26 0.06  25 / 0.45);
-    --col-sim:        oklch(0.78 0.13 320);
+    --col-sim:        oklch(0.72 0.12 280);
     --col-stby:       oklch(0.70 0.13 255);
-    --highlight:      oklch(0.78 0.13 320);
-    --highlight-bg:   oklch(0.30 0.10 320 / 0.55);
+    --highlight:      oklch(0.78 0.20 316);
+    --highlight-bg:   oklch(0.28 0.10 316 / 0.55);
+    --batch-ap124:    oklch(0.70 0.15 250);
+    --batch-ap126:    oklch(0.78 0.14 145);
+    --batch-ap127:    oklch(0.78 0.20 316);
+    --batch-ap128:    oklch(0.76 0.15  50);
+    --batch-ap129:    oklch(0.82 0.12  84);
     --shadow: 0 6px 24px oklch(0 0 0 / 0.4);
   }
   body[data-theme="light"] {
@@ -100,10 +105,15 @@ const THEME_CSS = `
     --col-done-bg:    oklch(0.94 0.06 145);
     --col-cancel:     oklch(0.45 0.14  25);
     --col-cancel-bg:  oklch(0.94 0.05  25);
-    --col-sim:        oklch(0.50 0.16 330);
+    --col-sim:        oklch(0.45 0.12 280);
     --col-stby:       oklch(0.45 0.13 255);
-    --highlight:      oklch(0.45 0.16 330);
-    --highlight-bg:   oklch(0.95 0.06 330);
+    --highlight:      oklch(0.48 0.20 316);
+    --highlight-bg:   oklch(0.95 0.06 316);
+    --batch-ap124:    oklch(0.45 0.15 250);
+    --batch-ap126:    oklch(0.45 0.14 145);
+    --batch-ap127:    oklch(0.48 0.20 316);
+    --batch-ap128:    oklch(0.50 0.14  50);
+    --batch-ap129:    oklch(0.52 0.12  84);
     --shadow: 0 4px 14px oklch(0 0 0 / 0.07);
   }
   body[data-theme="warm"] {
@@ -121,10 +131,15 @@ const THEME_CSS = `
     --col-done-bg:    oklch(0.18 0.06 130);
     --col-cancel:     oklch(0.70 0.18  25);
     --col-cancel-bg:  oklch(0.20 0.06  25);
-    --col-sim:        oklch(0.82 0.18 350);
+    --col-sim:        oklch(0.75 0.14 280);
     --col-stby:       oklch(0.70 0.16 255);
-    --highlight:      oklch(0.82 0.18 320);
-    --highlight-bg:   oklch(0.22 0.06 320);
+    --highlight:      oklch(0.82 0.22 316);
+    --highlight-bg:   oklch(0.22 0.08 316);
+    --batch-ap124:    oklch(0.72 0.16 250);
+    --batch-ap126:    oklch(0.82 0.16 140);
+    --batch-ap127:    oklch(0.82 0.22 316);
+    --batch-ap128:    oklch(0.80 0.16  50);
+    --batch-ap129:    oklch(0.84 0.14  84);
     --shadow: 0 0 0 1px oklch(0.22 0.01 60), 0 8px 30px oklch(0 0 0 / 0.6);
   }
   body { background: var(--bg); color: var(--ink); }
@@ -595,7 +610,7 @@ function FocusControls() {
       <span style={{ opacity: highlightAP127 ? 1 : 0.35, transition:'opacity .15s' }}
         title={highlightAP127 ? '' : 'Enable AP-127 focus first to use HIDE'}>
         <Chip on={hideOthers} onClick={()=>setHideOthers(v=>!v)} color="var(--highlight)"
-          title="Hide all non-AP-127 flights from the current view.">HIDE</Chip>
+          title="Show only AP-127 flights in the current view.">ONLY</Chip>
       </span>
     </div>
   );

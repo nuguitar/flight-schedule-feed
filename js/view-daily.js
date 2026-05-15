@@ -353,7 +353,7 @@ function DailyBoard() {
                     // Hourly breakdown for 6–18 only
                     const hrs = [];
                     for (let h = 6; h <= 18; h++) hrs.push(h);
-                    const buckets = Object.fromEntries(hrs.map(h => [h, { total: 0, ap127: 0, ap126: 0, ap124: 0, ap129: 0 }]));
+                    const buckets = Object.fromEntries(hrs.map(h => [h, { total: 0, ap127: 0, ap126: 0, ap124: 0, ap128: 0, ap129: 0 }]));
                     flights.forEach(f => {
                       const m = minutesOf(f.start);
                       if (m == null) return;
@@ -363,6 +363,7 @@ function DailyBoard() {
                       if (f.batch === 'AP-127') buckets[h].ap127++;
                       else if (f.batch === 'AP-126') buckets[h].ap126++;
                       else if (f.batch === 'AP-124') buckets[h].ap124++;
+                      else if (f.batch === 'AP-128') buckets[h].ap128++;
                       else if (f.batch === 'AP-129') buckets[h].ap129++;
                     });
 
@@ -408,37 +409,41 @@ function DailyBoard() {
                     const ap127Pts = hrs.map(h => buckets[h].ap127);
                     const ap126Pts = hrs.map(h => buckets[h].ap126);
                     const ap124Pts = hrs.map(h => buckets[h].ap124);
+                    const ap128Pts = hrs.map(h => buckets[h].ap128);
                     const ap129Pts = hrs.map(h => buckets[h].ap129);
+                    const W = 300, H = 80;
 
                     return (
                       <>
-                        <div style={{ background: 'color-mix(in oklch,var(--ink) 2%,transparent)', borderRadius: 6, padding: 8 }}>
-                          <svg width="100%" height="140" viewBox="0 0 280 110" style={{ overflow: 'visible' }}>
-                            {/* Grid lines */}
-                            {[0, 4, 8, 12].map(i => (
-                              <line key={`grid-${i}`} x1={i * 280 / 12} y1="0" x2={i * 280 / 12} y2="100" stroke="var(--line-soft)" strokeWidth="0.5" opacity="0.5" />
+                        <div style={{ background: 'color-mix(in oklch,var(--ink) 3%,transparent)', borderRadius: 6, padding: '6px 4px 2px' }}>
+                          <svg width="100%" height="110" viewBox={`0 0 ${W} ${H + 16}`} style={{ display: 'block' }}>
+                            {/* Horizontal axis line */}
+                            <line x1="0" y1={H} x2={W} y2={H} stroke="var(--line-soft)" strokeWidth="1" />
+                            {/* Vertical grid lines */}
+                            {hrs.map((h, i) => (
+                              <line key={`vg-${h}`} x1={i * W / 12} y1="0" x2={i * W / 12} y2={H} stroke="var(--line-soft)" strokeWidth="0.4" opacity="0.6" />
                             ))}
-                            {/* Filled areas (more opaque for visibility) */}
-                            <path d={genPath(ap127Pts)} fill="var(--highlight)" opacity="0.35" />
-                            <path d={genPath(ap126Pts)} fill="var(--col-done)" opacity="0.35" />
-                            <path d={genPath(ap124Pts)} fill="var(--col-stby)" opacity="0.35" />
-                            <path d={genPath(ap129Pts)} fill="var(--col-cancel)" opacity="0.35" />
-                            {/* Total line (bold, opaque) */}
-                            <path d={genPath(totalPts)} fill="none" stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                            {/* Hour tick labels */}
-                            {[6, 9, 12, 15, 18].map(h => {
-                              const idx = h - 6;
-                              const x = idx * 280 / 12;
-                              return <text key={`hr-${h}`} x={x} y="108" fontSize="8" textAnchor="middle" fill="var(--ink-3)" className="mono">{h}:00</text>;
-                            })}
+                            {/* Filled areas */}
+                            <path d={genPath(ap124Pts, W, H)} fill="var(--batch-ap124)" opacity="0.40" />
+                            <path d={genPath(ap126Pts, W, H)} fill="var(--batch-ap126)" opacity="0.40" />
+                            <path d={genPath(ap128Pts, W, H)} fill="var(--batch-ap128)" opacity="0.40" />
+                            <path d={genPath(ap129Pts, W, H)} fill="var(--batch-ap129)" opacity="0.40" />
+                            <path d={genPath(ap127Pts, W, H)} fill="var(--batch-ap127)" opacity="0.45" />
+                            {/* Total line — distinct amber, thinner */}
+                            <path d={genPath(totalPts, W, H)} fill="none" stroke="var(--col-pending)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            {/* Every-hour axis labels */}
+                            {hrs.map((h, i) => (
+                              <text key={`hr-${h}`} x={i * W / 12} y={H + 13} fontSize="7.5" textAnchor="middle" fill="var(--ink-3)">{h}</text>
+                            ))}
                           </svg>
                         </div>
-                        <div style={{ display: 'flex', gap: 12, fontSize: 9, flexWrap: 'wrap' }}>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--highlight)', borderRadius: 2, marginRight: 4 }} />AP-127</span>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-done)', borderRadius: 2, marginRight: 4 }} />AP-126</span>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-stby)', borderRadius: 2, marginRight: 4 }} />AP-124</span>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-cancel)', borderRadius: 2, marginRight: 4 }} />AP-129</span>
-                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 10, height: 2.5, background: 'var(--ink)', marginRight: 4 }} />TOTAL</span>
+                        <div style={{ display: 'flex', gap: 10, fontSize: 9, flexWrap: 'wrap' }}>
+                          <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap127)', borderRadius: 2, marginRight: 3 }} />AP-127</span>
+                          <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap126)', borderRadius: 2, marginRight: 3 }} />AP-126</span>
+                          <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap124)', borderRadius: 2, marginRight: 3 }} />AP-124</span>
+                          <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap128)', borderRadius: 2, marginRight: 3 }} />AP-128</span>
+                          <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap129)', borderRadius: 2, marginRight: 3 }} />AP-129</span>
+                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 12, height: 2, background: 'var(--col-pending)', marginRight: 3, verticalAlign: 'middle' }} />TOTAL</span>
                         </div>
                       </>
                     );
@@ -447,35 +452,52 @@ function DailyBoard() {
               )}
             </Section>
 
-            {/* Batch breakdown — stacked bar chart, side by side with Schedule Pulse */}
+            {/* Batch breakdown — grouped bar chart: AP / HP / Other */}
             <Section title="BATCH BREAKDOWN" hint={`${byBatch.length} BATCH${byBatch.length === 1 ? '' : 'ES'} FLYING`}>
               {byBatch.length === 0 ? (
                 <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '8px 0' }}>NO DATA</div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {(() => {
                     const max = Math.max(...byBatch.map(b => b.total), 1);
-                    return byBatch.map(b => {
-                      const isHL = b.name === HIGHLIGHT_BATCH;
-                      const color = isHL ? 'var(--highlight)' : (
-                        b.name === 'AP-124' ? 'var(--col-stby)' :
-                        b.name === 'AP-126' ? 'var(--col-done)' :
-                        b.name === 'AP-129' ? 'var(--col-cancel)' : 'var(--ink-3)'
-                      );
-                      return (
-                        <div key={b.name} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                          <div className="mono uc" style={{
-                            width: 70, fontSize: 11, flexShrink: 0,
-                            color: color, fontWeight: isHL ? 700 : 500,
-                          }}>{isHL ? '◆ ' : ''}{b.name}</div>
-                          <div style={{ flex: 1, height: 16, background: 'var(--bg-2)', borderRadius: 3, overflow: 'hidden' }}>
-                            <div style={{ width: `${(b.total / max) * 100}%`, height: '100%', background: color, opacity: 0.85, transition: 'width .25s' }}/>
-                          </div>
-                          <div className="mono num" style={{ width: 28, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{b.total}</div>
-                          <div className="mono num" style={{ width: 50, fontSize: 10, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(b.hours)}h</div>
+                    const batchColor = n => {
+                      if (n === 'AP-127') return 'var(--batch-ap127)';
+                      if (n === 'AP-126') return 'var(--batch-ap126)';
+                      if (n === 'AP-124') return 'var(--batch-ap124)';
+                      if (n === 'AP-128') return 'var(--batch-ap128)';
+                      if (n === 'AP-129') return 'var(--batch-ap129)';
+                      if (/^HP/i.test(n))  return 'var(--col-stby)';
+                      return 'var(--ink-3)';
+                    };
+                    const groups = [
+                      { label: 'AP', items: byBatch.filter(b => /^AP-/i.test(b.name)) },
+                      { label: 'HP', items: byBatch.filter(b => /^HP/i.test(b.name)) },
+                      { label: 'OTHER', items: byBatch.filter(b => !/^AP-|^HP/i.test(b.name)) },
+                    ].filter(g => g.items.length > 0);
+                    return groups.map(g => (
+                      <div key={g.label}>
+                        <div className="mono uc" style={{ fontSize: 8, color: 'var(--ink-3)', margin: '6px 0 4px', letterSpacing: '0.08em' }}>{g.label}</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          {g.items.map(b => {
+                            const isHL = b.name === HIGHLIGHT_BATCH;
+                            const color = batchColor(b.name);
+                            return (
+                              <div key={b.name} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                                <div className="mono uc" style={{
+                                  width: 64, fontSize: 10, flexShrink: 0,
+                                  color: color, fontWeight: isHL ? 700 : 500,
+                                }}>{isHL ? '◆ ' : ''}{b.name}</div>
+                                <div style={{ flex: 1, height: 14, background: 'var(--bg-2)', borderRadius: 3, overflow: 'hidden' }}>
+                                  <div style={{ width: `${(b.total / max) * 100}%`, height: '100%', background: color, opacity: 0.85, transition: 'width .25s' }}/>
+                                </div>
+                                <div className="mono num" style={{ width: 24, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{b.total}</div>
+                                <div className="mono num" style={{ width: 44, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(b.hours)}h</div>
+                              </div>
+                            );
+                          })}
                         </div>
-                      );
-                    });
+                      </div>
+                    ));
                   })()}
                 </div>
               )}
@@ -527,7 +549,7 @@ function DailyBoard() {
                           <div style={{ flex: 1, height: 12, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
                             <div style={{
                               width: `${(i.total / max) * 100}%`, height: '100%',
-                              background: i.ap127 > 0 ? 'var(--highlight)' : 'var(--col-pending)',
+                              background: pct >= 100 ? 'var(--col-done)' : pct >= 75 ? 'var(--col-pending)' : pct >= 50 ? 'var(--col-cancel)' : 'var(--ink-3)',
                               opacity: 0.85,
                             }}/>
                           </div>
@@ -546,22 +568,43 @@ function DailyBoard() {
               {byTail.length === 0 ? (
                 <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)', padding: '8px 0' }}>NO DATA</div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 260, overflowY: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 280, overflowY: 'auto' }}>
                   {(() => {
                     const max = Math.max(...byTail.map(t => t.total), 1);
-                    return byTail.map(t => {
-                      return (
-                        <div key={t.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11 }}>
-                          <div className="mono" style={{ width: 70, fontSize: 11, color: 'var(--ink)', fontWeight: 600, flexShrink: 0 }}>{t.name}</div>
-                          <div className="mono" style={{ width: 50, fontSize: 9, color: 'var(--ink-3)', flexShrink: 0 }}>{t.type}</div>
-                          <div style={{ flex: 1, height: 12, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
-                            <div style={{ width: `${(t.total / max) * 100}%`, height: '100%', background: 'var(--col-pending)', opacity: 0.85 }}/>
-                          </div>
-                          <div className="mono num" style={{ width: 22, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{t.total}</div>
-                          <div className="mono num" style={{ width: 38, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(t.hours)}h</div>
-                        </div>
-                      );
+                    // Priority: DA40TDI first, DA40CS second, then alphabetical
+                    const typePriority = t => t === 'DA40TDI' ? 0 : t === 'DA40CS' ? 1 : 2;
+                    const sorted = [...byTail].sort((a, b) => {
+                      const tp = typePriority(a.type) - typePriority(b.type);
+                      if (tp !== 0) return tp;
+                      return a.type.localeCompare(b.type) || a.name.localeCompare(b.name);
                     });
+                    // Assign a distinct color per type
+                    const typeColors = {};
+                    const palette = ['var(--batch-ap124)','var(--batch-ap126)','var(--batch-ap128)','var(--batch-ap129)','var(--col-cancel)','var(--col-stby)'];
+                    let ci = 0;
+                    sorted.forEach(t => { if (!typeColors[t.type]) typeColors[t.type] = palette[ci++ % palette.length]; });
+                    // Group rows by type
+                    const groups = [];
+                    let lastType = null;
+                    sorted.forEach(t => {
+                      if (t.type !== lastType) { groups.push({ type: t.type, color: typeColors[t.type], items: [] }); lastType = t.type; }
+                      groups[groups.length - 1].items.push(t);
+                    });
+                    return groups.map(g => (
+                      <div key={g.type}>
+                        <div className="mono uc" style={{ fontSize: 8, color: g.color, margin: '6px 0 3px', fontWeight: 600 }}>{g.type}</div>
+                        {g.items.map(t => (
+                          <div key={t.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11, marginBottom: 4 }}>
+                            <div className="mono" style={{ width: 70, fontSize: 10, color: 'var(--ink)', fontWeight: 600, flexShrink: 0 }}>{t.name}</div>
+                            <div style={{ flex: 1, height: 12, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
+                              <div style={{ width: `${(t.total / max) * 100}%`, height: '100%', background: g.color, opacity: 0.85 }}/>
+                            </div>
+                            <div className="mono num" style={{ width: 22, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{t.total}</div>
+                            <div className="mono num" style={{ width: 38, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(t.hours)}h</div>
+                          </div>
+                        ))}
+                      </div>
+                    ));
                   })()}
                 </div>
               )}
@@ -585,36 +628,7 @@ function DailyBoard() {
                   <DKPI label="PENDING"    value={ap127.pending}        sub={`${ap127.standby} STBY`} color="var(--col-pending)" small={isMobile}/>
                   <DKPI label="CANCELED"   value={ap127.canceled}       sub="OF SCHED"   color="var(--col-cancel)" small={isMobile}/>
                   <DKPI label="HOURS"      value={hoursFmt(ap127.hours)} sub="PLANNED"   color="var(--highlight)" small={isMobile}/>
-                  <DKPI label="VS SCHOOL"
-                    value={apRate != null && schoolRate != null
-                      ? `${(apRate - schoolRate >= 0 ? '+' : '')}${(apRate - schoolRate).toFixed(0)}%`
-                      : '—'}
-                    sub="COMPLETION DELTA"
-                    color={apRate != null && schoolRate != null
-                      ? (apRate >= schoolRate ? 'var(--col-done)' : 'var(--col-cancel)')
-                      : 'var(--ink-3)'} small={isMobile}/>
                 </div>
-
-                {/* AP-127 vs School comparison bar */}
-                {(apRate != null || schoolRate != null) && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '10px 12px', background: 'var(--bg-2)', borderRadius: 6, border: '1px solid var(--line-soft)' }}>
-                    <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)' }}>COMPLETION RATE COMPARISON (COMPLETED / COMPLETED+CANCELED)</div>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <div className="mono uc" style={{ width: 70, fontSize: 10, color: 'var(--highlight)', fontWeight: 600 }}>AP-127</div>
-                      <div style={{ flex: 1, height: 14, background: 'var(--bg)', borderRadius: 3, overflow: 'hidden', border: '1px solid var(--line-soft)' }}>
-                        <div style={{ width: `${apRate || 0}%`, height: '100%', background: 'var(--highlight)', opacity: 0.85, transition: 'width .3s' }}/>
-                      </div>
-                      <div className="mono num" style={{ width: 50, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{apRate != null ? `${apRate.toFixed(0)}%` : '—'}</div>
-                    </div>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <div className="mono uc" style={{ width: 70, fontSize: 10, color: 'var(--ink-2)', fontWeight: 600 }}>SCHOOL</div>
-                      <div style={{ flex: 1, height: 14, background: 'var(--bg)', borderRadius: 3, overflow: 'hidden', border: '1px solid var(--line-soft)' }}>
-                        <div style={{ width: `${schoolRate || 0}%`, height: '100%', background: 'var(--col-pending)', opacity: 0.85, transition: 'width .3s' }}/>
-                      </div>
-                      <div className="mono num" style={{ width: 50, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{schoolRate != null ? `${schoolRate.toFixed(0)}%` : '—'}</div>
-                    </div>
-                  </div>
-                )}
 
                 {/* AP-127 student list */}
                 <div style={{ background: 'var(--bg-2)', borderRadius: 6, border: '1px solid var(--line-soft)', overflow: 'hidden' }}>
