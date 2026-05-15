@@ -187,11 +187,12 @@ function DailyBoard() {
     return { HOURS, buckets, max };
   }, [flights]);
 
-  // Batch breakdown
+  // Batch breakdown (exclude MEETING and non-training entries)
   const byBatch = useM_d(() => {
     const m = {};
     flights.forEach(f => {
       const b = f.batch || '—';
+      if (/meeting|recurrent/i.test(b) || /meeting/i.test(f.lesson || '')) return;
       if (!m[b]) m[b] = { name: b, total: 0, pending: 0, completed: 0, canceled: 0, standby: 0, hours: 0 };
       m[b].total++;
       if (f.status === 'Pending')   m[b].pending++;
@@ -418,10 +419,10 @@ function DailyBoard() {
                               <line key={`grid-${i}`} x1={i * 280 / 12} y1="0" x2={i * 280 / 12} y2="100" stroke="var(--line-soft)" strokeWidth="0.5" opacity="0.5" />
                             ))}
                             {/* Filled areas (more opaque for visibility) */}
-                            <path d={genPath(ap127Pts)} fill="var(--col-ap127)" opacity="0.35" />
-                            <path d={genPath(ap126Pts)} fill="var(--col-ap126)" opacity="0.35" />
-                            <path d={genPath(ap124Pts)} fill="var(--col-ap124)" opacity="0.35" />
-                            <path d={genPath(ap129Pts)} fill="var(--col-ap129)" opacity="0.35" />
+                            <path d={genPath(ap127Pts)} fill="var(--highlight)" opacity="0.35" />
+                            <path d={genPath(ap126Pts)} fill="var(--col-done)" opacity="0.35" />
+                            <path d={genPath(ap124Pts)} fill="var(--col-stby)" opacity="0.35" />
+                            <path d={genPath(ap129Pts)} fill="var(--col-cancel)" opacity="0.35" />
                             {/* Total line (bold, opaque) */}
                             <path d={genPath(totalPts)} fill="none" stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                             {/* Hour tick labels */}
@@ -433,10 +434,10 @@ function DailyBoard() {
                           </svg>
                         </div>
                         <div style={{ display: 'flex', gap: 12, fontSize: 9, flexWrap: 'wrap' }}>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap127)', borderRadius: 2, marginRight: 4 }} />AP-127</span>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap126)', borderRadius: 2, marginRight: 4 }} />AP-126</span>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap124)', borderRadius: 2, marginRight: 4 }} />AP-124</span>
-                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-ap129)', borderRadius: 2, marginRight: 4 }} />AP-129</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--highlight)', borderRadius: 2, marginRight: 4 }} />AP-127</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-done)', borderRadius: 2, marginRight: 4 }} />AP-126</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-stby)', borderRadius: 2, marginRight: 4 }} />AP-124</span>
+                          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--col-cancel)', borderRadius: 2, marginRight: 4 }} />AP-129</span>
                           <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 10, height: 2.5, background: 'var(--ink)', marginRight: 4 }} />TOTAL</span>
                         </div>
                       </>
@@ -456,10 +457,10 @@ function DailyBoard() {
                     const max = Math.max(...byBatch.map(b => b.total), 1);
                     return byBatch.map(b => {
                       const isHL = b.name === HIGHLIGHT_BATCH;
-                      const color = isHL ? 'var(--col-ap127)' : (
-                        b.name === 'AP-124' ? 'var(--col-ap124)' :
-                        b.name === 'AP-126' ? 'var(--col-ap126)' :
-                        b.name === 'AP-129' ? 'var(--col-ap129)' : 'var(--ink-3)'
+                      const color = isHL ? 'var(--highlight)' : (
+                        b.name === 'AP-124' ? 'var(--col-stby)' :
+                        b.name === 'AP-126' ? 'var(--col-done)' :
+                        b.name === 'AP-129' ? 'var(--col-cancel)' : 'var(--ink-3)'
                       );
                       return (
                         <div key={b.name} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
