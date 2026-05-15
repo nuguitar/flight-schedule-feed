@@ -32,15 +32,15 @@
 <!-- Shared components and context.
      The ?v= token cache-busts the app JS — bump it whenever a js/ file changes
      so browsers don't serve stale code after a deploy. -->
-<script type="text/babel" src="js/app-shared.js?v=r15"></script>
+<script type="text/babel" src="js/app-shared.js?v=r16"></script>
 
 <!-- Views -->
-<script type="text/babel" src="js/view-daily.js?v=r15"></script>
-<script type="text/babel" src="js/view-board.js?v=r15"></script>
-<script type="text/babel" src="js/view-gantt.js?v=r15"></script>
-<script type="text/babel" src="js/view-weekly.js?v=r15"></script>
-<script type="text/babel" src="js/view-summary.js?v=r15"></script>
-<script type="text/babel" src="js/view-roster.js?v=r15"></script>
+<script type="text/babel" src="js/view-daily.js?v=r16"></script>
+<script type="text/babel" src="js/view-board.js?v=r16"></script>
+<script type="text/babel" src="js/view-gantt.js?v=r16"></script>
+<script type="text/babel" src="js/view-weekly.js?v=r16"></script>
+<script type="text/babel" src="js/view-summary.js?v=r16"></script>
+<script type="text/babel" src="js/view-roster.js?v=r16"></script>
 
 <script type="text/babel" data-presets="env,react">
 const VIEWS = [
@@ -82,7 +82,7 @@ function Sidebar({ view, setView, width, mobile=false, onClose }) {
       {/* Wordmark */}
       <div style={{ padding:'14px 16px', borderBottom:'1px solid var(--line)', display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
         <span style={{ width:8,height:8,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 6px var(--col-done)',animation:'pulse 2s ease-in-out infinite',flexShrink:0 }}/>
-        <span className="mono uc" style={{ fontSize:12,fontWeight:700,letterSpacing:'0.08em',flex:1 }}>AP127 CMD CN</span>
+        <span className="mono uc" style={{ fontSize:11,fontWeight:700,letterSpacing:'0.06em',flex:1 }}>AP127 COMMAND CENTER</span>
         {mobile && <button onClick={onClose} style={{ background:'none',border:'none',color:'var(--ink-3)',cursor:'pointer',fontSize:18,padding:'2px 6px',lineHeight:1 }}>✕</button>}
       </div>
 
@@ -144,7 +144,7 @@ function MobileTopBar({ view, onMenuOpen }) {
       }}>☰</button>
       <div style={{ display:'flex',alignItems:'center',gap:7 }}>
         <span style={{ width:7,height:7,borderRadius:999,background:'var(--col-done)',boxShadow:'0 0 5px var(--col-done)' }}/>
-        <span className="mono uc" style={{ fontSize:11,fontWeight:700,letterSpacing:'0.08em' }}>AP127 CMD CN</span>
+        <span className="mono uc" style={{ fontSize:11,fontWeight:700,letterSpacing:'0.06em' }}>AP127 COMMAND CENTER</span>
       </div>
       <div style={{ flex:1 }}/>
       <LastUpdate showOnMobile/>

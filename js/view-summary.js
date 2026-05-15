@@ -91,13 +91,13 @@ function BreakdownTable({ title, subtitle, rows, nameKey='batch', barMode='fligh
                   {r.total === 0   && <div style={{ flex:1, background:'var(--line)', opacity:.2 }}/>}
                 </div>
               </div>
-              {barMode === 'hours'
-                ? <div className="mono num" style={{ width:50, fontSize:10, color:'var(--ink-3)', textAlign:'right', flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
-                : <>
-                    <div className="mono num" style={{ width:26, fontSize:10, color:'var(--ink-3)', textAlign:'right', flexShrink:0 }}>{r.total}</div>
-                    <div className="mono num" style={{ width:44, fontSize:9,  color:'var(--ink-3)', textAlign:'right', flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
-                  </>
-              }
+              {/* Completed / Canceled counts + metric */}
+              <div style={{ display:'flex', gap:4, alignItems:'center', flexShrink:0 }}>
+                <div className="mono num" style={{ fontSize:9, color:'var(--col-done)', textAlign:'right', width:20 }} title="Completed">{r.completed}</div>
+                <div className="mono" style={{ fontSize:8, color:'var(--ink-3)' }}>/</div>
+                <div className="mono num" style={{ fontSize:9, color:'var(--col-cancel)', textAlign:'right', width:20 }} title="Canceled">{r.canceled}</div>
+                <div className="mono num" style={{ width:46, fontSize:9, color:'var(--ink-3)', textAlign:'right' }}>{r.hours.toFixed(1)}h</div>
+              </div>
             </div>
           );
         })}
@@ -119,7 +119,7 @@ function SummaryBoard() {
     const today = localToday();
     return [...ALL_DATES].reverse().find(d => d <= today) || ALL_DATES[ALL_DATES.length-1];
   });
-  const [barMode, setBarMode] = useS_s('flights'); // 'flights' | 'hours'
+  const [barMode, setBarMode] = useS_s('hours'); // 'flights' | 'hours'
 
   const all = useM_s(()=> {
     return FLIGHTS.filter(f => {
@@ -173,7 +173,8 @@ function SummaryBoard() {
   const studentStats = useM_s(()=>{
     const m={};
     all.forEach(f=>{
-      const k=f.student||'—';
+      if(!f.student) return;  // skip flights with no named student
+      const k=f.student;
       if(!m[k]) m[k]={name:k,total:0,hours:0,pending:0,completed:0,canceled:0,standby:0};
       m[k].total++; m[k].hours+=(f.durMin||0)/60;
       if(f.status==='Pending')   m[k].pending++;
@@ -340,13 +341,13 @@ function SummaryBoard() {
                           {r.total === 0   && <div style={{ flex:1, background:'var(--line)', opacity:.2 }}/>}
                         </div>
                       </div>
-                      {barMode === 'hours'
-                        ? <div className="mono num" style={{ width:50,fontSize:10,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
-                        : <>
-                            <div className="mono num" style={{ width:26,fontSize:10,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.total}</div>
-                            <div className="mono num" style={{ width:44,fontSize:9,color:'var(--ink-3)',textAlign:'right',flexShrink:0 }}>{r.hours.toFixed(1)}h</div>
-                          </>
-                      }
+                      {/* Completed / Canceled + hours */}
+                      <div style={{ display:'flex', gap:4, alignItems:'center', flexShrink:0 }}>
+                        <div className="mono num" style={{ fontSize:9,color:'var(--col-done)',textAlign:'right',width:20 }} title="Completed">{r.completed}</div>
+                        <div className="mono" style={{ fontSize:8,color:'var(--ink-3)' }}>/</div>
+                        <div className="mono num" style={{ fontSize:9,color:'var(--col-cancel)',textAlign:'right',width:20 }} title="Canceled">{r.canceled}</div>
+                        <div className="mono num" style={{ width:46,fontSize:9,color:'var(--ink-3)',textAlign:'right' }}>{r.hours.toFixed(1)}h</div>
+                      </div>
                     </div>
                   );
                 });

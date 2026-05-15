@@ -209,7 +209,7 @@ function DailyBoard() {
     });
   }, [flights]);
 
-  // Top instructors (by flights), with completion %
+  // Top instructors (by hours), with completion %
   const byInstructor = useM_d(() => {
     const m = {};
     flights.forEach(f => {
@@ -222,7 +222,7 @@ function DailyBoard() {
       m[k].hours += (f.durMin || 0) / 60;
       if (f.batch === HIGHLIGHT_BATCH) m[k].ap127++;
     });
-    return Object.values(m).sort((a, b) => b.total - a.total || b.hours - a.hours);
+    return Object.values(m).sort((a, b) => b.hours - a.hours || b.total - a.total);
   }, [flights]);
 
   // Aircraft fleet usage (by tail)
@@ -293,7 +293,10 @@ function DailyBoard() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 8, height: 8, borderRadius: 999, background: 'var(--col-done)', boxShadow: '0 0 8px var(--col-done)', animation: 'pulse 2s ease-in-out infinite' }}/>
           <ViewIcon id="daily" size={12} color="var(--ink-2)"/>
-          <div className="mono uc" style={{ fontSize: 11, fontWeight: 600 }}>DAY AT A GLANCE</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <div className="mono uc" style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)', letterSpacing: '0.08em' }}>AP127 COMMAND CENTER</div>
+            <div className="mono uc" style={{ fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.06em' }}>DAY AT A GLANCE</div>
+          </div>
         </div>
         <div style={{ flex: 1 }}/>
         <div className="mono uc" style={{ fontSize: 9, color: 'var(--ink-3)' }}>{flights.length} FLTS · {FLIGHTS.length} TOTAL</div>
@@ -413,15 +416,16 @@ function DailyBoard() {
                     const ap129Pts = hrs.map(h => buckets[h].ap129);
                     const W = 300, H = 80;
 
+                    const FL_GREEN = 'oklch(0.88 0.30 130)';
                     return (
                       <>
-                        <div style={{ background: 'color-mix(in oklch,var(--ink) 3%,transparent)', borderRadius: 6, padding: '6px 4px 2px' }}>
-                          <svg width="100%" height="110" viewBox={`0 0 ${W} ${H + 16}`} style={{ display: 'block' }}>
-                            {/* Horizontal axis line */}
-                            <line x1="0" y1={H} x2={W} y2={H} stroke="var(--line-soft)" strokeWidth="1" />
+                        <div style={{ background: 'color-mix(in oklch,var(--ink) 3%,transparent)', borderRadius: 6, padding: '4px 0 2px' }}>
+                          <svg width="100%" height={H + 16} viewBox={`0 0 ${W} ${H + 16}`} style={{ display: 'block' }} overflow="visible">
+                            {/* Horizontal axis line — grey */}
+                            <line x1="0" y1={H} x2={W} y2={H} stroke="var(--ink-3)" strokeWidth="0.8" opacity="0.6" />
                             {/* Vertical grid lines */}
                             {hrs.map((h, i) => (
-                              <line key={`vg-${h}`} x1={i * W / 12} y1="0" x2={i * W / 12} y2={H} stroke="var(--line-soft)" strokeWidth="0.4" opacity="0.6" />
+                              <line key={`vg-${h}`} x1={i * W / 12} y1="0" x2={i * W / 12} y2={H} stroke="var(--line-soft)" strokeWidth="0.4" opacity="0.5" />
                             ))}
                             {/* Filled areas */}
                             <path d={genPath(ap124Pts, W, H)} fill="var(--batch-ap124)" opacity="0.40" />
@@ -429,11 +433,13 @@ function DailyBoard() {
                             <path d={genPath(ap128Pts, W, H)} fill="var(--batch-ap128)" opacity="0.40" />
                             <path d={genPath(ap129Pts, W, H)} fill="var(--batch-ap129)" opacity="0.40" />
                             <path d={genPath(ap127Pts, W, H)} fill="var(--batch-ap127)" opacity="0.45" />
-                            {/* Total line — distinct amber, thinner */}
-                            <path d={genPath(totalPts, W, H)} fill="none" stroke="var(--col-pending)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            {/* Total line — fluorescent green */}
+                            <path d={genPath(totalPts, W, H)} fill="none" stroke={FL_GREEN} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             {/* Every-hour axis labels */}
                             {hrs.map((h, i) => (
-                              <text key={`hr-${h}`} x={i * W / 12} y={H + 13} fontSize="7.5" textAnchor="middle" fill="var(--ink-3)">{h}</text>
+                              <text key={`hr-${h}`} x={i * W / 12} y={H + 13} fontSize="7.5"
+                                textAnchor={i === 0 ? 'start' : i === hrs.length - 1 ? 'end' : 'middle'}
+                                fill="var(--ink-3)">{h}</text>
                             ))}
                           </svg>
                         </div>
@@ -443,7 +449,7 @@ function DailyBoard() {
                           <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap124)', borderRadius: 2, marginRight: 3 }} />AP-124</span>
                           <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap128)', borderRadius: 2, marginRight: 3 }} />AP-128</span>
                           <span><span style={{ display: 'inline-block', width: 9, height: 9, background: 'var(--batch-ap129)', borderRadius: 2, marginRight: 3 }} />AP-129</span>
-                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 12, height: 2, background: 'var(--col-pending)', marginRight: 3, verticalAlign: 'middle' }} />TOTAL</span>
+                          <span style={{ marginLeft: 'auto' }}><span style={{ display: 'inline-block', width: 12, height: 2, background: FL_GREEN, marginRight: 3, verticalAlign: 'middle' }} />TOTAL</span>
                         </div>
                       </>
                     );
@@ -537,9 +543,10 @@ function DailyBoard() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 260, overflowY: 'auto' }}>
                   {(() => {
-                    const max = Math.max(...byInstructor.map(i => i.total), 1);
+                    const maxH = Math.max(...byInstructor.map(i => i.hours), 0.01);
                     return byInstructor.slice(0, 12).map(i => {
                       const pct = (i.hours / 8) * 100;
+                      const barColor = pct >= 100 ? 'var(--col-done)' : pct >= 75 ? 'var(--col-pending)' : pct >= 50 ? 'var(--col-cancel)' : 'var(--ink-3)';
                       return (
                         <div key={i.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11 }}>
                           <div style={{
@@ -548,14 +555,12 @@ function DailyBoard() {
                           }} title={i.name}>{i.name}</div>
                           <div style={{ flex: 1, height: 12, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
                             <div style={{
-                              width: `${(i.total / max) * 100}%`, height: '100%',
-                              background: pct >= 100 ? 'var(--col-done)' : pct >= 75 ? 'var(--col-pending)' : pct >= 50 ? 'var(--col-cancel)' : 'var(--ink-3)',
-                              opacity: 0.85,
+                              width: `${(i.hours / maxH) * 100}%`, height: '100%',
+                              background: barColor, opacity: 0.85,
                             }}/>
                           </div>
-                          <div className="mono num" style={{ width: 22, fontSize: 11, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{i.total}</div>
-                          <div className="mono num" style={{ width: 38, fontSize: 9, color: 'var(--ink-3)', textAlign: 'right' }}>{hoursFmt(i.hours)}h</div>
-                          <div className="mono num" style={{ width: 32, fontSize: 9, color: pct >= 100 ? 'var(--col-done)' : (pct >= 50 ? 'var(--col-pending)' : 'var(--col-cancel)'), textAlign: 'right' }}>{pct.toFixed(0)}%</div>
+                          <div className="mono num" style={{ width: 40, fontSize: 10, color: 'var(--ink)', textAlign: 'right', fontWeight: 600 }}>{hoursFmt(i.hours)}h</div>
+                          <div className="mono num" style={{ width: 32, fontSize: 9, color: barColor, textAlign: 'right' }}>{pct.toFixed(0)}%</div>
                         </div>
                       );
                     });
