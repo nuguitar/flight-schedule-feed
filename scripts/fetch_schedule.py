@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -12,9 +13,13 @@ SCRIPT_URL = (
     "AKfycbzsOcPHLUpD5U8Qyq-x78edIOMUr28NJAp0KTvJvYCW6IQ_yG-HB97aRue8aFoxGQ5lJg/exec"
 )
 OUTPUT_FILE = Path(__file__).parent.parent / "data" / "flight_schedule.json"
-LOAD_TIMEOUT_MS = 60_000   # 60 s total page load budget
+LOAD_TIMEOUT_MS = 90_000   # 90 s total page load budget (GAS cold-starts can be slow)
 POLL_INTERVAL_MS = 500     # check every 0.5 s
-MAX_POLL_TRIES = 60        # 30 s of polling after page load
+MAX_POLL_TRIES = 80        # 40 s of polling after page load
+
+# Retry config — overridable via env vars set in the workflow.
+MAX_ATTEMPTS  = int(os.environ.get("FETCH_MAX_ATTEMPTS", "3"))
+RETRY_DELAY_S = int(os.environ.get("FETCH_RETRY_DELAY",  "20"))
 
 TIMEZONE = "Asia/Bangkok"
 VALID_STATUSES = {"Pending", "Completed", "Canceled"}
@@ -311,5 +316,32 @@ async def main():
     print(f"Saved → {OUTPUT_FILE}")
 
 
+async def main_with_retry():
+    """Run main() up to MAX_ATTEMPTS times with exponential-ish backoff."""
+    last_exc = None
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            await main()
+            return  # success
+        except SystemExit as exc:
+            if exc.code == 0:
+                return
+            last_exc = exc
+            if attempt < MAX_ATTEMPTS:
+                wait = RETRY_DELAY_S * attempt
+                print(
+                    f"Attempt {attempt}/{MAX_ATTEMPTS} failed (exit {exc.code}). "
+                    f"Retrying in {wait}s …",
+                    file=sys.stderr,
+                )
+                await asyncio.sleep(wait)
+            else:
+                print(
+                    f"All {MAX_ATTEMPTS} attempts failed. Giving up.",
+                    file=sys.stderr,
+                )
+    sys.exit(last_exc.code if last_exc else 1)
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main_with_retry())

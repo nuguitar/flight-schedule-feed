@@ -13,7 +13,7 @@ permissions:
 jobs:
   fetch-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,23 +31,48 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Playwright browser
+      # Cache the Playwright browser binary — avoids a ~300 MB download every run.
+      # Cache key includes the Playwright version so it rebuilds after upgrades.
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('requirements.txt') }}
+
+      - name: Install Playwright browser (full install on cache miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: playwright install chromium --with-deps
 
+      - name: Install Playwright browser OS deps (cache hit — deps only)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: playwright install-deps chromium
+
+      # Fetch with up to 3 attempts before failing the job.
       - name: Fetch flight schedule
+        id: fetch
         run: python scripts/fetch_schedule.py
+        env:
+          FETCH_MAX_ATTEMPTS: '3'
+          FETCH_RETRY_DELAY: '20'
 
       - name: Generate flight-data.js
         run: python scripts/generate_flight_data.py
 
+      # Rebase before pushing to survive concurrent runs (cron + manual overlap).
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/flight_schedule.json flight-data.js
-          git diff --cached --quiet \
-            || git commit -m "chore: update flight data $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push
+          if git diff --cached --quiet; then
+            echo "No data changes — skipping commit."
+          else
+            git commit -m "chore: update flight data $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            # Rebase over any concurrent data commit, then push.
+            git pull --rebase origin main
+            git push origin main
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -60,3 +85,24 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Open a GitHub issue when this run fails so stale data doesn't go unnoticed.
+      - name: Report failure as GitHub issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `[Fetch] Run failed – ${new Date().toISOString().slice(0,16)} UTC`;
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'fetch-failure',
+            });
+            // Don't open a duplicate if one is already open.
+            if (issues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title,
+                body: `Workflow run failed: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\nCheck logs and re-run manually once fixed.`,
+                labels: ['fetch-failure'],
+              });
+            }
