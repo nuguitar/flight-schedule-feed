@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 .env
 node_modules/
+# Rolling backup written before each fetch — not worth tracking in git
+data/flight_schedule.backup.json

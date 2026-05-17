@@ -293,23 +293,53 @@ async def main():
         print(f"Schema validation passed with {len(warnings)} warning(s). Review stderr.", file=sys.stderr)
 
     raw_schedules = cache.get("schedules", {})
-    normalized_schedules = {
+    new_schedules = {
         date: [normalize_entry(entry, date) for entry in entries]
         for date, entries in raw_schedules.items()
     }
 
+    # ── Merge with existing data ───────────────────────────────────────────────
+    # Load the on-disk file (if any) so dates outside the rolling window are kept.
+    # Dates present in the fresh fetch overwrite the stored version (newer = more
+    # accurate statuses).  Dates only in the stored file are preserved as-is.
+    BACKUP_FILE = OUTPUT_FILE.with_name("flight_schedule.backup.json")
+
+    existing_schedules = {}
+    if OUTPUT_FILE.exists():
+        try:
+            existing = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+            existing_schedules = existing.get("schedules", {})
+        except Exception as e:
+            print(f"WARNING: could not read existing file for merge: {e}", file=sys.stderr)
+
+        # Back up before overwriting
+        try:
+            BACKUP_FILE.write_bytes(OUTPUT_FILE.read_bytes())
+        except Exception as e:
+            print(f"WARNING: could not write backup: {e}", file=sys.stderr)
+
+    # Merge: existing dates first (preserves history), then new fetch overwrites
+    # any date it covers.
+    merged_schedules = {**existing_schedules, **new_schedules}
+
+    new_dates  = set(new_schedules.keys())
+    kept_dates = set(existing_schedules.keys()) - new_dates
+    print(f"Fetched {sum(len(v) for v in new_schedules.values())} flights across {len(new_dates)} date(s).")
+    if kept_dates:
+        print(f"Preserved {len(kept_dates)} historical date(s) not in current window: "
+              f"{', '.join(sorted(kept_dates))}")
+
     output = {
         "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "timezone": TIMEZONE,
-        "schedules": normalized_schedules,
+        "schedules": dict(sorted(merged_schedules.items())),  # chronological order
         "leaves": cache.get("leaves", []),
         "instructors": cache.get("instructors", []),
         "resources": cache.get("resources", []),
     }
 
-    schedule_count = sum(len(v) for v in output["schedules"].values())
-    date_count = len(output["schedules"])
-    print(f"Fetched {schedule_count} flights across {date_count} date(s).")
+    total_count = sum(len(v) for v in output["schedules"].values())
+    print(f"Total after merge: {total_count} flights across {len(output['schedules'])} date(s).")
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_FILE.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
