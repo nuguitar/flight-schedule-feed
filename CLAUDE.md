@@ -513,7 +513,13 @@ python3 scripts/rebuild_history.py --apply   # writes data/flight_schedule.json
 python3 scripts/generate_flight_data.py
 ```
 
-Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent browsers from serving stale data. The app JS files (`js/app-shared.js` + the `js/view-*.js` files) also carry a `?v=<token>` query — **bump that token whenever a `js/` file changes** so browsers don't serve stale code after a deploy.
+**Cache strategy — three layers:**
+
+| Resource | Mechanism |
+|---|---|
+| `index.html` | `no-cache, no-store, must-revalidate` meta tags → browser always revalidates with server on every load/refresh; GitHub Pages returns 304 if unchanged (no download) |
+| `js/*.js` | `?v=rXX` token in `index.html` script tags — **bump whenever a `js/` file changes** |
+| `flight-data.js` | `?v=<unix-timestamp>` written by `generate_flight_data.py` — changes automatically with every data fetch |
 
 ---
 
@@ -529,7 +535,8 @@ Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent brow
 | Shared `--batch-ap*` CSS vars | All batch colors defined once in `ThemeStyle` and consumed by every view — single source of truth |
 | Fetch merges rather than overwrites | Source only provides a rolling ~10-day window; merging preserves all historical dates in `flight_schedule.json` |
 | `rebuild_history.py` | One-time and recovery tool — replays all git commits to reconstruct the fullest possible dataset |
-| Playwright browser cached in CI | `actions/cache` keyed on `requirements.txt` — avoids a 300 MB CDN download every 30-min run |
+| Playwright browser cached in CI | `actions/cache` keyed on `requirements.txt` — avoids a ~200 MB CDN download every 30-min run; always run `install --with-deps` so binary + OS deps are both present regardless of cache state |
+| `no-cache` meta tags on `index.html` | GitHub Pages can't set custom HTTP headers; meta-equivalent directives tell browsers to revalidate `index.html` on every refresh so users always get the latest `?v=` tokens for JS/data files |
 | Flex scroll anti-pattern fix | `flex:1, minHeight:0, overflowY:auto` on outer + non-flex inner prevents children shrinking instead of scrolling |
 | isMobile uses both width AND height | Catches landscape phones (width > 768 but height < 560) |
 | ROSTER view as PM tool | Only view showing cross-day utilization at a glance — essential for scheduling |
@@ -551,7 +558,9 @@ Cache-busting: `index.html` loads `flight-data.js?v=<timestamp>` to prevent brow
 | 12 | **Schedule Pulse visual refinement**: Converted from hourly bar chart (06–21) to smoothed SVG line graph covering 6–18 hours with opaque filled areas for each batch (AP-127, AP-126, AP-124, AP-129) plus a bold total line. Expanded to full width. **Batch Breakdown redesign**: Changed from stacked status bars to SVG donut chart with legend; excluded meetings from display. **Utilization simplification**: Removed percentage columns from Instructor Load and Aircraft Fleet sections. **Aircraft Fleet cleanup**: Removed "TBD" for unassigned tails. **GANTT time header**: simplified to compact "6", "9", "12" on desktop; mobile: every 3rd hour. |
 | 13 | **DAY GLANCE refinements**: Schedule Pulse made more visible (distinct colors, background fill, smoother curves, half-width); Batch Breakdown reverted to bar chart matching Pulse colors; Status Mix removed SIM slice; Instructor Load: added % column vs 8-hour benchmark; **Mobile**: burger menu now toggles (was open-only); **GANTT**: mobile time labels match desktop format (plain numbers). |
 | 14 | **Bug fix**: blank white page caused by accidental extra `</div>` in JSX from Round 13 edit, which mismatched the outer container and caused Babel parse failure. |
-| 15 | **Batch color system** (`--batch-ap124/126/127/128/129` CSS vars added to all themes): AP124=Blue · AP126=Green · AP127=Magenta · AP128=Orange · AP129=Mustard. `--highlight` updated to magenta (316°). `--col-sim` changed to purple/indigo to avoid clash. **DAY GLANCE**: AP-128 added to Schedule Pulse; Pulse improvements (every-hour labels 6–18, tight margins, total vs axis distinct colors); Batch Breakdown grouped AP/HP/Other; Instructor Load bar color by % load; Aircraft Fleet grouped by type (DA40TDI/DA40CS first); AP-127 Spotlight "VS SCHOOL" section removed; SIM removed from Status Mix donut. **FocusControls**: "HIDE" → "ONLY". **Page title**: "AP127 CMD CN" → "AP127 CMD CN" (sidebar/mobile wordmark). |
+| 15 | **Batch color system** (`--batch-ap124/126/127/128/129` CSS vars added to all themes): AP124=Blue · AP126=Green · AP127=Magenta · AP128=Orange · AP129=Mustard. `--highlight` updated to magenta (316°). `--col-sim` changed to purple/indigo to avoid clash. **DAY GLANCE**: AP-128 added to Schedule Pulse; Pulse improvements (every-hour labels 6–18, tight margins, total vs axis distinct colors); Batch Breakdown grouped AP/HP/Other; Instructor Load bar color by % load; Aircraft Fleet grouped by type (DA40TDI/DA40CS first); AP-127 Spotlight "VS SCHOOL" section removed; SIM removed from Status Mix donut. **FocusControls**: "HIDE" → "ONLY". **Page title**: sidebar/mobile wordmark updated to "AP127 COMMAND CENTER" (full form, was "AP127 CMD CN"). |
 | 16 | **DAY GLANCE**: Schedule Pulse total line → fluorescent green `oklch(0.88 0.30 130)`; axis line → grey; chart fills full container (side padding removed, SVG `overflow=visible`); Instructor Load bars now represent hours (not flight count), sorted by hours. Page title updated to **"AP127 COMMAND CENTER"** in both top bar and sidebar/mobile wordmark. **ANALYTICS**: default breakdown mode → HOURS; all breakdowns show Completed ✓ / Canceled ✗ counts separately; Student breakdown excludes anonymous "—" entries. |
 | — | **Fetch reliability**: Playwright browser cached in CI (saves ~2 min/run); Python script retries up to 3× with backoff; `git pull --rebase` before push prevents concurrent-run conflicts; failure opens a GitHub Issue (`fetch-failure` label). |
+| — | **Workflow bug fixes**: (1) Playwright cache-hit path ran `install-deps` only — binary was never placed, causing "Executable doesn't exist" crash. Fixed by always running `playwright install chromium --with-deps` unconditionally (fast when cached, full install when cold). (2) Issue reporter got 403 because `issues: write` was missing from the workflow permissions block. |
 | — | **Historical data preservation**: `fetch_schedule.py` now merges new data into existing `flight_schedule.json` instead of overwriting — dates outside the source's rolling window are kept. Rolling backup written to `flight_schedule.backup.json` before each save. `rebuild_history.py` reconstructed the full history from 111 git commits (11 dates/260 entries → 15 dates/382 entries, recovering May 5–8). |
+| — | **Browser cache**: Added `no-cache / no-store / must-revalidate` meta tags to `index.html` so every refresh revalidates the page with the server. GitHub Pages can't set HTTP headers directly; this is the equivalent client-side directive. Ensures users always load the current `?v=` tokens for JS and data files after a deploy. |
