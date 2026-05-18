@@ -9,6 +9,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 jobs:
   fetch-and-deploy:
@@ -31,7 +32,7 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      # Cache the Playwright browser binary — avoids a ~300 MB download every run.
+      # Cache the Playwright browser binary — avoids a ~200 MB download every run.
       # Cache key includes the Playwright version so it rebuilds after upgrades.
       - name: Cache Playwright browsers
         id: playwright-cache
@@ -40,13 +41,11 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ hashFiles('requirements.txt') }}
 
-      - name: Install Playwright browser (full install on cache miss)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      # Always run --with-deps so OS packages are present.
+      # When the cache is warm the binary already exists and Playwright skips
+      # the download — making this step take ~10 s instead of ~2 min.
+      - name: Install Playwright browser
         run: playwright install chromium --with-deps
-
-      - name: Install Playwright browser OS deps (cache hit — deps only)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: playwright install-deps chromium
 
       # Fetch with up to 3 attempts before failing the job.
       - name: Fetch flight schedule
