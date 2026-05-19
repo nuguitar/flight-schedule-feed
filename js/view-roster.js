@@ -217,6 +217,12 @@ function RosterBoard() {
           <span className="mono" style={{ fontSize:10,color:'var(--highlight)' }}>◆</span>
           <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>AP-127</span>
         </span>
+        <span style={{ display:'flex',gap:5,alignItems:'center' }}>
+          <span style={{ width:14,height:10,borderRadius:2,background:'color-mix(in oklch,var(--col-stby) 10%,transparent)',border:'1px solid var(--col-stby)',display:'flex',alignItems:'center',justifyContent:'center' }}>
+            <span className="mono uc" style={{ fontSize:6,color:'var(--col-stby)',fontWeight:700 }}>L</span>
+          </span>
+          <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>ON LEAVE</span>
+        </span>
         <div style={{flex:1}}/>
         <span className="mono uc" style={{ fontSize:8,color:'var(--ink-3)' }}>CLICK CELL → DETAILS</span>
       </div>
@@ -263,6 +269,10 @@ function RosterBoard() {
                 ? key === HIGHLIGHT_BATCH
                 : ALL_DATES.some(d => rowData[d]?.ap127 > 0);
               const rowAlpha = app.highlightAP127 && !isHL ? 0.3 : 1;
+              // Count leave days in the visible date range (instructor / student rows only)
+              const leaveDays = (groupBy !== 'batch')
+                ? ALL_DATES.filter(d => leavesOnDate(d)[key]).length
+                : 0;
 
               return (
                 <tr key={key} style={{ opacity: rowAlpha, transition:'opacity .15s' }}>
@@ -285,6 +295,7 @@ function RosterBoard() {
                         maxWidth: LABEL_W - 30,
                         display:'block',
                       }}>{key}</span>
+                      {leaveDays > 0 && <LeaveBadge reason={`${leaveDays} leave day${leaveDays>1?'s':''} in range`}/>}
                     </div>
                     {!isMobile && (
                       <div className="mono uc" style={{ fontSize:8,color:'var(--ink-3)',marginTop:1 }}>
@@ -298,19 +309,26 @@ function RosterBoard() {
                     const n    = cell?.flights || 0;
                     const color      = LOAD_COLOR(n);
                     const isTodayDate = d === today;
+                    const onLeaveToday = groupBy !== 'batch' && !!leavesOnDate(d)[key];
                     return (
                       <td key={d}
                         onClick={() => {
                           if (n > 0) setCellDetail({ key, date: d });
                         }}
-                        title={n > 0 ? `${key} · ${d} · ${n} FLT · ${(cell.hours).toFixed(1)}h` : undefined}
+                        title={
+                          onLeaveToday
+                            ? `${key} · ${d} · ON LEAVE${n ? ` · ${n} FLT` : ''}`
+                            : n > 0 ? `${key} · ${d} · ${n} FLT · ${(cell.hours).toFixed(1)}h` : undefined
+                        }
                         style={{
                           width:CELL_W, height:ROW_H, textAlign:'center', verticalAlign:'middle',
                           borderBottom:'1px solid var(--line-soft)',
                           borderLeft:`1px solid ${isTodayDate?'color-mix(in oklch,var(--col-pending) 30%,var(--line-soft))':'var(--line-soft)'}`,
                           background: color
                             ? `color-mix(in oklch,${color} ${Math.round(LOAD_OPACITY(n)*100)}%,var(--surface))`
-                            : ki%2 ? 'transparent' : 'color-mix(in oklch,var(--ink) 0.8%,transparent)',
+                            : onLeaveToday
+                              ? 'color-mix(in oklch,var(--col-stby) 10%,transparent)'
+                              : ki%2 ? 'transparent' : 'color-mix(in oklch,var(--ink) 0.8%,transparent)',
                           cursor: n > 0 ? 'pointer' : 'default',
                           transition:'background .1s',
                           position:'relative',
@@ -322,6 +340,9 @@ function RosterBoard() {
                               <span style={{ position:'absolute', top:2, right:3, fontSize:7, color:'var(--highlight)', lineHeight:1 }}>◆</span>
                             )}
                           </>
+                        )}
+                        {n === 0 && onLeaveToday && (
+                          <span className="mono uc" style={{ fontSize:isMobile?6:7, color:'var(--col-stby)', fontWeight:600, letterSpacing:'0.03em' }}>L</span>
                         )}
                       </td>
                     );

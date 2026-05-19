@@ -174,6 +174,8 @@ function WeeklyBoard() {
                   {list.map((f,fi)=>{
                     const color = STATUS_COLOR(f);
                     const alpha = flightAlpha(f, app.highlightAP127);
+                    const dayLeaveMap = leavesOnDate(d);
+                    const tailMaint  = isTailMaint(f.tail);
                     return (
                       <button key={`${d}-${f.id}-${fi}`} onClick={()=>{ app.setDate(d); app.setDrawer(f.id); }}
                         style={{
@@ -189,9 +191,13 @@ function WeeklyBoard() {
                           <span className="mono num" style={{ fontSize:12,fontWeight:600,color:'var(--ink)' }}>{f.start}</span>
                           <span className="mono uc" style={{ fontSize:8,color:f.batch===HIGHLIGHT_BATCH?'var(--highlight)':'var(--ink-3)',fontWeight:f.batch===HIGHLIGHT_BATCH?600:400 }}>{f.batch}</span>
                         </div>
-                        <div style={{ fontSize:11,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--ink)' }}>{f.student||'—'}</div>
+                        <div style={{ fontSize:11,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--ink)',display:'flex',gap:4,alignItems:'center' }}>
+                          <span style={{ overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.student||'—'}</span>
+                          {f.student && dayLeaveMap[f.student] && <LeaveBadge reason={dayLeaveMap[f.student]}/>}
+                        </div>
                         <div style={{ display:'flex',gap:5,alignItems:'center' }}>
-                          <span className="mono" style={{ fontSize:9,color:'var(--ink-3)',flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.tail||'TBD'}</span>
+                          <span className="mono" style={{ fontSize:9,color:tailMaint?'var(--col-cancel)':'var(--ink-3)',fontWeight:tailMaint?600:400,flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.tail||'TBD'}</span>
+                          {tailMaint&&<GndBadge/>}
                           {f.isStandby&&<span className="mono uc" style={{ fontSize:7,color:'var(--col-stby)',padding:'1px 4px',border:'1px dashed var(--col-stby)',borderRadius:2 }}>STBY</span>}
                         </div>
                       </button>

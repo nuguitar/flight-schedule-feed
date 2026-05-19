@@ -56,6 +56,7 @@ function OpsBoard() {
   },[flights]);
 
   const { wd, mo, day } = fmtDay(app.date);
+  const leaveMap = React.useMemo(() => leavesOnDate(app.date), [app.date]);
 
   return (
     <ArtboardShell style={{ display:'flex', flexDirection:'column' }}>
@@ -145,14 +146,23 @@ function OpsBoard() {
                   {f.isSim&&<Tag color="var(--col-sim)" mono>SIM</Tag>}
                 </span>
                 <span className="mono uc"  style={{ fontSize:10, color:f.batch===HIGHLIGHT_BATCH?'var(--highlight)':'var(--ink-2)', fontWeight:f.batch===HIGHLIGHT_BATCH?600:500 }}>{f.batch}</span>
-                <span style={{ fontSize:12, minWidth:0, overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.student||'—'}</span>
-                <span style={{ fontSize:12, color:'var(--ink-2)', minWidth:0, overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.instructor||'—'}</span>
+                <span style={{ fontSize:12, minWidth:0, display:'flex', alignItems:'center', gap:4, overflow:'hidden' }}>
+                  <span style={{ overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.student||'—'}</span>
+                  {f.student && leaveMap[f.student] && <LeaveBadge reason={leaveMap[f.student]}/>}
+                </span>
+                <span style={{ fontSize:12, color:'var(--ink-2)', minWidth:0, display:'flex', alignItems:'center', gap:4, overflow:'hidden' }}>
+                  <span style={{ overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.instructor||'—'}</span>
+                  {f.instructor && leaveMap[f.instructor] && <LeaveBadge reason={leaveMap[f.instructor]}/>}
+                </span>
                 <span className="mono" style={{ fontSize:11, color:'var(--ink-2)', minWidth:0, overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.lesson}</span>
                 <span className="mono num" style={{ fontSize:13,fontWeight:600 }}>{f.start}</span>
                 <span className="mono num" style={{ fontSize:11,color:'var(--ink-3)' }}>{f.duration||''}</span>
                 <span className="mono num" style={{ fontSize:12,color:'var(--ink-2)' }}>{f.end}</span>
                 <span className="mono" style={{ fontSize:11, color:'var(--ink-2)' }}>{f.type}</span>
-                <span className="mono" style={{ fontSize:11, padding:'2px 5px', borderRadius:3, background:'var(--bg-2)', border:'1px solid var(--line)', display:'inline-block', textAlign:'center', width:'fit-content' }}>{f.tail||'TBD'}</span>
+                <span style={{ display:'flex', alignItems:'center', gap:4 }}>
+                  <span className="mono" style={{ fontSize:11, padding:'2px 5px', borderRadius:3, background:'var(--bg-2)', border:`1px solid ${isTailMaint(f.tail)?'var(--col-cancel)':'var(--line)'}`, color:isTailMaint(f.tail)?'var(--col-cancel)':'var(--ink)', display:'inline-block', textAlign:'center', fontWeight:isTailMaint(f.tail)?600:400 }}>{f.tail||'TBD'}</span>
+                  {isTailMaint(f.tail) && <GndBadge/>}
+                </span>
               </div>
             );
           })}
@@ -167,6 +177,8 @@ function OpsBoard() {
               {l}
             </span>
           ))}
+          <span style={{ display:'flex',gap:5,alignItems:'center' }}><GndBadge/> MAINTENANCE</span>
+          <span style={{ display:'flex',gap:5,alignItems:'center' }}><LeaveBadge reason="On Leave"/> ON LEAVE</span>
         </div>
       </div>
       <Drawer/>

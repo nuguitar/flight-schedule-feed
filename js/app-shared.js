@@ -8,6 +8,24 @@ const RESOURCES   = window.FLIGHT_DATA.resources;
 const LEAVES      = window.FLIGHT_DATA.leaves;
 const HIGHLIGHT_BATCH = 'AP-127';
 
+// ─── Maintenance & leave helpers ─────────────────────────────────────────
+// Set of tail registrations currently in maintenance
+const MAINT_TAILS = new Set(RESOURCES.filter(r => r.isMaint).map(r => r.tail));
+const isTailMaint = tail => Boolean(tail && MAINT_TAILS.has(tail));
+
+// Returns { name → reason } for all people on leave on the given YYYY-MM-DD date.
+// Results are cached so calling this many times per render is free.
+const leavesOnDate = (() => {
+  const cache = {};
+  return date => {
+    if (!date) return {};
+    if (cache[date]) return cache[date];
+    const m = {};
+    LEAVES.forEach(l => { if (date >= l.start && date <= l.end) m[l.name] = l.reason || 'On Leave'; });
+    return (cache[date] = m);
+  };
+})();
+
 // Fill in every calendar day between first and last flight date
 const ALL_DATES = (() => {
   const src = [...new Set(FLIGHTS.map(f => f.date))].sort();
@@ -268,6 +286,32 @@ function StandbyTag({ size='sm' }) {
       border:'1px dashed color-mix(in oklch,var(--col-stby) 55%,transparent)',
       whiteSpace:'nowrap',
     }}>◌ STBY</span>
+  );
+}
+
+// Aircraft in maintenance — red "GND" chip
+function GndBadge() {
+  return (
+    <span className="mono uc" style={{
+      display:'inline-flex', alignItems:'center',
+      fontSize:8, padding:'1px 4px', borderRadius:2, lineHeight:1.3,
+      background:'color-mix(in oklch,var(--col-cancel) 14%,transparent)',
+      border:'1px solid var(--col-cancel)', color:'var(--col-cancel)',
+      fontWeight:700, flexShrink:0,
+    }}>GND</span>
+  );
+}
+
+// Person on leave — blue "LEAVE" chip
+function LeaveBadge({ reason }) {
+  return (
+    <span className="mono uc" title={reason||'On Leave'} style={{
+      display:'inline-flex', alignItems:'center',
+      fontSize:8, padding:'1px 4px', borderRadius:2, lineHeight:1.3,
+      background:'color-mix(in oklch,var(--col-stby) 14%,transparent)',
+      border:'1px solid var(--col-stby)', color:'var(--col-stby)',
+      fontWeight:600, flexShrink:0,
+    }}>LEAVE</span>
   );
 }
 
@@ -619,8 +663,9 @@ function FocusControls() {
 Object.assign(window, {
   AppCtx, AppProvider, useApp, ThemeStyle, ArtboardShell,
   FLIGHTS, INSTRUCTORS, RESOURCES, LEAVES, ALL_DATES, DEFAULT_DATE, HIGHLIGHT_BATCH,
+  MAINT_TAILS, isTailMaint, leavesOnDate,
   localToday, fmtDay, minutesOf, fmtHM, isPast, isToday, STATUS_COLOR, flightAlpha, STATUS,
-  FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar,
+  FlightDot, ConditionTag, StatusPill, Tag, StandbyTag, HighlightBar, GndBadge, LeaveBadge,
   DateStrip, FilterBar, InlineSettings, Drawer,
   ViewIcon, FocusControls, LastUpdate,
 });

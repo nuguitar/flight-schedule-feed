@@ -118,6 +118,9 @@ function GanttBoard() {
             const totalMin = r.flights.reduce((a,b)=>a+(b.durMin||0),0);
             const hasHL    = r.flights.some(f=>f.batch===HIGHLIGHT_BATCH);
             const rowAlpha = app.highlightAP127&&!hasHL ? 0.28 : 1;
+            const dateLeaveMap = leavesOnDate(app.date);
+            const rowOnLeave   = groupBy === 'instructor' && dateLeaveMap[r.key];
+            const rowOnMaint   = groupBy === 'tail'       && isTailMaint(r.key);
 
             const rightMetric = (() => {
               if (groupBy === 'instructor') {
@@ -144,7 +147,12 @@ function GanttBoard() {
                 <div style={{ padding: isMobile?'4px 6px':'8px 10px', display:'flex', alignItems:'center', borderRight:'1px solid var(--line)', overflow:'hidden',
                   ...(isMobile ? { position:'sticky', left:0, zIndex:2, background:'var(--bg-2)' } : {}) }}>
                   <div style={{ minWidth:0 }}>
-                    <div style={{ fontSize:isMobile?10:12,color:'var(--ink)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{r.key}</div>
+                    <div style={{ fontSize:isMobile?10:12, fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+                      color: rowOnMaint ? 'var(--col-cancel)' : 'var(--ink)' }}>{r.key}</div>
+                    <div style={{ display:'flex', gap:4, marginTop:2, flexWrap:'wrap' }}>
+                      {rowOnMaint && <GndBadge/>}
+                      {rowOnLeave && <LeaveBadge reason={rowOnLeave}/>}
+                    </div>
                   </div>
                 </div>
                 <div style={{ position:'relative' }}>
@@ -179,9 +187,11 @@ function GanttBoard() {
                           {stby&&<span style={{color:'var(--col-stby)',fontSize:8}}>STBY</span>}
                         </div>
                         <div style={{ fontSize:11,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',lineHeight:1.2 }}>{f.student}</div>
-                        <div className="mono uc" style={{ fontSize:8.5,color:'var(--ink-3)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',display:'flex',gap:5 }}>
+                        <div className="mono uc" style={{ fontSize:8.5,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',display:'flex',gap:4,alignItems:'center' }}>
                           <span style={{color:f.batch===HIGHLIGHT_BATCH?'var(--highlight)':'var(--ink-3)',fontWeight:f.batch===HIGHLIGHT_BATCH?600:400}}>{f.batch}</span>
-                          <span>·</span><span>{f.tail||'TBD'}</span>
+                          <span style={{color:'var(--ink-3)'}}>·</span>
+                          <span style={{color:isTailMaint(f.tail)?'var(--col-cancel)':'var(--ink-3)',fontWeight:isTailMaint(f.tail)?600:400}}>{f.tail||'TBD'}</span>
+                          {isTailMaint(f.tail) && <GndBadge/>}
                         </div>
                       </button>
                     );

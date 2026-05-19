@@ -271,6 +271,9 @@ function DailyBoard() {
   const schoolRate = stats.completionRate;
   const apRate     = ap127.completionRate;
 
+  // Leave & maintenance status for the selected date
+  const leaveMap = useM_d(() => leavesOnDate(date), [date]);
+
   // Status mix slices for donut — mutually exclusive (SIM excluded)
   const statusSlices = [
     { label: 'Completed', value: stats.mix.completed, color: 'var(--col-done)' },
@@ -549,10 +552,10 @@ function DailyBoard() {
                       const barColor = pct >= 100 ? 'var(--col-done)' : pct >= 75 ? 'var(--col-pending)' : pct >= 50 ? 'var(--col-cancel)' : 'var(--ink-3)';
                       return (
                         <div key={i.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11 }}>
-                          <div style={{
-                            width: 110, fontSize: 11, color: 'var(--ink-2)',
-                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flexShrink: 0,
-                          }} title={i.name}>{i.name}</div>
+                          <div style={{ width: 110, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden' }}>
+                            <span style={{ fontSize: 11, color: 'var(--ink-2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={i.name}>{i.name}</span>
+                            {leaveMap[i.name] && <LeaveBadge reason={leaveMap[i.name]}/>}
+                          </div>
                           <div style={{ flex: 1, height: 12, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
                             <div style={{
                               width: `${(i.hours / maxH) * 100}%`, height: '100%',
@@ -600,7 +603,10 @@ function DailyBoard() {
                         <div className="mono uc" style={{ fontSize: 8, color: g.color, margin: '6px 0 3px', fontWeight: 600 }}>{g.type}</div>
                         {g.items.map(t => (
                           <div key={t.name} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11, marginBottom: 4 }}>
-                            <div className="mono" style={{ width: 70, fontSize: 10, color: 'var(--ink)', fontWeight: 600, flexShrink: 0 }}>{t.name}</div>
+                            <div style={{ width: 70, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <span className="mono" style={{ fontSize: 10, color: isTailMaint(t.name) ? 'var(--col-cancel)' : 'var(--ink)', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</span>
+                              {isTailMaint(t.name) && <GndBadge/>}
+                            </div>
                             <div style={{ flex: 1, height: 12, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
                               <div style={{ width: `${(t.total / max) * 100}%`, height: '100%', background: g.color, opacity: 0.85 }}/>
                             </div>
@@ -665,10 +671,23 @@ function DailyBoard() {
                         onMouseEnter={e => e.currentTarget.style.background = 'color-mix(in oklch,var(--highlight) 8%,transparent)'}
                         onMouseLeave={e => e.currentTarget.style.background = i % 2 ? 'transparent' : 'color-mix(in oklch,var(--ink) 1.5%,transparent)'}>
                         <span className="mono num" style={{ fontWeight: 600, color: 'var(--ink)' }}>{f.start}</span>
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.student || '—'}</span>
-                        {!isMobile && <span style={{ color: 'var(--ink-2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.instructor || '—'}</span>}
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden' }}>
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.student || '—'}</span>
+                          {f.student && leaveMap[f.student] && <LeaveBadge reason={leaveMap[f.student]}/>}
+                        </span>
+                        {!isMobile && (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden', color: 'var(--ink-2)' }}>
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.instructor || '—'}</span>
+                            {f.instructor && leaveMap[f.instructor] && <LeaveBadge reason={leaveMap[f.instructor]}/>}
+                          </span>
+                        )}
                         <span className="mono" style={{ color: 'var(--ink-2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.lesson}</span>
-                        {!isMobile && <span className="mono" style={{ fontSize: 10, color: 'var(--ink-2)' }}>{f.tail || 'TBD'}</span>}
+                        {!isMobile && (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <span className="mono" style={{ fontSize: 10, color: isTailMaint(f.tail) ? 'var(--col-cancel)' : 'var(--ink-2)', fontWeight: isTailMaint(f.tail) ? 600 : 400 }}>{f.tail || 'TBD'}</span>
+                            {isTailMaint(f.tail) && <GndBadge/>}
+                          </span>
+                        )}
                         <span className="mono num" style={{ fontSize: 10, color: 'var(--ink-3)' }}>{f.duration || ''}</span>
                         <span style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                           <StatusPill status={f.status}/>

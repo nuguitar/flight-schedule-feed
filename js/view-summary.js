@@ -58,6 +58,7 @@ function BreakdownTable({ title, subtitle, rows, nameKey='batch', barMode='fligh
   );
   const maxFlights = Math.max(...sorted.map(r => r.total), 1);
   const maxHours   = Math.max(...sorted.map(r => r.hours), 0.01);
+  const todayLeaves = leavesOnDate(localToday());
 
   return (
     <div style={{ background:'var(--surface)', border:'1px solid var(--line)', borderRadius:8, overflow:'hidden' }}>
@@ -75,12 +76,15 @@ function BreakdownTable({ title, subtitle, rows, nameKey='batch', barMode='fligh
             : `${((r.total   / maxFlights) * 100).toFixed(1)}%`;
           return (
             <div key={name} style={{ display:'flex', gap:10, alignItems:'center' }}>
-              <div className="mono uc" style={{
-                width:120, fontSize:10, flexShrink:0,
-                color: isHL ? 'var(--highlight)' : 'var(--ink-2)',
-                fontWeight: isHL ? 600 : 400,
-                overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
-              }} title={name}>{name}</div>
+              <div style={{ width:120, flexShrink:0, display:'flex', alignItems:'center', gap:4, overflow:'hidden' }}>
+                <span className="mono uc" style={{
+                  fontSize:10,
+                  color: isHL ? 'var(--highlight)' : 'var(--ink-2)',
+                  fontWeight: isHL ? 600 : 400,
+                  overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+                }} title={name}>{name}</span>
+                {nameKey !== 'batch' && todayLeaves[name] && <LeaveBadge reason={todayLeaves[name]}/>}
+              </div>
               {/* Bar track */}
               <div style={{ flex:1, height:18, background:'var(--bg-2)', borderRadius:3, overflow:'hidden' }}>
                 <div style={{ width:barW, height:'100%', display:'flex', gap:1, transition:'width .3s' }}>
@@ -331,7 +335,10 @@ function SummaryBoard() {
                     : `${((r.total / maxF127) * 100).toFixed(1)}%`;
                   return (
                     <div key={r.name} style={{ display:'flex', gap:10, alignItems:'center' }}>
-                      <div className="mono uc" style={{ width:120,fontSize:10,flexShrink:0,color:'var(--highlight)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={r.name}>{r.name}</div>
+                      <div style={{ width:120, flexShrink:0, display:'flex', alignItems:'center', gap:4, overflow:'hidden' }}>
+                        <span className="mono uc" style={{ fontSize:10,color:'var(--highlight)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={r.name}>{r.name}</span>
+                        {leavesOnDate(localToday())[r.name] && <LeaveBadge reason={leavesOnDate(localToday())[r.name]}/>}
+                      </div>
                       <div style={{ flex:1, height:18, background:'var(--bg-2)', borderRadius:3, overflow:'hidden' }}>
                         <div style={{ width:barW, height:'100%', display:'flex', gap:1, transition:'width .3s' }}>
                           {r.pending   > 0 && <div title={`Pending: ${r.pending}`}   style={{ flex:r.pending,   background:'var(--col-pending)', opacity:.85 }}/>}
